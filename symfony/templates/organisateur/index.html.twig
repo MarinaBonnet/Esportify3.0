@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Organisateur{% endblock %}
+
+{% block body %}
+<h1>Dashboard Organisateur</h1>
+
+<p>Bienvenue {{ app.user.email }}</p>
+
+<ul>
+    <li>Créer un événement</li>
+    <li>Gérer mes événements</li>
+    <li>Voir les participants</li>
+    <li>Gérer les scores</li>
+</ul>
+{% endblock %}

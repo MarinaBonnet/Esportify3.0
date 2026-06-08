@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Joueur{% endblock %}
+
+{% block body %} <h1>Dashboard Joueur</h1>
+
+```
+{% if app.user %}
+<p>Bienvenue {{ app.user.email }}</p>
+{% else %}
+<p>Utilisateur non connecté</p>
+{% endif %}
+
+<ul>
+    <li>Voir les événements disponibles</li>
+    <li>Mes participations</li>
+    <li>Mes scores</li>
+    <li>Mes favoris</li>
+    <li>Mon profil</li>
+</ul>
+```
+
+{% endblock %}

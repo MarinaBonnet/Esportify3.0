@@ -26,7 +26,7 @@ class AppFixtures extends Fixture
         $organisateur = new User();
         $organisateur->setEmail('orga@esportify.fr');
         $organisateur->setPseudo('organisateur');
-        $organisateur->setRoles(['ROLE_ORGANISATEUR']);
+        $organisateur->setRoles(['ROLE_ORGANISATEUR','ROLE_JOUEUR']);
         $organisateur->setPassword($this->passwordHasher->hashPassword($organisateur,'Orga123!'));
         $manager->persist($organisateur);
 

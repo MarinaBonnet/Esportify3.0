@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block body %}
+<h1>Dashboard Administrateur</h1>
+
+<p>Bienvenue {{ app.user.email }}</p>
+
+<ul>
+    <li>Gestion des utilisateurs</li>
+    <li>Gestion des tournois</li>
+    <li>Gestion des équipes</li>
+    <li>Statistiques</li>
+</ul>
+<ul>
+    <li>Utilisateurs : {{ nbUsers }}</li>
+    <li>Événements : {{ nbEvenements }}</li>
+    <li>Jeux : {{ nbJeux }}</li>
+    <li>Participations : {{ nbParticipations }}</li>
+    <li>Newsletters : {{ nbNewsletters }}</li>
+</ul>
+{% endblock %}
