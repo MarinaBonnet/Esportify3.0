@@ -41,10 +41,19 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/organisateur, roles: ROLE_ORGANISATEUR }
-        - { path: ^/joueur, roles: ROLE_JOUEUR }
+        - path: ^/admin
+          roles: ROLE_ADMIN
 
+        - path: ^/organisateur
+          roles:
+              - ROLE_ADMIN
+              - ROLE_ORGANISATEUR
+
+        - path: ^/joueur
+          roles:
+              - ROLE_ADMIN
+              - ROLE_ORGANISATEUR
+              - ROLE_JOUEUR
 when@test:
     security:
         password_hashers:

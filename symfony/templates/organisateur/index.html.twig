@@ -7,6 +7,22 @@
 
 <p>Bienvenue {{ app.user.email }}</p>
 
+<h2>Mes événements</h2>
+
+{% if evenements is empty %}
+<p>Ancun événement crée pour le moment.</p>
+{% else %}
+
+<ul>
+    {% for evenement in evenements %}
+    <li>
+        {{ evenement.titre }} -
+        {{ evenement.status }} -
+        {{ evenement.dateStart|date('d/m/Y H:i') }}
+    </li>
+    {% endfor %}
+</ul>
+{ % endif% }
 <ul>
     <li>Créer un événement</li>
     <li>Gérer mes événements</li>

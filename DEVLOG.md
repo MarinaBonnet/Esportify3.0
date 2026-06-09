@@ -97,3 +97,100 @@ TESTS
 
 Résultat :
 Système d'authentification entièrement fonctionnel.
+
+---
+
+## 09/06/2026
+
+### Gestion des rôles
+
+- Vérification des rôles utilisateurs
+- Configuration des accès dans security.yaml
+- Mise en place de la hiérarchie des droits
+- Tests des autorisations
+
+Rôles configurés :
+
+- ROLE_ADMIN
+- ROLE_ORGANISATEUR
+- ROLE_JOUEUR
+
+### Dashboards
+
+Création des espaces utilisateurs :
+
+- Dashboard Administrateur
+- Dashboard Organisateur
+- Dashboard Joueur
+
+Tests réalisés :
+
+✓ Accès Admin → Dashboard Administrateur
+
+✓ Accès Organisateur → Dashboard Organisateur
+
+✓ Accès Organisateur → Dashboard Joueur
+
+✓ Accès Joueur → Dashboard Joueur
+
+✓ Accès refusé selon les permissions
+
+Résultat :
+
+Le système de gestion des rôles et des autorisations est opérationnel.
+
+### Analyse métier des événements
+
+Étude du cahier des charges afin de définir les règles métier liées aux événements.
+
+Règles identifiées :
+
+- Un joueur peut proposer un événement.
+- Un événement est créé avec le statut « en attente ».
+- Un administrateur valide ou refuse l'événement.
+- Un organisateur gère ses propres événements.
+- Un administrateur possède l'ensemble des droits de la plateforme.
+
+### Dashboard Organisateur
+
+Connexion du dashboard à la base de données.
+
+Utilisation de :
+
+- EvenementRepository
+- Doctrine ORM
+- Injection de dépendance
+- getUser()
+
+Objectif :
+
+Afficher uniquement les événements de l'utilisateur connecté.
+
+Résultat :
+
+Le dashboard organisateur est prêt à afficher les événements associés à son propriétaire.
+
+### Gestion des événements
+
+- Génération du CRUD Evenement avec Symfony Maker Bundle.
+- Création automatique du contrôleur EvenementController.
+- Création du formulaire EvenementType.
+- Génération des vues Twig (liste, création, modification, détail, suppression).
+
+Adaptation du formulaire métier :
+
+- Suppression des champs status, createdAt et organisateur du formulaire utilisateur.
+- Association automatique de l'organisateur connecté lors de la création.
+- Attribution automatique du statut "en_attente".
+- Enregistrement automatique de la date de création.
+
+Tests réalisés :
+
+- Création d'un premier événement.
+- Vérification de l'enregistrement en base de données.
+- Vérification de l'affichage dans la liste des événements.
+- Vérification de la liaison avec l'entité Jeu.
+
+Résultat :
+
+Le système de création d'événements est opérationnel et conforme aux règles métier du projet Esportify.
