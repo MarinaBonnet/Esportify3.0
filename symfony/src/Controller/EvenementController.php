@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Evenement;
+use App\Entity\Participation;
 use App\Form\EvenementType;
 use App\Repository\EvenementRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +14,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/evenement')]
-#[IsGranted('ROLE_ORGANISATEUR')]
+
 final class EvenementController extends AbstractController
 {
+    
     #[Route(name: 'app_evenement_index', methods: ['GET'])]
     public function index(EvenementRepository $evenementRepository): Response
     {
@@ -24,6 +26,7 @@ final class EvenementController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ORGANISATEUR')]
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -56,6 +59,7 @@ final class EvenementController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ORGANISATEUR')]
     #[Route('/{id}/edit', name: 'app_evenement_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
@@ -74,6 +78,7 @@ final class EvenementController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ORGANISATEUR')]
     #[Route('/{id}', name: 'app_evenement_delete', methods: ['POST'])]
     public function delete(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
@@ -83,5 +88,30 @@ final class EvenementController extends AbstractController
         }
 
         return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[IsGranted('ROLE_JOUEUR')]
+    #[Route('/{id}/participer', name: 'app_evenement_participer', methods: ['GET'])]
+    public function participer(Evenement $evenement, EntityManagerInterface $entityManager): Response
+    {
+        $participationExistante = $entityManager
+            ->getRepository(Participation::class)
+            ->findOneBy([
+                'user' => $this->getUser(),
+                'evenement' => $evenement,
+            ]);
+
+        if ($participationExistante) {
+            return $this->redirectToRoute('app_home');
+        }
+        $participation = new Participation();
+        $participation->setUser($this->getUser());
+        $participation->setEvenement($evenement);
+        $participation->setStatus('en_attente');
+
+        $entityManager->persist($participation);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
     }
 }

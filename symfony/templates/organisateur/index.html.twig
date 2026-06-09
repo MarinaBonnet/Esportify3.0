@@ -24,6 +24,25 @@
 </ul>
 {% endif %}
 
+<h2>Demandes de participation</h2>
+
+{% if participationsEnAttente is empty %}
+<p>Aucune demande de participation en attente.</p>
+{% else %}
+<ul>
+    {% for participation in participationsEnAttente %}
+    <li>
+        {{ participation.user.email }}
+        souhaite participer à
+        {{ participation.evenement.titre }}
+
+        <a href="{{ path('app_organisateur_participation_accepter', { id: participation.id }) }}">Accepter</a>
+        <a href="{{ path('app_organisateur_participation_refuser', { id: participation.id }) }}">Refuser</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 
 
 <ul>

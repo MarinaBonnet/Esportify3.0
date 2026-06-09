@@ -27,6 +27,16 @@
             Places : {{ evenement.nbPlaces }}<br>
             Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
             Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
+
+            {% if app.user %}
+            <a href="{{ path('app_evenement_participer', { id: evenement.id }) }}">
+                Participer
+            </a>
+            {% else %}
+            <a href="{{ path('app_login') }}">
+                Connectez-vous pour participer
+            </a>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>
