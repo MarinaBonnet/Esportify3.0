@@ -7,6 +7,33 @@
 
 <p>Bienvenue {{ app.user.email }}</p>
 
+<h2>Événements en attente</h2>
+
+{% if evenementsEnAttente is empty %}
+<p>Aucun événement en attente.</p>
+{% else %}
+<ul>
+    {% for evenement in evenementsEnAttente %}
+    <li>
+        {{ evenement.titre }} -
+        {{ evenement.dateStart|date('d/m/Y H:i') }} -
+        {{ evenement.organisateur.email }}
+        <a href="{{ path('app_admin_evenement_valider', {
+        id: evenement.id
+    }) }}">
+            Valider
+        </a>
+
+        <a href="{{ path('app_admin_evenement_refuser', {
+        id: evenement.id
+    }) }}">
+            Refuser
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <ul>
     <li>Gestion des utilisateurs</li>
     <li>Gestion des tournois</li>

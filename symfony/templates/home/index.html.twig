@@ -1,20 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil - Esportify{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<h1>Bienvenue sur Esportify</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<section>
+    <h2>Présentation</h2>
+    <p>
+        Esportify est une plateforme dédiée à l'organisation et à la participation
+        à des événements e-sport.
+    </p>
+</section>
 
-    This friendly message is coming from:
+<section>
+    <h2>Événements à venir et en cours</h2>
+
+    {% if evenements is empty %}
+    <p>Aucun événement validé pour le moment.</p>
+    {% else %}
     <ul>
-        <li>Your controller at <code>/var/www/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/var/www/templates/home/index.html.twig</code></li>
+        {% for evenement in evenements %}
+        <li>
+            <strong>{{ evenement.titre }}</strong><br>
+            Jeu : {{ evenement.jeu.nom }}<br>
+            Places : {{ evenement.nbPlaces }}<br>
+            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
+            Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
+        </li>
+        {% endfor %}
     </ul>
-</div>
+    {% endif %}
+</section>
 {% endblock %}

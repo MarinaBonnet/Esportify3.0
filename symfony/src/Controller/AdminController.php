@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Evenement;
 use App\Repository\EvenementRepository;
 use App\Repository\JeuRepository;
 use App\Repository\NewsletterRepository;
@@ -28,7 +30,36 @@ final class AdminController extends AbstractController
             'nbJeux' => $jeuRepository->count([]),
             'nbParticipations' => $participationRepository->count([]),
             'nbNewsletters' => $newsletterRepository->count([]),
+            'evenementsEnAttente' => $evenementRepository->findBy([
+                'status' => 'en_attente',
+]),
 
         ]);
+    }
+
+    #[Route('/admin/evenement/{id}/valider', name: 'app_admin_evenement_valider')]
+    public function valider(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $evenement->setStatus('valide');
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_admin');
+    }
+
+    #[Route('/admin/evenement/{id}/refuser', name: 'app_admin_evenement_refuser')]
+    public function refuser(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $evenement->setStatus('refuse');
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_admin');
     }
 }

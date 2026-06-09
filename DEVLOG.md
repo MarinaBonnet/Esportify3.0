@@ -194,3 +194,9 @@ Tests réalisés :
 Résultat :
 
 Le système de création d'événements est opérationnel et conforme aux règles métier du projet Esportify.
+
+À faire :
+□ Repasser automatiquement un événement à "en_attente" lors d'une modification
+□ Empêcher la modification d'un événement déjà commencé
+□ Vérifier que dateFin > dateDébut
+□ Ajouter les images
