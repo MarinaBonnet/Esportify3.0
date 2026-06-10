@@ -141,6 +141,7 @@ Cette fonctionnalité serait particulièrement adaptée aux jeux compétitifs en
 - Système de badges et de récompenses.
 - Application mobile dédiée.
 - Intégration d'un chat temps réel via WebSocket.
+- Intégration d’API externes pour récupérer automatiquement les scores des joueurs selon les jeux.
 
 Equipe
 

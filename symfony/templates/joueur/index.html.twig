@@ -40,10 +40,24 @@
     {% endfor %}
 </ul>
 {% endif %}
+<h2>Mes scores</h2>
+{% if scores is empty %}
+<p>Aucun score enregistré pour le moment.</p>
+{% else %}
+<ul>
+    {% for score in scores %}
+    <li>
+        {{ score.evenement.titre }} -
+        Score : {{ score.value }} -
+        {{ score.createdAt|date('d/m/Y H:i') }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
 <ul>
     <li>Voir les événements disponibles</li>
 
-    <li>Mes scores</li>
+
 
     <li>Mon profil</li>
 </ul>

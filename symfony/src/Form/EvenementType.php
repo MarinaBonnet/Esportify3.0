@@ -7,6 +7,7 @@ use App\Entity\Jeu;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EvenementType extends AbstractType
@@ -26,6 +27,11 @@ class EvenementType extends AbstractType
             ->add('jeu', EntityType::class, [
                 'class' => Jeu::class,
                 'choice_label' => 'nom',
+            ])
+            ->add('imageFile', FileType::class, [
+                'label' => 'Image de l’événement',
+                'mapped' => false,
+                'required' => false,
             ])
         ;
     }

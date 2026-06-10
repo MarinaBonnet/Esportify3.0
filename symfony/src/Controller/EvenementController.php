@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Evenement;
 use App\Entity\Favori;
+use App\Entity\Image;
 use App\Entity\Participation;
 use App\Form\EvenementType;
 use App\Repository\EvenementRepository;
@@ -11,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -18,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class EvenementController extends AbstractController
 {
-    
+
     #[Route(name: 'app_evenement_index', methods: ['GET'])]
     public function index(EvenementRepository $evenementRepository): Response
     {
@@ -41,6 +43,30 @@ final class EvenementController extends AbstractController
             $evenement->setCreatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($evenement);
+
+            $imageFile = $form->get('imageFile')->getData();
+
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads/evenements',
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Plus tard : message d'erreur utilisateur
+                }
+
+                $image = new Image();
+                $image->setUrl('uploads/evenements/' . $newFilename);
+                $image->setAlt($evenement->getTitre());
+                $image->setEvenement($evenement);
+
+                $entityManager->persist($image);
+            }
+
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
@@ -83,7 +109,7 @@ final class EvenementController extends AbstractController
     #[Route('/{id}', name: 'app_evenement_delete', methods: ['POST'])]
     public function delete(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$evenement->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $evenement->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($evenement);
             $entityManager->flush();
         }
@@ -142,7 +168,7 @@ final class EvenementController extends AbstractController
 
         return $this->redirectToRoute('app_home');
     }
-    
+
     #[IsGranted('ROLE_JOUEUR')]
     #[Route('/{id}/retirer-favori', name: 'app_evenement_retirer_favori')]
     public function retirerFavori(

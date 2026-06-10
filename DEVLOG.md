@@ -250,6 +250,68 @@ Le système d'inscription des joueurs aux événements est opérationnel et fonc
 - Changement automatique du statut de la participation.
 - Vérification en base de données.
 
+### Gestion des favoris
+
+Ajout de l'entité Favori dans le workflow utilisateur.
+Création de la fonctionnalité "Ajouter aux favoris".
+Mise en place d'un contrôle anti-doublon empêchant l'ajout multiple d'un même événement.
+Création de la fonctionnalité "Retirer des favoris".
+Mise à jour dynamique de l'interface utilisateur.
+
+Tests réalisés :
+
+Ajout d'un événement aux favoris.
+Vérification de l'enregistrement en base de données.
+Suppression d'un favori.
+Vérification de la suppression en base de données.
+
+Résultat :
+
+Le système de favoris est entièrement fonctionnel.
+
+Amélioration de l'accueil
+Affichage dynamique du statut de participation d'un joueur.
+Affichage du bouton "Participer" uniquement lorsqu'aucune participation n'existe.
+Affichage des statuts :
+en_attente
+accepte
+refuse
+
+Résultat :
+
+L'utilisateur visualise immédiatement son état d'inscription à un événement.
+
+Dashboard Joueur
+Affichage des événements ajoutés aux favoris.
+Affichage des participations du joueur.
+Affichage du statut des participations.
+Exploitation des relations Doctrine entre User, Favori, Participation et Evenement.
+
+Tests réalisés :
+
+Vérification de l'affichage des favoris.
+Vérification de l'affichage des participations.
+Vérification des statuts associés.
+
+Résultat :
+
+L'espace joueur devient un véritable tableau de bord personnel regroupant les informations essentielles de l'utilisateur.
+
+V1 Esportify :
+
+- le score est prévu dans la base
+- l’historique des scores est affichable
+- la saisie automatique n’est pas encore connectée à une API de jeu
+
+Score automatique idéal :
+jeu / API / système externe
+↓
+récupération du résultat
+↓
+enregistrement en base
+↓
+affichage dans l’espace joueur
+
 À faire :
 
 □ Repasser automatiquement un événement à "en_attente" lors d'une modification.
@@ -261,10 +323,6 @@ Le système d'inscription des joueurs aux événements est opérationnel et fonc
 □ Ajouter la gestion des images des événements.
 
 □ Permettre l'inscription des joueurs aux événements (Participation).
-
-□ Empêcher un joueur refusé de se réinscrire au même événement.
-
-□ Empêcher un joueur refusé de se réinscrire.
 
 □ Vérifier que l'événement n'est pas complet.
 

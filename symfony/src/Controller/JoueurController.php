@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Repository\ParticipationRepository;
 use App\Repository\FavoriRepository;
+use App\Repository\ParticipationRepository;
+use App\Repository\ScoreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,6 +15,7 @@ final class JoueurController extends AbstractController
     public function index(
         FavoriRepository $favoriRepository ,
         ParticipationRepository $participationRepository,
+        ScoreRepository $scoreRepository,
     ): Response {
     
         $favoris = $favoriRepository->findBy([
@@ -24,10 +26,15 @@ final class JoueurController extends AbstractController
             'user' => $this->getUser(),
         ]);
 
+        $scores = $scoreRepository->findBy([
+            'user' => $this->getUser(),
+        ]);
+
         return $this->render('joueur/index.html.twig', [
             'controller_name' => 'JoueurController',
             'favoris' => $favoris,
             'participations' => $participations,
+            'scores' => $scores,
         ]);
     }
 }

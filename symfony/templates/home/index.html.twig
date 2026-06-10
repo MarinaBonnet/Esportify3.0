@@ -22,6 +22,11 @@
     <ul>
         {% for evenement in evenements %}
         <li>
+            {% if evenement.images is not empty %}
+            {% set image = evenement.images|first %}
+            <img src="{{ asset(image.url) }}" alt="{{ image.alt }}" width="250">
+            <br>
+            {% endif %}
             <strong>{{ evenement.titre }}</strong><br>
             Jeu : {{ evenement.jeu.nom }}<br>
             Places : {{ evenement.nbPlaces }}<br>
