@@ -24,6 +24,11 @@ class Favori
     #[ORM\JoinColumn(nullable: false)]
     private ?Evenement $evenement = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -27,11 +27,35 @@
             Places : {{ evenement.nbPlaces }}<br>
             Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
             Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
+            <br>
+            {% if app.user %}
+            {% if favorisUtilisateur[evenement.id] is defined %}
+            <a href="{{ path('app_evenement_retirer_favori', { id: evenement.id }) }}">
+                Retirer des favoris
+            </a><br>
+            {% else %}
+            <a href="{{ path('app_evenement_favori', { id: evenement.id }) }}">
+                Ajouter aux favoris
+            </a>
+            {% endif %}
+            {% endif %}
 
             {% if app.user %}
+            {% if participationsUtilisateur[evenement.id] is defined %}
+            {% set participation = participationsUtilisateur[evenement.id] %}
+
+            {% if participation.status == 'en_attente' %}
+            <span>Demande en attente</span>
+            {% elseif participation.status == 'accepte' %}
+            <span>Inscription acceptée</span>
+            {% elseif participation.status == 'refuse' %}
+            <span>Inscription refusée</span>
+            {% endif %}
+            {% else %}
             <a href="{{ path('app_evenement_participer', { id: evenement.id }) }}">
                 Participer
             </a>
+            {% endif %}
             {% else %}
             <a href="{{ path('app_login') }}">
                 Connectez-vous pour participer

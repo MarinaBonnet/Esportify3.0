@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Evenement;
+use App\Entity\Favori;
 use App\Entity\Participation;
 use App\Form\EvenementType;
 use App\Repository\EvenementRepository;
@@ -111,6 +112,54 @@ final class EvenementController extends AbstractController
 
         $entityManager->persist($participation);
         $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[IsGranted('ROLE_JOUEUR')]
+    #[Route('/{id}/favori', name: 'app_evenement_favori', methods: ['GET'])]
+    public function ajouterFavori(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $favoriExistant = $entityManager
+            ->getRepository(Favori::class)
+            ->findOneBy([
+                'user' => $this->getUser(),
+                'evenement' => $evenement,
+            ]);
+
+        if ($favoriExistant) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        $favori = new Favori();
+        $favori->setUser($this->getUser());
+        $favori->setEvenement($evenement);
+
+        $entityManager->persist($favori);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+    
+    #[IsGranted('ROLE_JOUEUR')]
+    #[Route('/{id}/retirer-favori', name: 'app_evenement_retirer_favori')]
+    public function retirerFavori(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $favori = $entityManager
+            ->getRepository(Favori::class)
+            ->findOneBy([
+                'user' => $this->getUser(),
+                'evenement' => $evenement,
+            ]);
+
+        if ($favori) {
+            $entityManager->remove($favori);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('app_home');
     }

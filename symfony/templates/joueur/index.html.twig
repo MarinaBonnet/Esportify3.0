@@ -10,12 +10,41 @@
 {% else %}
 <p>Utilisateur non connecté</p>
 {% endif %}
+<h2>Mes favoris</h2>
 
+{% if favoris is empty %}
+<p>Aucun événement ajouté aux favoris.</p>
+{% else %}
+<ul>
+    {% for favori in favoris %}
+    <li>
+        {{ favori.evenement.titre }} -
+        {{ favori.evenement.jeu.nom }} -
+        {{ favori.evenement.dateStart|date('d/m/Y H:i') }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<h2>Mes participations</h2>
+{% if participations is empty %}
+<p>Aucune participation pour le moment.</p>
+{% else %}
+<ul>
+    {% for participation in participations %}
+    <li>
+        {{ participation.evenement.titre }} -
+        {{ participation.evenement.jeu.nom }} -
+        {{ participation.status }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
 <ul>
     <li>Voir les événements disponibles</li>
-    <li>Mes participations</li>
+
     <li>Mes scores</li>
-    <li>Mes favoris</li>
+
     <li>Mon profil</li>
 </ul>
 ```

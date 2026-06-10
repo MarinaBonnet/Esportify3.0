@@ -222,6 +222,12 @@ Le cycle complet de création, validation et publication des événements est op
 - Création automatique d'une participation avec le statut "en_attente".
 - Liaison entre l'utilisateur connecté et l'événement sélectionné.
 - Protection de la route par le rôle ROLE_JOUEUR.
+- Création d'une participation lors de l'inscription d'un joueur.
+- Statut initial : en_attente.
+- Empêchement des doublons d'inscription.
+- Affichage des demandes dans le dashboard organisateur.
+- Ajout des actions Accepter / Refuser.
+- Validation de l'inscription par l'organisateur.
 
 Tests réalisés :
 
@@ -231,7 +237,18 @@ Tests réalisés :
 
 Résultat :
 
-Le système d'inscription des joueurs aux événements est opérationnel.
+Le système d'inscription des joueurs aux événements est opérationnel et fonctionnel
+
+---
+
+## 10/06/2026
+
+### Gestion des participations
+
+- Affichage des demandes de participation dans le dashboard organisateur.
+- Mise en place des actions Accepter / Refuser.
+- Changement automatique du statut de la participation.
+- Vérification en base de données.
 
 À faire :
 
