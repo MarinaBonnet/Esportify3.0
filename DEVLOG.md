@@ -312,7 +312,155 @@ enregistrement en base
 ↓
 affichage dans l’espace joueur
 
+### Gestion des images d'événements
+
+- Ajout d'un champ d'upload dans le formulaire de création d'événement.
+- Mise en place du traitement des fichiers dans le contrôleur.
+- Génération automatique d'un nom unique pour les images.
+- Enregistrement des fichiers dans le dossier public/uploads/evenements.
+- Création de l'entité Image liée à un événement.
+- Stockage du chemin de l'image en base de données.
+- Affichage des images sur la page d'accueil.
+
+Tests réalisés :
+
+- Upload d'une image depuis le poste de l'organisateur.
+- Vérification de la création du fichier sur le serveur.
+- Vérification de l'enregistrement en base de données.
+- Vérification de l'affichage sur l'accueil après validation de l'événement.
+
+Résultat :
+
+Le système d'images pour les événements est entièrement fonctionnel.
+
+## 11/06/2026
+
+### Gestion de la newsletter
+
+Objectif :
+
+Permettre aux visiteurs de s'inscrire à la newsletter Esportify afin de recevoir les actualités de la plateforme et les informations sur les événements.
+
+Travaux réalisés :
+
+- Création de l'entité Newsletter.
+- Mise en place des champs :
+  - email
+  - token
+  - createdAt
+
+- Création du formulaire NewsletterType.
+- Intégration du formulaire sur la page d'accueil.
+- Traitement du formulaire dans le HomeController.
+- Génération automatique d'un token unique lors de l'inscription.
+- Enregistrement automatique de la date d'inscription.
+- Mise en place d'un système anti-doublon pour empêcher plusieurs inscriptions avec la même adresse email.
+
+Tests réalisés :
+
+- Inscription d'un utilisateur à la newsletter.
+- Vérification de l'enregistrement en base de données.
+- Vérification de la génération automatique du token.
+- Vérification de l'enregistrement de la date de création.
+- Vérification du fonctionnement de l'anti-doublon.
+
+Résultat :
+
+Le système d'inscription à la newsletter est opérationnel. Les abonnés sont enregistrés en base de données avec un identifiant unique permettant de préparer ultérieurement des fonctionnalités de confirmation ou de désinscription.
+
+Évolutions prévues :
+
+□ Interface d'administration des abonnés
+□ Export de la liste des abonnés
+□ Envoi de campagnes email
+□ Désinscription via token unique
+□ Confirmation d'inscription par email
+
+### Système de chat MongoDB
+
+Objectif :
+
+Mettre en place un système de discussion lié aux événements e-sport.
+
+Principe :
+
+- Chaque événement possède son propre espace de discussion.
+- Les joueurs peuvent échanger des messages avant, pendant et après l'événement.
+- Les messages sont stockés dans MongoDB.
+- Les données métier principales restent stockées dans MySQL.
+
+Motivation technique :
+
+Le chat génère un grand nombre de messages indépendants. MongoDB est particulièrement adapté à ce type de données documentaires et permet de démontrer l'utilisation d'une base NoSQL dans le projet Esportify.
+
+### Mise en place de MongoDB pour le système de chat
+
+Objectif :
+
+Mettre en place une base de données NoSQL afin de gérer les messages du système de discussion des événements e-sport.
+
+Travaux réalisés :
+
+- Installation du bundle Doctrine MongoDB ODM.
+- Configuration de la connexion MongoDB dans Symfony.
+- Création du document Message.
+- Mise en place du DocumentManager.
+- Création d'un premier document de test.
+- Validation du fonctionnement de l'insertion dans MongoDB.
+
+Structure du document :
+
+- evenementId
+- userId
+- contenu
+- createdAt
+
+Justification technique :
+
+Les messages du chat sont des données indépendantes et fortement volumétriques. MongoDB est particulièrement adapté à ce type de stockage documentaire.
+
+Résultat :
+
+Le projet Esportify utilise désormais deux systèmes de stockage :
+
+- MySQL pour les données métier relationnelles.
+- MongoDB pour les messages du système de chat.
+
+### Avancement MongoDB
+
+Durant le développement local sous Docker, des permissions étendues ont été utilisées sur certains répertoires de cache Symfony afin de faciliter le travail avec Doctrine MongoDB ODM.
+
+En environnement de production, ces permissions devront être restreintes et attribuées uniquement à l'utilisateur du serveur web afin de respecter les bonnes pratiques de sécurité.
+
+- Installation et configuration de Doctrine MongoDB ODM.
+- Création du document Message.
+- Création d'un repository MongoDB.
+- Mise en place du DocumentManager.
+- Premier document enregistré dans MongoDB.
+- Lecture des documents MongoDB avec findAll().
+- Validation du fonctionnement complet du cycle :
+  création → stockage → lecture.
+
+Résultat :
+
+Le projet Esportify dispose désormais d'un système NoSQL opérationnel destiné au futur chat des événements.
+
+Le projet Esportify utilise deux systèmes de stockage complémentaires.
+
+Les données métier fortement relationnelles (utilisateurs, événements, participations, favoris, scores) sont stockées dans une base MySQL via Doctrine ORM.
+
+Le système de discussion des événements est stocké dans MongoDB via Doctrine ODM. Avant d'autoriser l'accès au chat, l'application vérifie dans MySQL qu'une participation acceptée existe entre le joueur et l'événement. Les messages sont ensuite récupérés depuis MongoDB.
+
+Cette architecture permet d'utiliser chaque technologie selon ses points forts.
+
 À faire :
+□ Restreindre l’accès au chat aux participants acceptés
+
+□ Bloquer l’accès au chat avant le démarrage de l’événement
+
+□ Ajouter un statut "started" ou "isStarted" à l’événement
+
+□ Afficher le bouton Rejoindre uniquement lorsque l’événement est accessible
 
 □ Repasser automatiquement un événement à "en_attente" lors d'une modification.
 

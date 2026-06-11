@@ -18,11 +18,11 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        //fixtures Utilisateurs 
+        //fixtures Utilisateurs
         $admin = new User();
         $admin->setEmail('admin@esportify.fr');
         $admin->setPseudo('Admin');
-        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setRoles(['ROLE_ADMIN','ROLE_ORGANISATEUR','ROLE_JOUEUR']);
         $admin->setPassword($this->passwordHasher->hashPassword($admin,'Admin123!'));
         $manager->persist($admin);
 

@@ -71,4 +71,12 @@
     </ul>
     {% endif %}
 </section>
+<section>
+    <h2>Newsletter</h2>
+
+    {{ form_start(newsletterForm) }}
+    {{ form_row(newsletterForm.email) }}
+    <button type="submit">S'inscrire</button>
+    {{ form_end(newsletterForm) }}
+</section>
 {% endblock %}

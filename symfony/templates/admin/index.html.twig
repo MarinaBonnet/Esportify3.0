@@ -47,4 +47,19 @@
     <li>Participations : {{ nbParticipations }}</li>
     <li>Newsletters : {{ nbNewsletters }}</li>
 </ul>
+<h2>Abonnés Newsletter</h2>
+
+{% if newsletters is empty %}
+<p>Aucun abonné.</p>
+{% else %}
+<ul>
+    {% for newsletter in newsletters %}
+    <li>
+        {{ newsletter.email }}
+        -
+        {{ newsletter.createdAt|date('d/m/Y H:i') }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

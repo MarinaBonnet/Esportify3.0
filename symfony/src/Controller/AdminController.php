@@ -30,9 +30,12 @@ final class AdminController extends AbstractController
             'nbJeux' => $jeuRepository->count([]),
             'nbParticipations' => $participationRepository->count([]),
             'nbNewsletters' => $newsletterRepository->count([]),
+            'newsletters' => $newsletterRepository->findBy([], [
+            'createdAt' => 'DESC',
+            ]),
             'evenementsEnAttente' => $evenementRepository->findBy([
                 'status' => 'en_attente',
-]),
+            ]),
 
         ]);
     }
