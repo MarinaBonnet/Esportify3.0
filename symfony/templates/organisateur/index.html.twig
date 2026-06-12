@@ -20,30 +20,63 @@
         {{ evenement.status }} -
         {{ evenement.dateStart|date('d/m/Y H:i') }}
 
+        {% set participantsAcceptes = 0 %}
+
+        {% for participation in evenement.participations %}
+        {% if participation.status == 'accepte' %}
+        {% set participantsAcceptes = participantsAcceptes + 1 %}
+        {% endif %}
+        {% endfor %}
+
+
+        <br>
+        Participants : {{ participantsAcceptes }} / {{ evenement.nbPlaces }}<br>
+        Places restantes : {{ evenement.nbPlaces - participantsAcceptes }}<br>
+
         <br>
 
-        {% set now = "now"|date("U") %}
-        {% set startLimit = evenement.dateStart|date("U") - 1800 %}
+        {% if evenement.dateEnd < date() %} <strong>Terminé</strong>
 
-        {% if evenement.startedAt is null and now >= startLimit %}
+            {% elseif evenement.startedAt is not null %}
+            <strong>En cours</strong>
 
-        <a href="{{ path('app_evenement_start', {
+            {% else %}
+            <strong>À venir</strong>
+            {% endif %}
+
+            {% set now = "now"|date("U") %}
+            {% set startLimit = evenement.dateStart|date("U") - 1800 %}
+
+            {% if evenement.startedAt is null and now >= startLimit %}
+
+            <a href="{{ path('app_evenement_start', {
                 id: evenement.id
             }) }}">
-            Démarrer l'événement
-        </a>
+                Démarrer l'événement
+            </a>
 
-        {% elseif evenement.startedAt is not null %}
+            {% elseif evenement.startedAt is not null %}
 
-        <strong>Événement démarré</strong>
+            <strong>Événement démarré</strong>
 
-        {% else %}
+            {% else %}
 
-        <small>
-            Démarrage disponible 30 min avant
-        </small>
+            <small>
+                Démarrage disponible 30 min avant
+            </small>
 
-        {% endif %}
+            {% endif %}
+            {% if evenement.startedAt is not null %}
+
+            <br>
+
+            <a href="{{ path('app_evenement_room', {
+        id: evenement.id
+    }) }}">
+                Accéder à la room
+            </a>
+
+            {% endif %}
     </li>
     {% endfor %}
 </ul>

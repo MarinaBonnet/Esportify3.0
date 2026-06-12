@@ -3,9 +3,20 @@
 {% block title %}Dashboard Admin{% endblock %}
 
 {% block body %}
+
 <h1>Dashboard Administrateur</h1>
 
 <p>Bienvenue {{ app.user.email }}</p>
+
+<h2>Statistiques</h2>
+
+<ul>
+    <li>Utilisateurs : {{ nbUsers }}</li>
+    <li>Événements : {{ nbEvenements }}</li>
+    <li>Jeux : {{ nbJeux }}</li>
+    <li>Participations : {{ nbParticipations }}</li>
+    <li>Newsletters : {{ nbNewsletters }}</li>
+</ul>
 
 <h2>Événements en attente</h2>
 
@@ -15,18 +26,23 @@
 <ul>
     {% for evenement in evenementsEnAttente %}
     <li>
-        {{ evenement.titre }} -
-        {{ evenement.dateStart|date('d/m/Y H:i') }} -
-        {{ evenement.organisateur.email }}
+        <strong>{{ evenement.titre }}</strong><br>
+
+        Organisateur :
+        {{ evenement.organisateur.email }}<br>
+
+        Début :
+        {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
+
         <a href="{{ path('app_admin_evenement_valider', {
-        id: evenement.id
-    }) }}">
+                    id: evenement.id
+                }) }}">
             Valider
         </a>
 
         <a href="{{ path('app_admin_evenement_refuser', {
-        id: evenement.id
-    }) }}">
+                    id: evenement.id
+                }) }}">
             Refuser
         </a>
     </li>
@@ -34,19 +50,6 @@
 </ul>
 {% endif %}
 
-<ul>
-    <li>Gestion des utilisateurs</li>
-    <li>Gestion des tournois</li>
-    <li>Gestion des équipes</li>
-    <li>Statistiques</li>
-</ul>
-<ul>
-    <li>Utilisateurs : {{ nbUsers }}</li>
-    <li>Événements : {{ nbEvenements }}</li>
-    <li>Jeux : {{ nbJeux }}</li>
-    <li>Participations : {{ nbParticipations }}</li>
-    <li>Newsletters : {{ nbNewsletters }}</li>
-</ul>
 <h2>Abonnés Newsletter</h2>
 
 {% if newsletters is empty %}
@@ -62,4 +65,14 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+<h2>Administration</h2>
+
+<ul>
+    <li>Gestion des utilisateurs</li>
+    <li>Gestion des tournois</li>
+    <li>Gestion des équipes</li>
+    <li>Statistiques avancées</li>
+</ul>
+
 {% endblock %}

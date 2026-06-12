@@ -457,7 +457,7 @@ Cette architecture permet d'utiliser chaque technologie selon ses points forts.
 
 ## Room événementielle et intégration MongoDB
 
-Aujourd'hui, j'ai finalisé la première version du système de room événementielle.
+Finaliser la première version du système de room événementielle.
 
 ### MongoDB
 

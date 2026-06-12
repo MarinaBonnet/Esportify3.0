@@ -4,7 +4,6 @@
 
 {% block body %} <h1>Dashboard Joueur</h1>
 
-```
 {% if app.user %}
 <p>Bienvenue {{ app.user.email }}</p>
 {% else %}
@@ -18,9 +17,10 @@
 <ul>
     {% for favori in favoris %}
     <li>
-        {{ favori.evenement.titre }} -
-        {{ favori.evenement.jeu.nom }} -
-        {{ favori.evenement.dateStart|date('d/m/Y H:i') }}
+        <strong>{{ favori.evenement.titre }}</strong><br>
+        Jeu : {{ favori.evenement.jeu.nom }}<br>
+        Début : {{ favori.evenement.dateStart|date('d/m/Y H:i') }}<br>
+        Places : {{ favori.evenement.nbPlaces }}
     </li>
     {% endfor %}
 </ul>
@@ -33,21 +33,25 @@
 <ul>
     {% for participation in participations %}
     <li>
-        {{ participation.evenement.titre }} -
-        {{ participation.evenement.jeu.nom }} -
-        {{ participation.status }}
-        <br>
+        <strong>{{ participation.evenement.titre }}</strong><br>
+        Jeu : {{ participation.evenement.jeu.nom }}<br>
+        Statut : {{ participation.status }}<br>
+        Début : {{ participation.evenement.dateStart|date('d/m/Y H:i') }}<br>
 
         {% set now = "now"|date("U") %}
-        {% set startTime = evenement.dateStart|date("U") %}
+        {% set startTime = participation.evenement.dateStart|date("U") %}
 
         {% if participation.status == 'accepte'
-        and evenement.startedAt is not null
+        and participation.evenement.startedAt is not null
         and now >= startTime
         %}
-        <a href="{{ path('app_evenement_room', { id: evenement.id }) }}">
-            Rejoindre
+        <a href="{{ path('app_evenement_room', {
+            id: participation.evenement.id
+        }) }}">
+            Rejoindre la room
         </a>
+        {% elseif participation.status == 'accepte' %}
+        <small>En attente du démarrage de l'événement.</small>
         {% endif %}
     </li>
     {% endfor %}
@@ -60,8 +64,9 @@
 <ul>
     {% for score in scores %}
     <li>
-        {{ score.evenement.titre }} -
-        Score : {{ score.value }} -
+        <strong>{{ score.evenement.titre }}</strong><br>
+        Score : {{ score.value }}<br>
+        Enregistré le :
         {{ score.createdAt|date('d/m/Y H:i') }}
     </li>
     {% endfor %}
@@ -74,6 +79,6 @@
 
     <li>Mon profil</li>
 </ul>
-```
+
 
 {% endblock %}

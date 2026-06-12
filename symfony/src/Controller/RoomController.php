@@ -24,13 +24,16 @@ final class RoomController extends AbstractController
         UserRepository $userRepository,
         DocumentManager $dm
     ): Response {
+        $isOrganisateur =
+            $evenement->getOrganisateur() === $this->getUser();
+
         $participation = $participationRepository->findOneBy([
             'user' => $this->getUser(),
             'evenement' => $evenement,
             'status' => 'accepte',
         ]);
 
-        if (!$participation) {
+        if (!$isOrganisateur && !$participation) {
             throw $this->createAccessDeniedException(
                 'Vous devez être accepté à cet événement pour rejoindre la room.'
             );
