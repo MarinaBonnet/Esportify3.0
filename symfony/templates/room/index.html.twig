@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Room - {{ evenement.titre }}{% endblock %}
+
+{% block body %}
+<h1>Room - {{ evenement.titre }}</h1>
+
+<section>
+
+    <h2>Informations de l'événement</h2>
+
+    <p>L'événement a commencé.</p>
+    <p>Jeu : {{ evenement.jeu.nom }}</p>
+    <p>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</p>
+    <p>Organisateur : {{ evenement.organisateur.pseudo }}</p>
+    {% set participantsAcceptes = 0 %}
+
+    {% for participation in evenement.participations %}
+    {% if participation.status == 'accepte' %}
+    {% set participantsAcceptes = participantsAcceptes + 1 %}
+    {% endif %}
+    {% endfor %}
+
+    <p>
+        Participants :
+        {{ participantsAcceptes }} / {{ evenement.nbPlaces }}
+    </p>
+
+    <p>
+        Places restantes :
+        {{ evenement.nbPlaces - participantsAcceptes }}
+    </p>
+</section>
+
+<section>
+    <h2>Participants</h2>
+
+    <ul>
+        {% for participation in evenement.participations %}
+        {% if participation.status == 'accepte' %}
+        <li>{{ participation.user.pseudo }}</li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</section>
+
+<section>
+
+    <h2>Chat de l'événement</h2>
+
+    {% if messages is empty %}
+    <p>Aucun message pour le moment.</p>
+    {% else %}
+    <ul>
+        {% for message in messages %}
+        <li>
+            <strong>{{ pseudos[message.id] ?? 'Utilisateur inconnu' }}</strong><br>
+            {{ message.contenu }}<br>
+            <small>{{ message.createdAt|date('d/m/Y H:i') }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+
+<section>
+
+    <h2>Envoyer un message</h2>
+
+    <form method="post">
+        <textarea name="contenu" placeholder="Votre message"></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+</section>
+{% endblock %}

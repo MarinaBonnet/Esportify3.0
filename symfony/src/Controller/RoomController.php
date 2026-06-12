@@ -4,43 +4,54 @@ namespace App\Controller;
 
 use App\Document\Message;
 use App\Entity\Evenement;
-use Doctrine\ODM\MongoDB\DocumentManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\ParticipationRepository;
 use App\Repository\UserRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
-
-final class ChatController extends AbstractController
+final class RoomController extends AbstractController
 {
-    #[Route('evenement/{id}/chat', name: 'app_chat', methods:['GET','POST'])]
+    #[IsGranted('ROLE_JOUEUR')]
+    #[Route('/evenement/{id}/room', name: 'app_evenement_room')]
     public function index(
         Evenement $evenement,
         Request $request,
-        DocumentManager $dm,
         ParticipationRepository $participationRepository,
-        UserRepository $userRepository
-    ): Response{
+        UserRepository $userRepository,
+        DocumentManager $dm
+    ): Response {
         $participation = $participationRepository->findOneBy([
             'user' => $this->getUser(),
             'evenement' => $evenement,
             'status' => 'accepte',
         ]);
-        if (!$participation){
-            throw $this->createAccessDeniedException(
-                'Vous devez etre accepté à cet événement pour acceder au chat.'
-            );
 
+        if (!$participation) {
+            throw $this->createAccessDeniedException(
+                'Vous devez être accepté à cet événement pour rejoindre la room.'
+            );
         }
 
-        if ($request-> isMethod('POST')) {
-            $contenu = $request->request->get('contenu');
+        if ($evenement->getStartedAt() === null) {
+            throw $this->createAccessDeniedException(
+                'L’événement n’a pas encore été démarré par l’organisateur.'
+            );
+        }
 
-            if ($contenu) {
+        if ($evenement->getDateStart() > new \DateTimeImmutable()) {
+            throw $this->createAccessDeniedException(
+                'L’événement n’a pas encore commencé.'
+            );
+        }
+
+        if ($request->isMethod('POST')) {
+            $contenu = trim($request->request->get('contenu', ''));
+
+            if ($contenu !== '') {
                 $message = new Message();
                 $message->setEvenementId($evenement->getId());
                 $message->setUserId($this->getUser()->getId());
@@ -50,8 +61,8 @@ final class ChatController extends AbstractController
                 $dm->flush();
             }
 
-            return $this->redirectToRoute('app_chat', [
-                'id'=> $evenement->getId(),
+            return $this->redirectToRoute('app_evenement_room', [
+                'id' => $evenement->getId(),
             ]);
         }
 
@@ -59,27 +70,23 @@ final class ChatController extends AbstractController
             ->getRepository(Message::class)
             ->findBy(
                 ['evenementId' => $evenement->getId()],
-                ['createdAt'=> 'ASC']
-                );
-
+                ['createdAt' => 'ASC']
+            );
 
         $pseudos = [];
 
         foreach ($messages as $message) {
-
-            $user = $userRepository->find(
-                $message->getUserId()
-            );
+            $user = $userRepository->find($message->getUserId());
 
             if ($user) {
                 $pseudos[$message->getId()] = $user->getPseudo();
             }
         }
-                return $this->render('chat/index.html.twig', [
-            'controller_name' => 'ChatController',
+
+        return $this->render('room/index.html.twig', [
             'evenement' => $evenement,
             'messages' => $messages,
-            'pseudos' => $pseudos
+            'pseudos' => $pseudos,
         ]);
     }
 }

@@ -19,6 +19,31 @@
         {{ evenement.titre }} -
         {{ evenement.status }} -
         {{ evenement.dateStart|date('d/m/Y H:i') }}
+
+        <br>
+
+        {% set now = "now"|date("U") %}
+        {% set startLimit = evenement.dateStart|date("U") - 1800 %}
+
+        {% if evenement.startedAt is null and now >= startLimit %}
+
+        <a href="{{ path('app_evenement_start', {
+                id: evenement.id
+            }) }}">
+            Démarrer l'événement
+        </a>
+
+        {% elseif evenement.startedAt is not null %}
+
+        <strong>Événement démarré</strong>
+
+        {% else %}
+
+        <small>
+            Démarrage disponible 30 min avant
+        </small>
+
+        {% endif %}
     </li>
     {% endfor %}
 </ul>

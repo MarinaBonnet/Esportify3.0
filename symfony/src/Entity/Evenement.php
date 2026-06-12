@@ -69,6 +69,9 @@ class Evenement
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'evenement')]
     private Collection $images;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $startedAt = null;
+
 
     public function __construct()
     {
@@ -308,6 +311,18 @@ class Evenement
                 $image->setEvenement(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStartedAt(): ?\DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
+
+    public function setStartedAt(\DateTimeImmutable $startedAt): static
+    {
+        $this->startedAt = $startedAt;
 
         return $this;
     }

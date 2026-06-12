@@ -36,6 +36,19 @@
         {{ participation.evenement.titre }} -
         {{ participation.evenement.jeu.nom }} -
         {{ participation.status }}
+        <br>
+
+        {% set now = "now"|date("U") %}
+        {% set startTime = evenement.dateStart|date("U") %}
+
+        {% if participation.status == 'accepte'
+        and evenement.startedAt is not null
+        and now >= startTime
+        %}
+        <a href="{{ path('app_evenement_room', { id: evenement.id }) }}">
+            Rejoindre
+        </a>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>

@@ -189,4 +189,17 @@ final class EvenementController extends AbstractController
 
         return $this->redirectToRoute('app_home');
     }
+    
+    #[IsGranted('ROLE_ORGANISATEUR')]
+    #[Route('/{id}/start', name: 'app_evenement_start')]
+    public function start(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $evenement->setStartedAt(new \DateTimeImmutable());
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_organisateur');
+    }
 }

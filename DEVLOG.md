@@ -453,12 +453,77 @@ Le système de discussion des événements est stocké dans MongoDB via Doctrine
 
 Cette architecture permet d'utiliser chaque technologie selon ses points forts.
 
+## 12/06/2026
+
+## Room événementielle et intégration MongoDB
+
+Aujourd'hui, j'ai finalisé la première version du système de room événementielle.
+
+### MongoDB
+
+- Installation et configuration de MongoDB avec Doctrine ODM.
+- Création du document `Message`.
+- Mise en place de l'enregistrement des messages dans MongoDB.
+- Affichage des messages associés à un événement.
+- Liaison entre MongoDB et MySQL via l'identifiant utilisateur (`userId`).
+- Affichage du pseudo des joueurs à partir des données SQL.
+
+### Gestion des événements
+
+- Ajout du champ `startedAt` dans l'entité `Evenement`.
+- Mise en place du démarrage manuel d'un événement par l'organisateur.
+- Contrôle d'accès à la room selon les règles métier :
+  - participation acceptée ;
+  - événement démarré ;
+  - date de début atteinte.
+
+### Room événementielle
+
+Création d'une page dédiée accessible aux joueurs autorisés :
+
+- informations de l'événement ;
+- organisateur ;
+- date de début ;
+- statut de l'événement ;
+- nombre de participants ;
+- nombre de places restantes ;
+- liste des participants acceptés ;
+- chat événementiel ;
+- formulaire d'envoi de messages.
+
+### Nettoyage technique
+
+- Suppression des contrôleurs de test MongoDB.
+- Centralisation de la logique dans `RoomController`.
+- Simplification de l'architecture du chat.
+
+### Compétences travaillées
+
+- Symfony 7
+- Doctrine ORM
+- Doctrine MongoDB ODM
+- Docker
+- Gestion des rôles et autorisations
+- Contrôle d'accès
+- Architecture SQL + NoSQL
+- Développement d'une fonctionnalité métier complète
+
+### Prochaine étape
+
+- Amélioration des dashboards Joueur, Organisateur et Administrateur.
+- Gestion des scores et des résultats des tournois.
+- Refonte graphique des interfaces.
+
 À faire :
+
 □ Restreindre l’accès au chat aux participants acceptés
 
-□ Bloquer l’accès au chat avant le démarrage de l’événement
+□ Limiter la longueur du message
+□ Bloquer les messages vides/espaces
 
-□ Ajouter un statut "started" ou "isStarted" à l’événement
+□ Bloquer le chat tant que l’événement n’a pas démarré
+
+□ Prévoir modération/suppression des messages
 
 □ Afficher le bouton Rejoindre uniquement lorsque l’événement est accessible
 
@@ -475,3 +540,13 @@ Cette architecture permet d'utiliser chaque technologie selon ses points forts.
 □ Vérifier que l'événement n'est pas complet.
 
 □ Vérifier que l'événement est validé.
+
+□ Simplifier les rôles stockés en base
+
+□ Gestion des scores
+
+□ Résultats tournoi
+
+□ Fermeture room après dateEnd
+
+□ Retour dashboard
