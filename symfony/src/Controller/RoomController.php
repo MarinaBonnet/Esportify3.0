@@ -24,11 +24,16 @@ final class RoomController extends AbstractController
         UserRepository $userRepository,
         DocumentManager $dm
     ): Response {
-        $isOrganisateur =
+         $user = $this->getUser();
+
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
+            $isOrganisateur =
             $evenement->getOrganisateur() === $this->getUser();
 
         $participation = $participationRepository->findOneBy([
-            'user' => $this->getUser(),
+            'user' => $user,
             'evenement' => $evenement,
             'status' => 'accepte',
         ]);
@@ -57,7 +62,7 @@ final class RoomController extends AbstractController
             if ($contenu !== '') {
                 $message = new Message();
                 $message->setEvenementId($evenement->getId());
-                $message->setUserId($this->getUser()->getId());
+                $message->setUserId($user->getId());
                 $message->setContenu($contenu);
 
                 $dm->persist($message);
