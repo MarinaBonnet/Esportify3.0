@@ -514,6 +514,92 @@ Création d'une page dédiée accessible aux joueurs autorisés :
 - Gestion des scores et des résultats des tournois.
 - Refonte graphique des interfaces.
 
+## Suite du développement
+
+### Dashboard Organisateur
+
+Amélioration du tableau de bord organisateur :
+
+- Affichage du nombre de participants acceptés par événement.
+- Calcul des places restantes.
+- Affichage du statut de l'événement :
+  - À venir
+  - En cours
+  - Terminé
+
+- Ajout du bouton de démarrage de l'événement selon les règles métier.
+- Ajout d'un accès direct à la room lorsque l'événement est démarré.
+
+### Dashboard Joueur
+
+Amélioration du tableau de bord joueur :
+
+- Affichage détaillé des participations :
+  - nom de l'événement ;
+  - jeu concerné ;
+  - statut de participation ;
+  - date de début.
+
+- Affichage conditionnel du bouton « Rejoindre la room ».
+- Affichage des favoris et des scores enregistrés.
+
+### Dashboard Administrateur
+
+Réorganisation du tableau de bord administrateur :
+
+- Mise en avant des statistiques globales :
+  - utilisateurs ;
+  - événements ;
+  - jeux ;
+  - participations ;
+  - abonnés newsletter.
+
+- Gestion des événements en attente de validation.
+- Affichage des abonnés à la newsletter.
+- Préparation des futures sections d'administration.
+
+### Architecture métier
+
+Finalisation du workflow principal des événements :
+
+Organisateur :
+
+- crée un événement ;
+- valide les participations ;
+- démarre l'événement.
+
+Joueur :
+
+- demande à participer ;
+- est accepté ou refusé ;
+- rejoint la room lorsque l'événement est démarré.
+
+Room :
+
+- affiche les informations de l'événement ;
+- affiche les participants ;
+- permet les échanges via le chat MongoDB.
+
+### Bilan de la journée
+
+Fonctionnalités finalisées :
+
+- Intégration MongoDB.
+- Chat événementiel.
+- Room événementielle.
+- Gestion du démarrage d'événement.
+- Contrôle d'accès basé sur les rôles et les participations.
+- Amélioration des dashboards Administrateur, Organisateur et Joueur.
+
+### Prochaines étapes
+
+- Gestion des scores.
+- Résultats des tournois.
+- Insciption / profil
+- Intégration d'une API externe.
+- Refonte graphique des dashboards avec Sass.
+- Ajout d'améliorations UX (compte à rebours, statistiques avancées, etc.).
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés

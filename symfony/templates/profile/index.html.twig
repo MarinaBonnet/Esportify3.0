@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+<h1>Mon profil</h1>
+
+<h2>Avatar</h2>
+
+<img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}" width="150">
+
+{% for message in app.flashes('success') %}
+<div>
+    {{ message }}
+</div>
+{% endfor %}
+
+{{ form_start(form) }}
+
+{{ form_row(form.pseudo) }}
+{{ form_row(form.email) }}
+{{ form_row(form.avatar) }}
+
+<button type="submit">
+    Enregistrer
+</button>
+
+{{ form_end(form) }}
+
+{% endblock %}

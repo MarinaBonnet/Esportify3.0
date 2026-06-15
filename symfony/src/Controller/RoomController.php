@@ -77,12 +77,14 @@ final class RoomController extends AbstractController
             );
 
         $pseudos = [];
+        $avatars = [];
 
         foreach ($messages as $message) {
             $user = $userRepository->find($message->getUserId());
 
             if ($user) {
                 $pseudos[$message->getId()] = $user->getPseudo();
+                $avatars[$message->getId()] = $user->getAvatar();
             }
         }
 
@@ -90,6 +92,7 @@ final class RoomController extends AbstractController
             'evenement' => $evenement,
             'messages' => $messages,
             'pseudos' => $pseudos,
+            'avatars' => $avatars,
         ]);
     }
 }

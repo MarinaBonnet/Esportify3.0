@@ -38,7 +38,10 @@
     <ul>
         {% for participation in evenement.participations %}
         {% if participation.status == 'accepte' %}
-        <li>{{ participation.user.pseudo }}</li>
+        <li>
+            <img src="{{ participation.user.avatar }}" alt="Avatar de {{ participation.user.pseudo }}" width="40">
+            {{ participation.user.pseudo }}
+        </li>
         {% endif %}
         {% endfor %}
     </ul>
@@ -54,6 +57,7 @@
     <ul>
         {% for message in messages %}
         <li>
+            <img src="{{ avatars[message.id] ?? '' }}" alt="Avatar" width="40">
             <strong>{{ pseudos[message.id] ?? 'Utilisateur inconnu' }}</strong><br>
             {{ message.contenu }}<br>
             <small>{{ message.createdAt|date('d/m/Y H:i') }}</small>

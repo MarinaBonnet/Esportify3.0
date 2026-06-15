@@ -4,8 +4,11 @@
 
 {% block body %} <h1>Dashboard Joueur</h1>
 
+{% if app.user.avatar %}
+<img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}" width="80">
+{% endif %}
 {% if app.user %}
-<p>Bienvenue {{ app.user.email }}</p>
+<p>Bienvenue {{ app.user.pseudo }}</p>
 {% else %}
 <p>Utilisateur non connecté</p>
 {% endif %}
@@ -74,9 +77,6 @@
 {% endif %}
 <ul>
     <li>Voir les événements disponibles</li>
-
-
-
     <li>Mon profil</li>
 </ul>
 
