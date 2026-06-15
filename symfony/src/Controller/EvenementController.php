@@ -8,8 +8,10 @@ use App\Entity\Image;
 use App\Entity\Participation;
 use App\Form\EvenementType;
 use App\Repository\EvenementRepository;
+use App\Repository\ScoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -25,7 +27,10 @@ final class EvenementController extends AbstractController
     public function index(EvenementRepository $evenementRepository): Response
     {
         return $this->render('evenement/index.html.twig', [
-            'evenements' => $evenementRepository->findAll(),
+            'evenements' => $evenementRepository->findBy(
+                ['status' => 'valide'],
+                [ 'dateStart' => 'ASC']
+            ),
         ]);
     }
 
@@ -78,6 +83,37 @@ final class EvenementController extends AbstractController
         ]);
     }
 
+    #[Route('/filter', name: 'app_evenement_filter', methods: ['GET'])]
+    public function filter(
+        Request $request,
+        EvenementRepository $evenementRepository
+    ): JsonResponse {
+
+        $sort = $request->query->get('sort');
+
+        $evenements = $evenementRepository->findFiltered($sort);
+
+        
+
+        $data = [];
+
+        foreach ($evenements as $evenement) {
+
+            $image = $evenement->getImages()->first();
+
+            $data[] = [
+                'id' => $evenement->getId(),
+                'titre' => $evenement->getTitre(),
+                'dateStart' => $evenement->getDateStart()?->format('d/m/Y H:i'),
+                'nbPlaces' => $evenement->getNbPlaces(),
+                'organisateur' => $evenement->getOrganisateur()?->getPseudo(),
+                'image' => $image ? $image->getUrl() : null,
+            ];
+        }
+
+        return $this->json($data);
+    }
+
     #[Route('/{id}', name: 'app_evenement_show', methods: ['GET'])]
     public function show(Evenement $evenement): Response
     {
@@ -94,6 +130,7 @@ final class EvenementController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $evenement->setStatus('en_attente');
             $entityManager->flush();
 
             return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
@@ -140,6 +177,27 @@ final class EvenementController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_home');
+    }
+
+    #[IsGranted('ROLE_JOUEUR')]
+    #[Route('/{id}/desinscrire', name: 'app_evenement_desinscrire', methods: ['GET'])]
+    public function desinscrire(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $participation = $entityManager
+            ->getRepository(Participation::class)
+            ->findOneBy([
+                'user' => $this->getUser(),
+                'evenement' => $evenement,
+            ]);
+
+        if ($participation && $participation->getStatus() !== 'refuse') {
+            $entityManager->remove($participation);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_joueur');
     }
 
     #[IsGranted('ROLE_JOUEUR')]
@@ -202,4 +260,22 @@ final class EvenementController extends AbstractController
 
         return $this->redirectToRoute('app_organisateur');
     }
+
+    #[Route('/{id}/classement', name: 'app_evenement_classement', methods: ['GET'])]
+    public function classement(
+        Evenement $evenement,
+        ScoreRepository $scoreRepository
+    ): Response {
+        $scores = $scoreRepository->findBy(
+            ['evenement' => $evenement],
+            ['value' => 'DESC']
+        );
+
+        return $this->render('evenement/classement.html.twig', [
+            'evenement' => $evenement,
+            'scores' => $scores,
+        ]);
+    }
+
+ 
 }

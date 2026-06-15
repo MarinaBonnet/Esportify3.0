@@ -1,0 +1,35 @@
+<h2>Événements à venir</h2>
+
+{% if evenements is empty %}
+<p>Aucun événement disponible.</p>
+{% else %}
+<ul>
+    {% for evenement in evenements %}
+    <div class="event-card">
+
+        {% set image = evenement.images|first %}
+
+        {% if image %}
+        <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
+        {% endif %}
+
+        <h3>{{ evenement.titre }}</h3>
+
+        <p>
+            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}
+        </p>
+
+        <p>
+            Joueurs : {{ evenement.nbPlaces }}
+        </p>
+
+        <a href="{{ path('app_evenement_show', {
+        id: evenement.id
+    }) }}">
+            Voir
+        </a>
+
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}

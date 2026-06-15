@@ -1,0 +1,21 @@
+<div data-controller="carousel" class="carousel-container">
+
+    <button data-carousel-target="prev" data-action="click->carousel#prev" class="navigation-item" data-slider="prev">
+        <i class="fa-solid fa-backward"></i>
+    </button>
+
+    <div class="carousel-track" data-carousel-target="track"
+        data-action="mouseenter->carousel#mouseenter mouseleave->carousel#mouseleave">
+
+        {% for item in evenements %}
+        <article class="item-photo">
+
+        </article>
+        {% endfor %}
+    </div>
+
+    <button data-carousel-target="next" data-action="click->carousel#next" class="navigation-item" data-slider="next">
+        <i class="fa-solid fa-forward"></i>
+    </button>
+
+</div>

@@ -1,0 +1,35 @@
+<header class="header">
+
+    <div class="baseline">
+
+        <span class="baseline__title-fixe">
+            Plateforme 100% E-sport
+        </span>
+
+        <div class="baseline__banner">
+
+            <span class="baseline__title-dynamique" data-controller="banner">
+
+                Tournois • Compétitions • Communauté
+
+            </span>
+
+        </div>
+
+        <span class="baseline__texte">
+            Rejoignez des événements e-sport organisés par la communauté.
+        </span>
+
+        {% if not app.user %}
+        <a class="btn-primary baseline__cta" href="{{ path('app_register') }}">
+            Rejoindre Esportify
+        </a>
+        {% else %}
+        <a class="btn-primary baseline__cta" href="{{ path('app_evenement_index') }}">
+            Voir les événements
+        </a>
+        {% endif %}
+
+    </div>
+
+</header>

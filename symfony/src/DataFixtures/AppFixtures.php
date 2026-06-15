@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\Jeu;
+use App\Entity\Score;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -70,6 +71,21 @@ class AppFixtures extends Fixture
         $fortnite->setDescription('Jeu multijoueur compétitif de type battle royale.');
         $fortnite->setEditeur('Epic Games');
         $manager->persist($fortnite);
+
+        //fixtures score
+        $score1 = new Score();
+        $score1->setUser($joueur);
+        $score1->setEvenement(Valorant);
+        $score1->setValue(1500);
+
+        $manager->persist($score1);
+
+        $score2 = new Score();
+        $score2->setUser($testinette);
+        $score2->setEvenement($Valorant);
+        $score2->setValue(1200);
+
+        $manager->persist($score2);
 
         $manager->flush();
     }

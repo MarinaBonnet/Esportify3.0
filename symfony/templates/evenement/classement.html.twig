@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement - {{ evenement.titre }}{% endblock %}
+
+{% block body %}
+
+<h1>Classement - {{ evenement.titre }}</h1>
+
+{% if scores is empty %}
+<p>Aucun score enregistré pour cet événement.</p>
+{% else %}
+<ol>
+    {% for score in scores %}
+    <li>
+        {{ score.user.pseudo }}
+        -
+        {{ score.value }} points
+    </li>
+    {% endfor %}
+</ol>
+{% endif %}
+
+<a href="{{ path('app_evenement_show', { id: evenement.id }) }}">
+    Retour à l'événement
+</a>
+
+{% endblock %}

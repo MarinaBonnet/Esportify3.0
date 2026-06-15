@@ -1,47 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Evenement index{% endblock %}
+{% block title %}Tous les événements{% endblock %}
 
 {% block body %}
-    <h1>Evenement index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>DateStart</th>
-                <th>DateEnd</th>
-                <th>NbPlaces</th>
-                <th>Status</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for evenement in evenements %}
-            <tr>
-                <td>{{ evenement.id }}</td>
-                <td>{{ evenement.titre }}</td>
-                <td>{{ evenement.description }}</td>
-                <td>{{ evenement.dateStart ? evenement.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ evenement.dateEnd ? evenement.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ evenement.nbPlaces }}</td>
-                <td>{{ evenement.status }}</td>
-                <td>{{ evenement.createdAt ? evenement.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_evenement_show', {'id': evenement.id}) }}">show</a>
-                    <a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<h1>Tous les événements</h1>
 
-    <a href="{{ path('app_evenement_new') }}">Create new</a>
+<p>
+    Retrouvez les événements e-sport validés par l'équipe Esportify.
+</p>
+
+{% if evenements is empty %}
+<p>Aucun événement disponible pour le moment.</p>
+{% else %}
+<label for="sort-events">Trier par :</label>
+
+<select id="sort-events">
+    <option value="date">Date</option>
+    <option value="places">Nombre de joueurs</option>
+    <option value="organisateur">Organisateur</option>
+</select>
+
+<section id="events-results" class="events-list">
+    {% for evenement in evenements %}
+    <article class="event-card">
+
+        {% set image = evenement.images|first %}
+
+        {% if image %}
+        <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
+        {% endif %}
+
+        <h2>{{ evenement.titre }}</h2>
+
+        <p>
+            Joueurs : {{ evenement.nbPlaces }}
+        </p>
+
+        <p>
+            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}
+        </p>
+
+        <p>
+            Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
+        </p>
+
+        <p>
+            Organisateur : {{ evenement.organisateur.pseudo }}
+        </p>
+
+        <a href="{{ path('app_evenement_show', {
+                    id: evenement.id
+                }) }}">
+            Voir l'événement
+        </a>
+
+    </article>
+    {% endfor %}
+</section>
+{% endif %}
+
+{% if is_granted('ROLE_ORGANISATEUR') %}
+<a href="{{ path('app_evenement_new') }}">
+    Créer un événement
+</a>
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('js/events-filter.js') }}"></script>
 {% endblock %}

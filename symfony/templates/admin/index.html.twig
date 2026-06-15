@@ -66,12 +66,50 @@
 </ul>
 {% endif %}
 
-<h2>Administration</h2>
+
+<h2>Gestion des utilisateurs</h2>
 
 <ul>
-    <li>Gestion des utilisateurs</li>
-    <li>Gestion des tournois</li>
-    <li>Gestion des équipes</li>
+    {% for user in users %}
+    <li>
+
+        <strong>{{ user.pseudo }}</strong>
+        -
+        {{ user.email }}
+        -
+        {{ user.roles|join(', ') }}
+
+        <br>
+
+        {% if 'ROLE_ADMIN' not in user.roles %}
+
+        {% if 'ROLE_ORGANISATEUR' not in user.roles %}
+
+        <a href="{{ path(
+                        'app_admin_user_promote_organisateur',
+                        { id: user.id }
+                    ) }}">
+            Promouvoir organisateur
+        </a>
+
+        {% else %}
+
+        <a href="{{ path(
+                        'app_admin_user_remove_organisateur',
+                        { id: user.id }
+                    ) }}">
+            Retirer organisateur
+        </a>
+
+        {% endif %}
+
+        {% endif %}
+
+    </li>
+    {% endfor %}
+</ul>
+
+<ul>
     <li>Statistiques avancées</li>
 </ul>
 

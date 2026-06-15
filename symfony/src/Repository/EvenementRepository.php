@@ -6,6 +6,7 @@ use App\Entity\Evenement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * @extends ServiceEntityRepository<Evenement>
  */
@@ -14,6 +15,29 @@ class EvenementRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Evenement::class);
+    }
+
+    public function findFiltered(?string $sort = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->andWhere('e.status = :status')
+            ->setParameter('status', 'valide');
+
+        if ($sort === 'date') {
+            $qb->orderBy('e.dateStart', 'ASC');
+        }
+
+        if ($sort === 'places') {
+            $qb->orderBy('e.nbPlaces', 'DESC');
+        }
+
+        if ($sort === 'organisateur') {
+            $qb
+                ->join('e.organisateur', 'u')
+                ->orderBy('u.pseudo', 'ASC');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     //    /**

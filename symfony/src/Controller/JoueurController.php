@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\EvenementRepository;
 use App\Repository\FavoriRepository;
 use App\Repository\ParticipationRepository;
 use App\Repository\ScoreRepository;
@@ -16,6 +17,7 @@ final class JoueurController extends AbstractController
         FavoriRepository $favoriRepository ,
         ParticipationRepository $participationRepository,
         ScoreRepository $scoreRepository,
+        EvenementRepository $evenementRepository
     ): Response {
     
         $favoris = $favoriRepository->findBy([
@@ -30,11 +32,16 @@ final class JoueurController extends AbstractController
             'user' => $this->getUser(),
         ]);
 
+         
+
         return $this->render('joueur/index.html.twig', [
             'controller_name' => 'JoueurController',
             'favoris' => $favoris,
             'participations' => $participations,
             'scores' => $scores,
+           'evenementsProposes' => $evenementRepository->findBy([
+                'organisateur' => $this->getUser(),
+            ]),
         ]);
     }
 }
