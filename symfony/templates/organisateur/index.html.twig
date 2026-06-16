@@ -3,129 +3,152 @@
 {% block title %}Dashboard Organisateur{% endblock %}
 
 {% block body %}
+
 <h1>Dashboard Organisateur</h1>
 
-<p>Bienvenue {{ app.user.email }}</p>
+<p>
+    Bienvenue {{ app.user.pseudo ?? app.user.email }}
+</p>
 
-<h2>Mes événements</h2>
+<section>
+    <h2>Actions rapides</h2>
 
-{% if evenements is empty %}
-<p>Ancun événement crée pour le moment.</p>
-{% else %}
-
-<ul>
-    {% for evenement in evenements %}
-    <li>
-        {{ evenement.titre }} -
-        {{ evenement.status }} -
-        {{ evenement.dateStart|date('d/m/Y H:i') }}
-
-        <br>
-
-        <a href="{{ path('app_evenement_show', {
-            id: evenement.id
-        }) }}">
-            Voir
-        </a>
-
-        {% if evenement.dateStart > date() %}
-        <a href="{{ path('app_evenement_edit', {
-                id: evenement.id
-            }) }}">
-            Modifier
-        </a>
-        {% endif %}
-
-        {% set participantsAcceptes = 0 %}
-
-        {% for participation in evenement.participations %}
-        {% if participation.status == 'accepte' %}
-        {% set participantsAcceptes = participantsAcceptes + 1 %}
-        {% endif %}
-        {% endfor %}
-
-
-        <br>
-        Participants : {{ participantsAcceptes }} / {{ evenement.nbPlaces }}<br>
-        Places restantes : {{ evenement.nbPlaces - participantsAcceptes }}<br>
-
-        <br>
-
-        {% if evenement.dateEnd < date() %} <strong>Terminé</strong>
-
-            {% elseif evenement.startedAt is not null %}
-            <strong>En cours</strong>
-
-            {% else %}
-            <strong>À venir</strong>
-            {% endif %}
-
-            {% set now = "now"|date("U") %}
-            {% set startLimit = evenement.dateStart|date("U") - 1800 %}
-
-            {% if evenement.startedAt is null and now >= startLimit %}
-
-            <a href="{{ path('app_evenement_start', {
-                id: evenement.id
-            }) }}">
-                Démarrer l'événement
+    <ul>
+        <li>
+            <a href="{{ path('app_evenement_new') }}">
+                Créer un événement
             </a>
+        </li>
 
-            {% elseif evenement.startedAt is not null %}
+        <li>
+            <a href="{{ path('app_evenement_index') }}">
+                Voir tous les événements
+            </a>
+        </li>
 
-            <strong>Événement démarré</strong>
+        <li>
+            <a href="{{ path('app_joueur') }}">
+                Mon espace joueur
+            </a>
+        </li>
+    </ul>
+</section>
 
-            {% else %}
+<section>
+    <h2>Mes événements</h2>
 
-            <small>
-                Démarrage disponible 30 min avant
-            </small>
+    {% if evenements is empty %}
+    <p>Aucun événement créé pour le moment.</p>
+    {% else %}
+    <ul>
+        {% for evenement in evenements %}
+        <li>
+            <strong>{{ evenement.titre }}</strong><br>
 
+            Statut : {{ evenement.status }}<br>
+            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
+            Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}<br>
+
+            {% set participantsAcceptes = 0 %}
+
+            {% for participation in evenement.participations %}
+            {% if participation.status == 'accepte' %}
+            {% set participantsAcceptes = participantsAcceptes + 1 %}
             {% endif %}
-            {% if evenement.startedAt is not null %}
+            {% endfor %}
+
+            Participants :
+            {{ participantsAcceptes }} / {{ evenement.nbPlaces }}<br>
+
+            Places restantes :
+            {{ evenement.nbPlaces - participantsAcceptes }}<br>
+
+            {% set nowDate = "now"|date %}
+
+            {% if evenement.dateEnd < "now" | date() %} <strong>Terminé</strong><br>
+
+                {% elseif evenement.startedAt is not null %}
+                <strong>En cours</strong><br>
+
+                {% else %}
+                <strong>À venir</strong><br>
+                {% endif %}
+
+                <a href="{{ path('app_evenement_show', {
+                        id: evenement.id
+                    }) }}">
+                    Voir
+                </a>
+
+                {% if evenement.dateStart > date() %}
+                <a href="{{ path('app_evenement_edit', {
+                            id: evenement.id
+                        }) }}">
+                    Modifier
+                </a>
+                {% endif %}
+
+                {% set now = "now"|date("U") %}
+                {% set startLimit = evenement.dateStart|date("U") - 1800 %}
+
+                {% if evenement.startedAt is null and now >= startLimit %}
+                <a href="{{ path('app_evenement_start', {
+                            id: evenement.id
+                        }) }}">
+                    Démarrer l'événement
+                </a>
+                {% elseif evenement.startedAt is not null %}
+                <span>Événement démarré</span>
+                {% else %}
+                <small>
+                    Démarrage disponible 30 min avant
+                </small>
+                {% endif %}
+
+                {% if evenement.startedAt is not null %}
+                <br>
+                <a href="{{ path('app_evenement_room', {
+                            id: evenement.id
+                        }) }}">
+                    Accéder à la room
+                </a>
+                {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Demandes de participation</h2>
+
+    {% if participationsEnAttente is empty %}
+    <p>Aucune demande de participation en attente.</p>
+    {% else %}
+    <ul>
+        {% for participation in participationsEnAttente %}
+        <li>
+            <strong>{{ participation.user.pseudo }}</strong>
+            souhaite participer à
+            <strong>{{ participation.evenement.titre }}</strong>
 
             <br>
 
-            <a href="{{ path('app_evenement_room', {
-        id: evenement.id
-    }) }}">
-                Accéder à la room
+            <a href="{{ path('app_organisateur_participation_accepter', {
+                        id: participation.id
+                    }) }}">
+                Accepter
             </a>
 
-            {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
+            <a href="{{ path('app_organisateur_participation_refuser', {
+                        id: participation.id
+                    }) }}">
+                Refuser
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
 
-<h2>Demandes de participation</h2>
-
-{% if participationsEnAttente is empty %}
-<p>Aucune demande de participation en attente.</p>
-{% else %}
-<ul>
-    {% for participation in participationsEnAttente %}
-    <li>
-        {{ participation.user.email }}
-        souhaite participer à
-        {{ participation.evenement.titre }}
-
-        <a href="{{ path('app_organisateur_participation_accepter', { id: participation.id }) }}">Accepter</a>
-        <a href="{{ path('app_organisateur_participation_refuser', { id: participation.id }) }}">Refuser</a>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
-
-<ul>
-    <li> <a href="{{ path('app_evenement_new') }}">
-            Créer un événement
-        </a>
-    </li>
-    <li>Gérer mes événements</li>
-    <li>Voir les participants</li>
-    <li>Gérer les scores</li>
-</ul>
 {% endblock %}

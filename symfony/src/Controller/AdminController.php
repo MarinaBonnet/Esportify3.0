@@ -98,6 +98,15 @@ final class AdminController extends AbstractController
         EntityManagerInterface $entityManager
 
     ): Response {
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            $this->addFlash(
+                'error',
+                'Impossible de retirer le rôle organisateur à un administrateur.'
+            );
+
+            return $this->redirectToRoute('app_admin');
+        }
+        
         $roles = array_filter(
             $user->getRoles(),
             fn ($role) => $role !== 'ROLE_ORGANISATEUR'

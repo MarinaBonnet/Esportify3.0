@@ -54,6 +54,12 @@
                 }) }}">
             Voir l'événement
         </a>
+        {% if evenement.dateEnd <= "now" |date %} <a href="{{ path('app_evenement_classement', {
+            id: evenement.id
+                }) }}">
+            Voir le classement
+            </a>
+            {% endif %}
 
     </article>
     {% endfor %}

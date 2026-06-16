@@ -32,9 +32,9 @@ final class HomeController extends AbstractController
     );
     $participationUtilisateur = [];
 
-    if ($this ->getUser()) {
+    if ($this->getUser()) {
         $participations = $participationRepository->findBy([
-            'user' => $this-> getUser(),
+            'user' => $this->getUser(),
         ]);
         foreach ($participations as $participation) {
             $participationUtilisateur[$participation->getEvenement()->getId()] = $participation;

@@ -92,8 +92,6 @@ final class EvenementController extends AbstractController
 
         $evenements = $evenementRepository->findFiltered($sort);
 
-        
-
         $data = [];
 
         foreach ($evenements as $evenement) {
@@ -107,6 +105,7 @@ final class EvenementController extends AbstractController
                 'nbPlaces' => $evenement->getNbPlaces(),
                 'organisateur' => $evenement->getOrganisateur()?->getPseudo(),
                 'image' => $image ? $image->getUrl() : null,
+                'dateEnd' => $evenement->getDateEnd()?->format('Y-m-d H:i:s'),
             ];
         }
 
@@ -203,6 +202,13 @@ final class EvenementController extends AbstractController
         Evenement $evenement,
         EntityManagerInterface $entityManager
     ): Response {
+
+       if ($evenement->getDateEnd() <= new \DateTimeImmutable()) {
+            throw $this->createAccessDeniedException(
+                'Cet événement est terminé.'
+            );
+        }
+
         if ($evenement->getStatus() !== 'valide') {
             throw $this->createAccessDeniedException(
                 'Vous ne pouvez participer qu’à un événement validé.'

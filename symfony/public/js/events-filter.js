@@ -47,6 +47,17 @@ if (select && results) {
             article.appendChild(organisateur);
             article.appendChild(lien);
 
+            const now = new Date();
+            const eventEnd = new Date(evenement.dateEnd);
+
+            if (eventEnd <= now) {
+                const classement = document.createElement("a");
+                classement.href = `/evenement/${evenement.id}/classement`;
+                classement.textContent = "Voir le classement";
+
+                article.appendChild(classement);
+            }
+
             results.appendChild(article);
         });
     });

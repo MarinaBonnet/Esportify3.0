@@ -1,50 +1,88 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Evenement{% endblock %}
+{% block title %}{{ evenement.titre }}{% endblock %}
 
 {% block body %}
-    <h1>Evenement</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ evenement.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ evenement.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ evenement.description }}</td>
-            </tr>
-            <tr>
-                <th>DateStart</th>
-                <td>{{ evenement.dateStart ? evenement.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateEnd</th>
-                <td>{{ evenement.dateEnd ? evenement.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>NbPlaces</th>
-                <td>{{ evenement.nbPlaces }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ evenement.status }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ evenement.createdAt ? evenement.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<section class="event-detail">
 
-    <a href="{{ path('app_evenement_index') }}">back to list</a>
+    <h1>{{ evenement.titre }}</h1>
 
-    <a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}">edit</a>
+    {% set image = evenement.images|first %}
 
-    {{ include('evenement/_delete_form.html.twig') }}
+    {% if image %}
+    <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
+    {% endif %}
+
+    <p>
+        {{ evenement.description }}
+    </p>
+
+    <ul>
+        <li>Jeu : {{ evenement.jeu.nom }}</li>
+        <li>Organisateur : {{ evenement.organisateur.pseudo }}</li>
+        <li>Places : {{ evenement.nbPlaces }}</li>
+        <li>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
+        <li>Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
+        <li>Statut : {{ evenement.status }}</li>
+    </ul>
+
+    <div class="event-actions">
+
+        <a href="{{ path('app_evenement_index') }}">
+            Retour aux événements
+        </a>
+
+        <a href="{{ path('app_evenement_classement', {
+            id: evenement.id
+        }) }}">
+            Voir le classement
+        </a>
+
+        {% if is_granted('ROLE_JOUEUR') %}
+
+        {% if evenement.dateEnd > "now"|date %}
+
+        <a href="{{ path('app_evenement_participer', {
+            id: evenement.id
+        }) }}">
+            Participer
+        </a>
+
+        <a href="{{ path('app_evenement_favori', {
+            id: evenement.id
+        }) }}">
+            Ajouter aux favoris
+        </a>
+
+        {% else %}
+
+        <p>
+            Cet événement est terminé.
+        </p>
+
+        {% endif %}
+
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN')
+        or app.user == evenement.organisateur
+        %}
+        {% if evenement.dateStart > date()
+        or is_granted('ROLE_ADMIN')
+        %}
+        <a href="{{ path('app_evenement_edit', {
+                    id: evenement.id
+                }) }}">
+            Modifier
+        </a>
+        {% endif %}
+
+        {{ include('evenement/_delete_form.html.twig') }}
+        {% endif %}
+
+    </div>
+
+</section>
+
 {% endblock %}
