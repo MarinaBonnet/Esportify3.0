@@ -600,6 +600,210 @@ Fonctionnalités finalisées :
 - Refonte graphique des dashboards avec Sass.
 - Ajout d'améliorations UX (compte à rebours, statistiques avancées, etc.).
 
+Scores
+STATUS : V1 DEMO
+
+- Entity Score créée
+- Relations User / Evenement OK
+- Classement prévu
+- API jeux prévue dans une version future
+
+### 15/06/2026
+
+## Gestion du profil utilisateur
+
+### Profil utilisateur
+
+- Création du ProfileController.
+- Création du formulaire de modification du profil.
+- Mise à jour des informations utilisateur.
+- Génération automatique d'un avatar via l'API DiceBear à partir du pseudo.
+- Sauvegarde de l'avatar en base de données.
+- Affichage de l'avatar dans le dashboard joueur.
+
+### Changement de mot de passe
+
+- Création du formulaire ChangePasswordType.
+- Mise en place de la route de modification du mot de passe.
+- Vérification de l'ancien mot de passe.
+- Encodage sécurisé du nouveau mot de passe.
+- Redirection vers le profil après modification.
+
+---
+
+### Intégration de l'API externe DiceBear.
+
+Les avatars des utilisateurs sont générés dynamiquement à partir de leur pseudo.
+L'application construit une URL vers l'API DiceBear et affiche l'image retournée dans la page profil.
+
+Compétences mobilisées :
+
+- Consommation d'une API externe
+- Paramétrage dynamique d'une requête
+- Utilisation de Twig
+- Intégration de ressources externes
+
+## Gestion des rôles
+
+### Administration des utilisateurs
+
+- Affichage de la liste des utilisateurs dans le dashboard administrateur.
+- Promotion d'un utilisateur au rôle Organisateur.
+- Retrait du rôle Organisateur.
+- Vérification du bon fonctionnement des permissions.
+- Mise à jour dynamique de l'affichage des actions administrateur.
+
+---
+
+## Dashboard Joueur
+
+### Historique utilisateur
+
+- Affichage des événements favoris.
+- Affichage des participations.
+- Affichage des scores.
+- Affichage des événements proposés par l'utilisateur avec leur statut.
+
+### Rejoindre un événement
+
+- Affichage du bouton "Rejoindre la room" uniquement :
+  - si la participation est acceptée ;
+  - si l'événement a été démarré ;
+  - si la date de début est atteinte.
+
+### Désinscription
+
+- Mise en place de la désinscription aux événements.
+- Vérification des statuts de participation.
+
+---
+
+## Gestion des événements
+
+### Événements organisateur
+
+- Vérification du statut lors de la modification d'un événement.
+- Retour automatique en "en_attente" après modification.
+- Vérification de la conformité avec le cahier des charges.
+
+### Images des événements
+
+- Gestion de l'upload des images.
+- Association des images aux événements.
+- Affichage des images sur la page d'accueil et dans les listes d'événements.
+
+---
+
+## Refonte de l'accueil
+
+### Organisation des templates
+
+Création de la structure :
+
+- home/header.html.twig
+- home/presentation.html.twig
+- home/challenges.html.twig
+- home/stats.html.twig
+- home/games_carousel.html.twig
+- home/events.html.twig
+- home/partners_newsletter.html.twig
+- home/about.html.twig
+- home/gallery.html.twig
+
+### Accueil
+
+- Réintégration du contenu de l'ancien projet.
+- Réorganisation de la page selon la maquette Figma.
+- Affichage des événements validés sur la page d'accueil.
+
+---
+
+## Vue globale des événements
+
+### Liste publique
+
+- Remplacement du CRUD Symfony généré automatiquement.
+- Création d'une page publique d'affichage des événements.
+- Affichage :
+  - image ;
+  - titre ;
+  - nombre de joueurs ;
+  - dates ;
+  - organisateur.
+
+### Filtrage des événements
+
+#### Repository
+
+- Création de la méthode findFiltered() dans EvenementRepository.
+
+#### API JSON
+
+- Création de la route :
+  /evenement/filter
+
+- Retour des données JSON :
+  - id ;
+  - titre ;
+  - date ;
+  - nombre de places ;
+  - organisateur ;
+  - image.
+
+#### JavaScript
+
+- Création du fichier :
+  public/js/events-filter.js
+
+- Utilisation de Fetch API.
+
+- Mise à jour dynamique de la liste sans rechargement de page.
+
+- Utilisation de createElement() et textContent() pour éviter l'utilisation de innerHTML.
+
+- Respect des bonnes pratiques de sécurité (prévention XSS).
+
+### Résultat
+
+- Filtre asynchrone fonctionnel.
+- Tri par date.
+- Tri par nombre de joueurs.
+- Tri par organisateur.
+
+---
+
+## État actuel du projet
+
+### Fonctionnalités terminées
+
+- Authentification
+- Gestion des rôles
+- Profil utilisateur
+- Avatar DiceBear
+- Changement de mot de passe
+- Favoris
+- Participations
+- Scores
+- Historique des événements
+- Création d'événements
+- Validation administrateur
+- Gestion organisateur
+- Démarrage des événements
+- Chat MongoDB
+- Room événement
+- Page d'accueil
+- Liste publique des événements
+- API JSON
+- Filtre AJAX obligatoire du cahier des charges
+
+### Prochaine étape
+
+- Audit final du cahier des charges.
+- Vérification des derniers points manquants.
+- Mise en place du Sass.
+- Responsive.
+- Finalisation de l'interface utilisateur.
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés

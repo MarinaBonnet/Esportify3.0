@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Evenement;
 use App\Entity\User;
+use App\Repository\ContactRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\JeuRepository;
 use App\Repository\NewsletterRepository;
@@ -22,7 +23,8 @@ final class AdminController extends AbstractController
         EvenementRepository $evenementRepository,
         JeuRepository $jeuRepository,
         ParticipationRepository $participationRepository,
-        NewsletterRepository $newsletterRepository
+        NewsletterRepository $newsletterRepository,
+        ContactRepository $contactRepository
     ): Response
     {
         return $this->render('admin/index.html.twig', [
@@ -38,6 +40,10 @@ final class AdminController extends AbstractController
                 'status' => 'en_attente',
             ]),
             'users' => $userRepository->findAll(),
+            'contacts' => $contactRepository->findBy(
+                [],
+                ['createdAt' => 'DESC']
+            ),
 
         ]);
     }
@@ -90,6 +96,7 @@ final class AdminController extends AbstractController
     public function removeOrganisateur(
         User $user,
         EntityManagerInterface $entityManager
+
     ): Response {
         $roles = array_filter(
             $user->getRoles(),

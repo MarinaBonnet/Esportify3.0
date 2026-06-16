@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact - Esportify{% endblock %}
+
+{% block body %}
+
+<h1>Contact</h1>
+
+<p>
+    Une question, une suggestion ou un problème ?
+    Contactez l'équipe Esportify.
+</p>
+
+{% for message in app.flashes('success') %}
+<div>
+    {{ message }}
+</div>
+{% endfor %}
+
+{{ form_start(form) }}
+
+{{ form_row(form.nom) }}
+{{ form_row(form.email) }}
+{{ form_row(form.sujet) }}
+{{ form_row(form.message) }}
+
+<button type="submit">
+    Envoyer
+</button>
+
+{{ form_end(form) }}
+
+{% endblock %}

@@ -71,7 +71,6 @@ final class EvenementController extends AbstractController
                 $entityManager->persist($image);
             }
 
-            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
@@ -117,6 +116,16 @@ final class EvenementController extends AbstractController
     #[Route('/{id}', name: 'app_evenement_show', methods: ['GET'])]
     public function show(Evenement $evenement): Response
     {
+
+    if (
+        $evenement->getStatus() !== 'valide'
+        && !$this->isGranted('ROLE_ADMIN')
+        && $evenement->getOrganisateur() !== $this->getUser()
+    ) {
+        throw $this->createAccessDeniedException(
+            'Cet événement n’est pas visible publiquement.'
+        );
+    }
         return $this->render('evenement/show.html.twig', [
             'evenement' => $evenement,
         ]);
@@ -124,8 +133,33 @@ final class EvenementController extends AbstractController
 
     #[IsGranted('ROLE_ORGANISATEUR')]
     #[Route('/{id}/edit', name: 'app_evenement_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(
+        Request $request,
+        Evenement $evenement,
+        EntityManagerInterface
+        $entityManager
+        ): Response {
+            //1. Si je ne suis pas admin et que ce n’est pas mon événement → interdit
+            //2. Si l’événement est commencé ou passé → interdit
+            //3. Sinon → formulaire de modification
+            if (
+                !$this->isGranted('ROLE_ADMIN')
+                && $evenement->getOrganisateur() !== $this->getUser()
+            ) {
+                throw $this->createAccessDeniedException(
+                    'Vous ne pouvez modifier que vos propres événements.'
+                );
+            }
+
+            if (
+                !$this->isGranted('ROLE_ADMIN')
+                && $evenement->getDateStart() <= new \DateTimeImmutable()
+            ) {
+                throw $this->createAccessDeniedException(
+                    'Cet événement ne peut plus être modifié.'
+                );
+            }
+
         $form = $this->createForm(EvenementType::class, $evenement);
         $form->handleRequest($request);
 
@@ -146,6 +180,15 @@ final class EvenementController extends AbstractController
     #[Route('/{id}', name: 'app_evenement_delete', methods: ['POST'])]
     public function delete(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && $evenement->getOrganisateur() !== $this->getUser()
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez gérer que vos propres événements.'
+            );
+        }
+    
         if ($this->isCsrfTokenValid('delete' . $evenement->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($evenement);
             $entityManager->flush();
@@ -156,8 +199,26 @@ final class EvenementController extends AbstractController
 
     #[IsGranted('ROLE_JOUEUR')]
     #[Route('/{id}/participer', name: 'app_evenement_participer', methods: ['GET'])]
-    public function participer(Evenement $evenement, EntityManagerInterface $entityManager): Response
-    {
+    public function participer(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response {
+        if ($evenement->getStatus() !== 'valide') {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez participer qu’à un événement validé.'
+            );
+        }
+
+        $participantsAcceptes = $evenement->getParticipations()
+            ->filter(fn ($participation) => $participation->getStatus() === 'accepte')
+            ->count();
+
+        if ($participantsAcceptes >= $evenement->getNbPlaces()) {
+            throw $this->createAccessDeniedException(
+                'Cet événement est complet.'
+            );
+        }
+
         $participationExistante = $entityManager
             ->getRepository(Participation::class)
             ->findOneBy([
@@ -168,6 +229,7 @@ final class EvenementController extends AbstractController
         if ($participationExistante) {
             return $this->redirectToRoute('app_home');
         }
+
         $participation = new Participation();
         $participation->setUser($this->getUser());
         $participation->setEvenement($evenement);
@@ -177,27 +239,6 @@ final class EvenementController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_home');
-    }
-
-    #[IsGranted('ROLE_JOUEUR')]
-    #[Route('/{id}/desinscrire', name: 'app_evenement_desinscrire', methods: ['GET'])]
-    public function desinscrire(
-        Evenement $evenement,
-        EntityManagerInterface $entityManager
-    ): Response {
-        $participation = $entityManager
-            ->getRepository(Participation::class)
-            ->findOneBy([
-                'user' => $this->getUser(),
-                'evenement' => $evenement,
-            ]);
-
-        if ($participation && $participation->getStatus() !== 'refuse') {
-            $entityManager->remove($participation);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_joueur');
     }
 
     #[IsGranted('ROLE_JOUEUR')]
@@ -254,6 +295,23 @@ final class EvenementController extends AbstractController
         Evenement $evenement,
         EntityManagerInterface $entityManager
     ): Response {
+
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && $evenement->getOrganisateur() !== $this->getUser()
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez gérer que vos propres événements.'
+            );
+        }
+        $startLimit = $evenement->getDateStart()->modify('-30 minutes');
+
+        if (new \DateTimeImmutable() < $startLimit) {
+            throw $this->createAccessDeniedException(
+                'L’événement ne peut être démarré que 30 minutes avant son début.'
+            );
+        }
+
         $evenement->setStartedAt(new \DateTimeImmutable());
 
         $entityManager->flush();
@@ -276,6 +334,4 @@ final class EvenementController extends AbstractController
             'scores' => $scores,
         ]);
     }
-
- 
 }

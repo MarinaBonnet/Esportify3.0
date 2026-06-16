@@ -20,6 +20,22 @@
         {{ evenement.status }} -
         {{ evenement.dateStart|date('d/m/Y H:i') }}
 
+        <br>
+
+        <a href="{{ path('app_evenement_show', {
+            id: evenement.id
+        }) }}">
+            Voir
+        </a>
+
+        {% if evenement.dateStart > date() %}
+        <a href="{{ path('app_evenement_edit', {
+                id: evenement.id
+            }) }}">
+            Modifier
+        </a>
+        {% endif %}
+
         {% set participantsAcceptes = 0 %}
 
         {% for participation in evenement.participations %}
@@ -104,7 +120,10 @@
 
 
 <ul>
-    <li>Créer un événement</li>
+    <li> <a href="{{ path('app_evenement_new') }}">
+            Créer un événement
+        </a>
+    </li>
     <li>Gérer mes événements</li>
     <li>Voir les participants</li>
     <li>Gérer les scores</li>

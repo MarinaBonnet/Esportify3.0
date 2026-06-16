@@ -29,8 +29,10 @@ final class RoomController extends AbstractController
         if (!$user instanceof \App\Entity\User) {
             throw $this->createAccessDeniedException();
         }
-            $isOrganisateur =
-            $evenement->getOrganisateur() === $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        $isOrganisateur =
+            $evenement->getOrganisateur() === $user;
 
         $participation = $participationRepository->findOneBy([
             'user' => $user,
@@ -38,7 +40,7 @@ final class RoomController extends AbstractController
             'status' => 'accepte',
         ]);
 
-        if (!$isOrganisateur && !$participation) {
+        if ( !$isAdmin && !$isOrganisateur && !$participation) {
             throw $this->createAccessDeniedException(
                 'Vous devez être accepté à cet événement pour rejoindre la room.'
             );
@@ -85,11 +87,11 @@ final class RoomController extends AbstractController
         $avatars = [];
 
         foreach ($messages as $message) {
-            $user = $userRepository->find($message->getUserId());
+            $messageUser = $userRepository->find($message->getUserId());
 
-            if ($user) {
-                $pseudos[$message->getId()] = $user->getPseudo();
-                $avatars[$message->getId()] = $user->getAvatar();
+            if ($messageUser) {
+                $pseudos[$message->getId()] = $messageUser->getPseudo();
+                $avatars[$message->getId()] = $messageUser->getAvatar();
             }
         }
 

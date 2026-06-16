@@ -66,6 +66,22 @@
 </ul>
 {% endif %}
 
+<h2>Messages reçus</h2>
+
+{% if contacts is empty %}
+<p>Aucun message.</p>
+{% else %}
+<ul>
+    {% for contact in contacts %}
+    <li>
+        <strong>{{ contact.nom }}</strong>
+        - {{ contact.email }}
+        - {{ contact.sujet }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 
 <h2>Gestion des utilisateurs</h2>
 
