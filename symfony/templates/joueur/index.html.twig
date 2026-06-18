@@ -30,13 +30,13 @@
             </a>
         </li>
 
-        {% if is_granted('ROLE_ORGANISATEUR') %}
+
         <li>
             <a href="{{ path('app_evenement_new') }}">
                 Créer un événement
             </a>
         </li>
-        {% endif %}
+
     </ul>
 </section>
 
@@ -53,30 +53,45 @@
             Jeu : {{ participation.evenement.jeu.nom }}<br>
             Statut : {{ participation.status }}<br>
             Début : {{ participation.evenement.dateStart|date('d/m/Y H:i') }}<br>
+            Fin : {{ participation.evenement.dateEnd|date('d/m/Y H:i') }}
 
             {% set now = "now"|date("U") %}
             {% set startTime = participation.evenement.dateStart|date("U") %}
+            {% set endTime = participation.evenement.dateEnd|date("U") %}
 
-            {% if participation.status == 'accepte'
-            and participation.evenement.startedAt is not null
-            and now >= startTime
-            %}
-            <a href="{{ path('app_evenement_room', {
-                            id: participation.evenement.id
-                        }) }}">
-                Rejoindre la room
-            </a><br>
-            {% elseif participation.status == 'accepte' %}
-            <small>En attente du démarrage de l'événement.</small><br>
-            {% endif %}
+            {% if endTime <= now %} <br><small>Événement terminé.</small><br>
 
-            {% if participation.status != 'refuse' %}
-            <a href="{{ path('app_evenement_desinscrire', {
-                            id: participation.evenement.id
-                        }) }}">
-                Se désinscrire
-            </a>
-            {% endif %}
+                <a href="{{ path('app_evenement_classement', {
+        id: participation.evenement.id
+    }) }}">
+                    Voir le classement
+                </a>
+
+                {% else %}
+
+                {% if participation.status == 'accepte'
+                and participation.evenement.startedAt is not null
+                and now >= startTime
+                %}
+                <a href="{{ path('app_evenement_room', {
+            id: participation.evenement.id
+        }) }}">
+                    Rejoindre la room
+                </a><br>
+
+                {% elseif participation.status == 'accepte' %}
+                <small>En attente du démarrage de l'événement.</small><br>
+                {% endif %}
+
+                {% if participation.status != 'refuse' and startTime > now %}
+                <a href="{{ path('app_evenement_desinscrire', {
+            id: participation.evenement.id
+        }) }}">
+                    Se désinscrire
+                </a>
+                {% endif %}
+
+                {% endif %}
         </li>
         {% endfor %}
     </ul>

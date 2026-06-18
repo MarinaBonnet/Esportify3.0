@@ -14,7 +14,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 final class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'app_admin')]
@@ -38,9 +40,21 @@ final class AdminController extends AbstractController
             ]),
             'evenementsEnAttente' => $evenementRepository->findBy([
                 'status' => 'en_attente',
+                
             ]),
+            'evenementsTraites' => $evenementRepository
+                ->createQueryBuilder('e')
+                ->where('e.status != :status')
+                ->setParameter('status', 'en_attente')
+                ->orderBy('e.createdAt', 'DESC')
+                ->getQuery()
+                ->getResult(),
             'users' => $userRepository->findAll(),
             'contacts' => $contactRepository->findBy(
+                [],
+                ['createdAt' => 'DESC']
+            ),
+            'evenements' => $evenementRepository->findBy(
                 [],
                 ['createdAt' => 'DESC']
             ),

@@ -34,7 +34,7 @@ final class EvenementController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ORGANISATEUR')]
+    #[IsGranted('ROLE_JOUEUR')]
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -73,7 +73,15 @@ final class EvenementController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('app_admin');
+            }
+
+            if ($this->isGranted('ROLE_ORGANISATEUR')) {
+                return $this->redirectToRoute('app_organisateur');
+            }
+
+            return $this->redirectToRoute('app_joueur');
         }
 
         return $this->render('evenement/new.html.twig', [
@@ -135,29 +143,36 @@ final class EvenementController extends AbstractController
     public function edit(
         Request $request,
         Evenement $evenement,
-        EntityManagerInterface
-        $entityManager
-        ): Response {
-            //1. Si je ne suis pas admin et que ce n’est pas mon événement → interdit
-            //2. Si l’événement est commencé ou passé → interdit
-            //3. Sinon → formulaire de modification
-            if (
-                !$this->isGranted('ROLE_ADMIN')
-                && $evenement->getOrganisateur() !== $this->getUser()
-            ) {
-                throw $this->createAccessDeniedException(
-                    'Vous ne pouvez modifier que vos propres événements.'
-                );
-            }
+        EntityManagerInterface $entityManager,
+    ): Response {
+        $user = $this->getUser();
 
-            if (
-                !$this->isGranted('ROLE_ADMIN')
-                && $evenement->getDateStart() <= new \DateTimeImmutable()
-            ) {
-                throw $this->createAccessDeniedException(
-                    'Cet événement ne peut plus être modifié.'
-                );
-            }
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && $evenement->getOrganisateur() !== $user
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez modifier que vos propres événements.'
+            );
+        }
+
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && $evenement->getDateStart() <= new \DateTimeImmutable()
+        ) {
+            throw $this->createAccessDeniedException(
+                'Cet événement ne peut plus être modifié car il a commencé.'
+            );
+        }
+
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && $evenement->getStartedAt() !== null
+        ) {
+            throw $this->createAccessDeniedException(
+                'Cet événement ne peut plus être modifié car il est démarré.'
+            );
+        }
 
         $form = $this->createForm(EvenementType::class, $evenement);
         $form->handleRequest($request);
@@ -166,7 +181,7 @@ final class EvenementController extends AbstractController
             $evenement->setStatus('en_attente');
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_organisateur', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('evenement/edit.html.twig', [
@@ -233,7 +248,7 @@ final class EvenementController extends AbstractController
             ]);
 
         if ($participationExistante) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_joueur');
         }
 
         $participation = new Participation();
@@ -244,7 +259,28 @@ final class EvenementController extends AbstractController
         $entityManager->persist($participation);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_joueur');
+    }
+
+    #[IsGranted('ROLE_JOUEUR')]
+    #[Route('/{id}/desinscrire', name: 'app_evenement_desinscrire', methods: ['GET'])]
+    public function desinscrire(
+        Evenement $evenement,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $participation = $entityManager
+            ->getRepository(Participation::class)
+            ->findOneBy([
+                'user' => $this->getUser(),
+                'evenement' => $evenement,
+            ]);
+
+        if ($participation && $participation->getStatus() !== 'refuse') {
+            $entityManager->remove($participation);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_joueur');
     }
 
     #[IsGranted('ROLE_JOUEUR')]
@@ -261,7 +297,7 @@ final class EvenementController extends AbstractController
             ]);
 
         if ($favoriExistant) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_joueur');
         }
 
         $favori = new Favori();
@@ -271,7 +307,7 @@ final class EvenementController extends AbstractController
         $entityManager->persist($favori);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_joueur');
     }
 
     #[IsGranted('ROLE_JOUEUR')]
@@ -292,7 +328,7 @@ final class EvenementController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_joueur');
     }
     
     #[IsGranted('ROLE_ORGANISATEUR')]
@@ -302,14 +338,18 @@ final class EvenementController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && $evenement->getOrganisateur() !== $this->getUser()
-        ) {
+        if ($evenement->getStatus() !== 'valide')
+         {
             throw $this->createAccessDeniedException(
-                'Vous ne pouvez gérer que vos propres événements.'
+                'Seul un événement valder peut etre démarrer.'
             );
         }
+        if ($evenement->getDateEnd()<= new \DateTimeImmutable()) {
+            throw $this->createAccessDeniedException(
+                'Cet événement est términer.'
+            );
+        }
+
         $startLimit = $evenement->getDateStart()->modify('-30 minutes');
 
         if (new \DateTimeImmutable() < $startLimit) {
@@ -317,10 +357,10 @@ final class EvenementController extends AbstractController
                 'L’événement ne peut être démarré que 30 minutes avant son début.'
             );
         }
-
-        $evenement->setStartedAt(new \DateTimeImmutable());
-
-        $entityManager->flush();
+        if ($evenement->getStartedAt() === null) {
+            $evenement->setStartedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('app_organisateur');
     }

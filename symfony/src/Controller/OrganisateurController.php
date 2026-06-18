@@ -9,7 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ORGANISATEUR')]
 final class OrganisateurController extends AbstractController
 {
     #[Route('/organisateur', name: 'app_organisateur')]
@@ -19,25 +21,16 @@ final class OrganisateurController extends AbstractController
     ): Response {
         if ($this->isGranted('ROLE_ADMIN')) {
             $evenements = $evenementRepository->findAll();
-
-            $participationsEnAttente = $participationRepository->findBy([
-                'status' => 'en_attente',
-            ]);
         } else {
-            $evenements = $evenementRepository->findBy([
-                'organisateur' => $this->getUser(),
-            ]);
-
-            $participationsEnAttente = $participationRepository
-                ->createQueryBuilder('p')
-                ->join('p.evenement', 'e')
-                ->where('e.organisateur = :organisateur')
-                ->andWhere('p.status = :status')
-                ->setParameter('organisateur', $this->getUser())
-                ->setParameter('status', 'en_attente')
-                ->getQuery()
-                ->getResult();
+            $evenements = $evenementRepository->findBy(
+                ['status' => 'valide'],
+                ['dateStart' => 'ASC']
+            );
         }
+
+        $participationsEnAttente = $participationRepository->findBy([
+            'status' => 'en_attente',
+        ]);
 
         return $this->render('organisateur/index.html.twig', [
             'controller_name' => 'OrganisateurController',
@@ -48,18 +41,9 @@ final class OrganisateurController extends AbstractController
 
     #[Route('/organisateur/participation/{id}/accepter', name: 'app_organisateur_participation_accepter')]
     public function accepterParticipation(
-
         Participation $participation,
         EntityManagerInterface $entityManager
     ): Response {
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && $participation->getEvenement()->getOrganisateur() !== $this->getUser()
-        ) {
-            throw $this->createAccessDeniedException(
-                'Vous ne pouvez gérer que les participations de vos événements.'
-            );
-        }
         $participation->setStatus('accepte');
 
         $entityManager->flush();
@@ -72,14 +56,6 @@ final class OrganisateurController extends AbstractController
         Participation $participation,
         EntityManagerInterface $entityManager
     ): Response {
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && $participation->getEvenement()->getOrganisateur() !== $this->getUser()
-        ) {
-            throw $this->createAccessDeniedException(
-                'Vous ne pouvez gérer que les participations de vos événements.'
-            );
-        }
         $participation->setStatus('refuse');
 
         $entityManager->flush();

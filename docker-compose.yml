@@ -41,7 +41,7 @@ services:
       MYSQL_PASSWORD: Esportify3.02026
 
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
     volumes:
       - mysql_data:/var/lib/mysql

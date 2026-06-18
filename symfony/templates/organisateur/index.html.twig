@@ -42,20 +42,26 @@
     {% else %}
     <ul>
         {% for evenement in evenements %}
+
+        {% set now = "now"|date("U", "Europe/Paris") %}
+        {% set start = evenement.dateStart|date("U", "Europe/Paris") %}
+        {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+        {% set startLimit = start - 1800 %}
+
+        {% set participantsAcceptes = 0 %}
+
+        {% for participation in evenement.participations %}
+        {% if participation.status == 'accepte' %}
+        {% set participantsAcceptes = participantsAcceptes + 1 %}
+        {% endif %}
+        {% endfor %}
+
         <li>
             <strong>{{ evenement.titre }}</strong><br>
 
-            Statut : {{ evenement.status }}<br>
+            Statut de validation : {{ evenement.status }}<br>
             Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
             Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}<br>
-
-            {% set participantsAcceptes = 0 %}
-
-            {% for participation in evenement.participations %}
-            {% if participation.status == 'accepte' %}
-            {% set participantsAcceptes = participantsAcceptes + 1 %}
-            {% endif %}
-            {% endfor %}
 
             Participants :
             {{ participantsAcceptes }} / {{ evenement.nbPlaces }}<br>
@@ -63,57 +69,68 @@
             Places restantes :
             {{ evenement.nbPlaces - participantsAcceptes }}<br>
 
-            {% set nowDate = "now"|date %}
-
-            {% if evenement.dateEnd < "now" | date() %} <strong>Terminé</strong><br>
-
+            {% if end <= now %} <strong>Terminé</strong><br>
                 {% elseif evenement.startedAt is not null %}
                 <strong>En cours</strong><br>
+                {% elseif start <= now %} <strong>En attente de démarrage</strong><br>
+                    {% else %}
+                    <strong>À venir</strong><br>
+                    {% endif %}
 
-                {% else %}
-                <strong>À venir</strong><br>
-                {% endif %}
+                    <a href="{{ path('app_evenement_show', {
+                    id: evenement.id
+                }) }}">
+                        Voir
+                    </a>
 
-                <a href="{{ path('app_evenement_show', {
+                    {% if end > now %}
+                    {% if start > now %}
+                    <a href="{{ path('app_evenement_edit', {
+                                id: evenement.id
+                            }) }}">
+                        Modifier
+                    </a>
+                    {% endif %}
+
+                    {% if evenement.status == 'valide' %}
+                    {% if evenement.startedAt is null and now >= startLimit %}
+                    <a href="{{ path('app_evenement_start', {
                         id: evenement.id
                     }) }}">
-                    Voir
-                </a>
+                        Démarrer l'événement
+                    </a>
 
-                {% if evenement.dateStart > date() %}
-                <a href="{{ path('app_evenement_edit', {
+                    {% elseif evenement.startedAt is not null %}
+                    <span>Événement démarré</span>
+                    {% else %}
+                    <small>
+                        Démarrage disponible 30 min avant
+                    </small>
+                    {% endif %}
+
+                    {% else %}
+                    <small>
+                        En attente de validation admin
+                    </small>
+                    {% endif %}
+
+                    {% if evenement.startedAt is not null and end > now %}
+                    <br>
+                    <a href="{{ path('app_evenement_room', {
+                                id: evenement.id
+                            }) }}">
+                        Accéder à la room
+                    </a>
+                    {% endif %}
+                    {% else %}
+                    <a href="{{ path('app_evenement_classement', {
                             id: evenement.id
                         }) }}">
-                    Modifier
-                </a>
-                {% endif %}
-
-                {% set now = "now"|date("U") %}
-                {% set startLimit = evenement.dateStart|date("U") - 1800 %}
-
-                {% if evenement.startedAt is null and now >= startLimit %}
-                <a href="{{ path('app_evenement_start', {
-                            id: evenement.id
-                        }) }}">
-                    Démarrer l'événement
-                </a>
-                {% elseif evenement.startedAt is not null %}
-                <span>Événement démarré</span>
-                {% else %}
-                <small>
-                    Démarrage disponible 30 min avant
-                </small>
-                {% endif %}
-
-                {% if evenement.startedAt is not null %}
-                <br>
-                <a href="{{ path('app_evenement_room', {
-                            id: evenement.id
-                        }) }}">
-                    Accéder à la room
-                </a>
-                {% endif %}
+                        Voir le classement
+                    </a>
+                    {% endif %}
         </li>
+
         {% endfor %}
     </ul>
     {% endif %}
