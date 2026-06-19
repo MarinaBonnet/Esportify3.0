@@ -138,7 +138,7 @@ final class EvenementController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ORGANISATEUR')]
+    #[IsGranted('ROLE_JOUEUR')]
     #[Route('/{id}/edit', name: 'app_evenement_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
@@ -181,7 +181,15 @@ final class EvenementController extends AbstractController
             $evenement->setStatus('en_attente');
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_organisateur', [], Response::HTTP_SEE_OTHER);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_admin');
+        }
+
+        if ($this->isGranted('ROLE_ORGANISATEUR')) {
+            return $this->redirectToRoute('app_organisateur');
+        }
+
+        return $this->redirectToRoute('app_joueur');
         }
 
         return $this->render('evenement/edit.html.twig', [
@@ -190,7 +198,7 @@ final class EvenementController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ORGANISATEUR')]
+    #[IsGranted('ROLE_JOUEUR')]
     #[Route('/{id}', name: 'app_evenement_delete', methods: ['POST'])]
     public function delete(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
@@ -218,7 +226,7 @@ final class EvenementController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
-       if ($evenement->getDateEnd() <= new \DateTimeImmutable()) {
+        if ($evenement->getDateEnd() <= new \DateTimeImmutable()) {
             throw $this->createAccessDeniedException(
                 'Cet événement est terminé.'
             );
@@ -262,12 +270,19 @@ final class EvenementController extends AbstractController
         return $this->redirectToRoute('app_joueur');
     }
 
+
     #[IsGranted('ROLE_JOUEUR')]
     #[Route('/{id}/desinscrire', name: 'app_evenement_desinscrire', methods: ['GET'])]
     public function desinscrire(
         Evenement $evenement,
         EntityManagerInterface $entityManager
     ): Response {
+        if ($evenement->getDateStart() <= new \DateTimeImmutable()) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez plus vous désinscrire après le début de l’événement.'
+            );
+        }
+
         $participation = $entityManager
             ->getRepository(Participation::class)
             ->findOneBy([
@@ -295,6 +310,12 @@ final class EvenementController extends AbstractController
                 'user' => $this->getUser(),
                 'evenement' => $evenement,
             ]);
+
+        if ($evenement->getDateEnd() <= new \DateTimeImmutable()) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez pas ajouter un événement terminé aux favoris.'
+            );
+        }
 
         if ($favoriExistant) {
             return $this->redirectToRoute('app_joueur');
@@ -339,14 +360,14 @@ final class EvenementController extends AbstractController
     ): Response {
 
         if ($evenement->getStatus() !== 'valide')
-         {
+        {
             throw $this->createAccessDeniedException(
-                'Seul un événement valder peut etre démarrer.'
+                'Seul un événement valider peut etre démarré.'
             );
         }
         if ($evenement->getDateEnd()<= new \DateTimeImmutable()) {
             throw $this->createAccessDeniedException(
-                'Cet événement est términer.'
+                'Cet événement est términé.'
             );
         }
 

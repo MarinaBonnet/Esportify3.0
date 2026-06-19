@@ -59,6 +59,7 @@
         <li>
             <strong>{{ evenement.titre }}</strong><br>
 
+            Proposé par : {{ evenement.organisateur.pseudo }}<br>
             Statut de validation : {{ evenement.status }}<br>
             Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
             Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}<br>
@@ -84,7 +85,7 @@
                     </a>
 
                     {% if end > now %}
-                    {% if start > now %}
+                    {% if start > now and evenement.startedAt is null %}
                     <a href="{{ path('app_evenement_edit', {
                                 id: evenement.id
                             }) }}">

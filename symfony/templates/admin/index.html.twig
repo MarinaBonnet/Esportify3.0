@@ -52,46 +52,44 @@
 
 <h2>Tous les événements</h2>
 
-{% if evenementsTraites is empty %}
-<p>Aucun événement.</p>
-{% else %}
+<h2>Événements validés</h2>
+
 <ul>
     {% for evenement in evenementsTraites %}
+    {% if evenement.status == 'valide' %}
     <li>
         <strong>{{ evenement.titre }}</strong><br>
         Organisateur : {{ evenement.organisateur.pseudo }}<br>
-        Statut : {{ evenement.status }}<br>
         Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
 
-        {% if evenement.status == 'en_attente' %}
-        <a href="{{ path('app_admin_evenement_valider', {
-                        id: evenement.id
-                    }) }}">
-            Valider
-        </a>
-
         <a href="{{ path('app_admin_evenement_refuser', {
-                        id: evenement.id
-                    }) }}">
-            Refuser
-        </a>
-        {% elseif evenement.status == 'valide' %}
-        <a href="{{ path('app_admin_evenement_refuser', {
-                        id: evenement.id
-                    }) }}">
+                    id: evenement.id
+                }) }}">
             Suspendre
         </a>
-        {% elseif evenement.status == 'refuse' %}
-        <a href="{{ path('app_admin_evenement_valider', {
-                        id: evenement.id
-                    }) }}">
-            Revalider
-        </a>
-        {% endif %}
     </li>
+    {% endif %}
     {% endfor %}
 </ul>
-{% endif %}
+<h2>Événements refusés</h2>
+
+<ul>
+    {% for evenement in evenementsTraites %}
+    {% if evenement.status == 'refuse' %}
+    <li>
+        <strong>{{ evenement.titre }}</strong><br>
+        Organisateur : {{ evenement.organisateur.pseudo }}<br>
+        Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
+
+        <a href="{{ path('app_admin_evenement_valider', {
+                    id: evenement.id
+                }) }}">
+            Valider
+        </a>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
 
 <h2>Gestion des utilisateurs</h2>
 

@@ -41,7 +41,10 @@
 
         {% if is_granted('ROLE_JOUEUR') %}
 
-        {% if evenement.dateEnd > "now"|date %}
+        {% set now = "now"|date("U") %}
+        {% set end = evenement.dateEnd|date("U") %}
+
+        {% if end > now %}
 
         <a href="{{ path('app_evenement_participer', {
             id: evenement.id

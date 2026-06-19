@@ -54,11 +54,15 @@ final class AdminController extends AbstractController
                 [],
                 ['createdAt' => 'DESC']
             ),
-            'evenements' => $evenementRepository->findBy(
-                [],
-                ['createdAt' => 'DESC']
+            'evenementsValides' => $evenementRepository->findBy(
+                ['status' => 'valide'],
+                ['dateStart' => 'DESC']
             ),
 
+            'evenementsRefuses' => $evenementRepository->findBy(
+                ['status' => 'refuse'],
+                ['dateStart' => 'DESC']
+            ),
         ]);
     }
 

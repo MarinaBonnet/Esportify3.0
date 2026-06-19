@@ -137,13 +137,38 @@
             Statut : {{ evenement.status }}<br>
             Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
 
-            {% if evenement.dateStart > date() %}
-            <a href="{{ path('app_evenement_edit', {
-                            id: evenement.id
-                        }) }}">
-                Modifier
-            </a>
-            {% endif %}
+            {% set now = "now"|date("U") %}
+            {% set start = evenement.dateStart|date("U") %}
+            {% set end = evenement.dateEnd|date("U") %}
+
+            {% if end <= now %} <small>Événement terminé.</small>
+
+                <a href="{{ path('app_evenement_classement', {
+        id: evenement.id
+    }) }}">
+                    Voir le classement
+                </a>
+
+                {% elseif start > now and evenement.startedAt is null %}
+                <a href="{{ path('app_evenement_edit', {
+        id: evenement.id
+    }) }}">
+                    Modifier
+                </a>
+                {% if evenement.status == 'valide' %}
+                <a href="{{ path('app_evenement_participer', {
+            id: evenement.id
+        }) }}">
+                    Participer
+                </a>
+                {% endif %}
+
+                {% elseif evenement.startedAt is not null %}
+                <small>Événement démarré.</small>
+
+                {% else %}
+                <small>Modification impossible après le début.</small>
+                {% endif %}
         </li>
         {% endfor %}
     </ul>

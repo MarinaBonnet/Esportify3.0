@@ -514,7 +514,7 @@ Création d'une page dédiée accessible aux joueurs autorisés :
 - Gestion des scores et des résultats des tournois.
 - Refonte graphique des interfaces.
 
-## Suite du développement
+## 14/06/2026
 
 ### Dashboard Organisateur
 
@@ -804,32 +804,45 @@ Création de la structure :
 - Responsive.
 - Finalisation de l'interface utilisateur.
 
+## 18 et 19 /06/2026
+
+### Audit
+
+- Audit complet des rôles Joueur, Organisateur et Admin
+- Correction des accès aux événements
+- Vérification des modifications d'événements
+- Mise en place de la validation des événements proposés
+- Correction de l'accès aux rooms
+- Sécurisation des participations et désinscriptions
+- Amélioration du dashboard administrateur
+- Tests du cycle complet :
+  Création → Validation → Participation →
+  Acceptation → Démarrage → Room → Classement
+
+  Prochaine étape :
+
+- Amélioration UX/UI des dashboards
+- Réorganisation des sections Twig
+- Refonte visuelle Sass
+- Préparation des captures du dossier projet
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés
 
 □ Limiter la longueur du message
+
 □ Bloquer les messages vides/espaces
 
 □ Bloquer le chat tant que l’événement n’a pas démarré
 
 □ Prévoir modération/suppression des messages
 
-□ Afficher le bouton Rejoindre uniquement lorsque l’événement est accessible
-
 □ Repasser automatiquement un événement à "en_attente" lors d'une modification.
-
-□ Empêcher la modification d'un événement déjà commencé.
-
-□ Vérifier que dateFin > dateDébut.
 
 □ Ajouter la gestion des images des événements.
 
 □ Permettre l'inscription des joueurs aux événements (Participation).
-
-□ Vérifier que l'événement n'est pas complet.
-
-□ Vérifier que l'événement est validé.
 
 □ Simplifier les rôles stockés en base
 

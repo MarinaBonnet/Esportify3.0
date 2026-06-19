@@ -57,6 +57,10 @@ security:
               - ROLE_ADMIN
               - ROLE_ORGANISATEUR
               - ROLE_JOUEUR
+
+        - path: ^/evenement/[0-9]+/edit
+          roles: ROLE_JOUEUR
+
 when@test:
     security:
         password_hashers:
