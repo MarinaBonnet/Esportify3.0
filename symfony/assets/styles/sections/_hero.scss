@@ -1,0 +1,94 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.header {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4rem 1rem;
+
+    background-image:
+        linear-gradient(90deg, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.45)),
+        linear-gradient(
+            135deg,
+            rgba(247, 37, 133, 0.25),
+            rgba(72, 149, 239, 0.25)
+        ),
+        url("/uploads/hero-gaming.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.baseline {
+    width: min(100%, 850px);
+    text-align: center;
+
+    &__title-fixe {
+        display: inline-block;
+
+        margin-bottom: 1rem;
+
+        color: $color-pink;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+    }
+
+    &__banner {
+        margin-bottom: 1.5rem;
+    }
+
+    &__title-dynamique {
+        display: block;
+
+        font-size: clamp(2.4rem, 8vw, 5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        text-transform: uppercase;
+
+        color: $color-text;
+        text-shadow:
+            0 0 12px rgba(247, 37, 133, 0.5),
+            0 0 24px rgba(72, 149, 239, 0.4);
+    }
+
+    &__texte {
+        display: block;
+        max-width: 650px;
+        margin: 0 auto 2rem;
+        color: $color-text-muted;
+        font-size: 1.1rem;
+    }
+
+    &__cta {
+        margin-top: 1rem;
+    }
+}
+
+@include tablet {
+    .header {
+        padding: 6rem 2rem;
+    }
+
+    .baseline {
+        &__title-dynamique {
+            font-size: 3.5rem;
+        }
+    }
+}
+
+@include desktop {
+    .header {
+        padding: 8rem 2rem;
+    }
+
+    .baseline {
+        &__title-dynamique {
+            font-size: 5rem;
+        }
+    }
+}

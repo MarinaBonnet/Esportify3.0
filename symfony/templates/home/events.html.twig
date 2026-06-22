@@ -1,40 +1,64 @@
-<h2>Événements à venir</h2>
+<section class="events">
 
-{% if evenements is empty %}
-<p>Aucun événement disponible.</p>
-{% else %}
-<ul>
-    {% for evenement in evenements %}
-    <div class="event-card">
+    <h2 class="events__title">
+        Événements à venir
+    </h2>
 
-        {% set image = evenement.images|first %}
+    {% if evenements is empty %}
 
-        {% if image %}
-        <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
-        {% endif %}
+    <p class="events__empty">
+        Aucun événement disponible.
+    </p>
 
-        <h3>{{ evenement.titre }}</h3>
+    {% else %}
 
-        <p>
-            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}
-        </p>
+    <div class="events__grid">
 
-        <p>
-            Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
-        </p>
+        {% for evenement in evenements %}
 
+        <article class="event-card">
 
-        <p>
-            Joueurs : {{ evenement.nbPlaces }}
-        </p>
+            {% set image = evenement.images|first %}
 
-        <a href="{{ path('app_evenement_show', {
-        id: evenement.id
-    }) }}">
-            Voir
-        </a>
+            {% if image %}
+            <img class="event-card__image" src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
+            {% endif %}
+
+            <div class="event-card__content">
+
+                <h3 class="event-card__title">
+                    {{ evenement.titre }}
+                </h3>
+
+                <p class="event-card__date">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    {{ evenement.dateStart|date('d/m/Y H:i') }}
+                </p>
+
+                <p class="event-card__date">
+                    <i class="fa-solid fa-clock"></i>
+                    {{ evenement.dateEnd|date('d/m/Y H:i') }}
+                </p>
+
+                <p class="event-card__players">
+                    <i class="fa-solid fa-users"></i>
+                    {{ evenement.nbPlaces }} joueurs
+                </p>
+
+                <a class="event-card__link" href="{{ path('app_evenement_show', {
+                                id: evenement.id
+                            }) }}">
+                    Voir l'événement
+                </a>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
 
     </div>
-    {% endfor %}
-</ul>
-{% endif %}
+
+    {% endif %}
+
+</section>

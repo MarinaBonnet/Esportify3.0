@@ -1,0 +1,47 @@
+@use "../abstracts/variables" as *;
+
+html {
+    scroll-behavior: smooth; //Défilement fluide
+}
+
+body {
+    min-height: 100vh;
+
+    background: $color-dark;
+    color: $color-text;
+
+    font-family: $font-main;
+    line-height: 1.6;
+}
+
+main {
+    width: 100%;
+}
+
+section {
+    padding: 5rem 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+}
+
+h2 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+p {
+    color: $color-text-muted;
+}
+
+.container {
+    width: min(100% - 2rem, $container-width);
+    margin-inline: auto;
+}

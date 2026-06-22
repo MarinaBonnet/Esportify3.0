@@ -1,0 +1,49 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.presentation {
+    padding: 4rem 1rem;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    &__content {
+        text-align: center;
+    }
+
+    &__title {
+        margin-bottom: 1rem;
+    }
+
+    &__accent {
+        color: $color-pink;
+    }
+
+    &__text {
+        margin-bottom: 1.5rem;
+    }
+
+    &__image {
+        img {
+            width: 100%;
+            display: block;
+            border-radius: $radius;
+        }
+    }
+}
+
+@include tablet {
+    .presentation__container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 3rem;
+    }
+
+    .presentation__content {
+        text-align: left;
+    }
+}

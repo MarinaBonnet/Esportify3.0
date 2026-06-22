@@ -1,0 +1,259 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #121212;
+  color: #ffffff;
+  font-family: "Exo 2", sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  width: 100%;
+}
+
+section {
+  padding: 5rem 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+p {
+  color: #bdbdbd;
+}
+
+.container {
+  width: min(100% - 2rem, 1200px);
+  margin-inline: auto;
+}
+
+.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid #7209b7;
+}
+.main-nav a {
+  color: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: 0.3s ease;
+}
+.main-nav a:hover {
+  color: #f72585;
+}
+.main-nav__logo img {
+  width: 100px;
+  height: auto;
+}
+@media (min-width: 768px) {
+  .main-nav {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  background-image: linear-gradient(90deg, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.45)), linear-gradient(135deg, rgba(247, 37, 133, 0.25), rgba(72, 149, 239, 0.25)), url("/uploads/hero-gaming.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.baseline {
+  width: min(100%, 850px);
+  text-align: center;
+}
+.baseline__title-fixe {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #f72585;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.baseline__banner {
+  margin-bottom: 1.5rem;
+}
+.baseline__title-dynamique {
+  display: block;
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(247, 37, 133, 0.5), 0 0 24px rgba(72, 149, 239, 0.4);
+}
+.baseline__texte {
+  display: block;
+  max-width: 650px;
+  margin: 0 auto 2rem;
+  color: #bdbdbd;
+  font-size: 1.1rem;
+}
+.baseline__cta {
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: 6rem 2rem;
+  }
+  .baseline__title-dynamique {
+    font-size: 3.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .header {
+    padding: 8rem 2rem;
+  }
+  .baseline__title-dynamique {
+    font-size: 5rem;
+  }
+}
+.presentation {
+  padding: 4rem 1rem;
+}
+.presentation__container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.presentation__content {
+  text-align: center;
+}
+.presentation__title {
+  margin-bottom: 1rem;
+}
+.presentation__accent {
+  color: #f72585;
+}
+.presentation__text {
+  margin-bottom: 1.5rem;
+}
+.presentation__image img {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .presentation__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+  }
+  .presentation__content {
+    text-align: left;
+  }
+}
+.events {
+  padding: 4rem 1rem;
+}
+.events__title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.events__grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.event-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
+}
+.event-card:hover {
+  transform: translateY(-5px);
+}
+.event-card__image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+.event-card__content {
+  padding: 1.5rem;
+}
+.event-card__title {
+  margin-bottom: 1rem;
+}
+.event-card__date, .event-card__players {
+  margin-bottom: 0.75rem;
+}
+.event-card__link {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .events__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .events__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/*# sourceMappingURL=app.css.map */

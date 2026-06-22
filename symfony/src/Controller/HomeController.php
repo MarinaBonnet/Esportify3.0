@@ -28,7 +28,8 @@ final class HomeController extends AbstractController
     
          $evenements = $evenementRepository->findBy(
         ['status' => 'valide'],
-        ['dateStart' => 'ASC']
+        ['dateStart' => 'ASC'],
+        3
     );
     $participationUtilisateur = [];
 
