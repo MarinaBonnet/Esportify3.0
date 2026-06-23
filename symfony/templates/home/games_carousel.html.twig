@@ -1,21 +1,45 @@
-<div data-controller="carousel" class="carousel-container">
+<section class="games-carousel">
 
-    <button data-carousel-target="prev" data-action="click->carousel#prev" class="navigation-item" data-slider="prev">
-        <i class="fa-solid fa-backward"></i>
-    </button>
+    <h2 class="games-carousel__title">
+        Jeux disponibles
+    </h2>
 
-    <div class="carousel-track" data-carousel-target="track"
-        data-action="mouseenter->carousel#mouseenter mouseleave->carousel#mouseleave">
+    <div class="games-carousel__container js-carousel">
 
-        {% for item in evenements %}
-        <article class="item-photo">
+        <button type="button" class="games-carousel__button js-carousel-prev">
+            <i class="fa-solid fa-backward"></i>
+        </button>
 
-        </article>
-        {% endfor %}
+        <div class="games-carousel__track js-carousel-track">
+
+            {% for jeu in jeux %}
+            <article class="games-carousel__item">
+
+                {% if jeu.logo %}
+                <img class="games-carousel__logo" src="{{ asset(jeu.logo) }}" alt="{{ jeu.nom }}">
+                {% endif %}
+
+                <div class="games-carousel__content">
+                    <h3 class="games-carousel__name">
+                        {{ jeu.nom }}
+                    </h3>
+
+                    {% if jeu.editeur %}
+                    <p class="games-carousel__editor">
+                        {{ jeu.editeur }}
+                    </p>
+                    {% endif %}
+                </div>
+
+            </article>
+            {% endfor %}
+
+        </div>
+
+        <button type="button" class="games-carousel__button js-carousel-next">
+            <i class="fa-solid fa-forward"></i>
+        </button>
+
     </div>
 
-    <button data-carousel-target="next" data-action="click->carousel#next" class="navigation-item" data-slider="next">
-        <i class="fa-solid fa-forward"></i>
-    </button>
-
-</div>
+</section>

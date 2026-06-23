@@ -826,6 +826,31 @@ Création de la structure :
 - Refonte visuelle Sass
 - Préparation des captures du dossier projet
 
+## 22/06/2026
+
+### UX/UI
+
+- Mise en place du système Sass mobile-first
+- Création de la navbar responsive
+- Création du Hero Esportify
+- Début de la refonte de la page d'accueil
+- Création de la section Présentation
+- Début de la section Événements à venir
+- Mise en place des breakpoints Sass (tablet, desktop, large)
+
+### Correctifs
+
+- Correction du problème de viewport responsive
+- Vérification du comportement mobile sur iPhone SE
+- Réorganisation de la navigation avec "Mon espace"
+
+### Prochaine étape
+
+- Finaliser la page d'accueil
+- Créer la section "Pourquoi Esportify ?"
+- Ajouter les statistiques
+- Limiter les événements affichés sur l'accueil
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés

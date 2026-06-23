@@ -1,0 +1,53 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.advantages {
+    padding: 2rem 1rem;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    &__title {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    &__grid {
+        display: grid;
+        gap: 1rem;
+    }
+    &__card {
+        padding: 1.5rem;
+        background: $color-card;
+        border-radius: $radius;
+    }
+    &__icon {
+        font-size: 2rem;
+        color: $color-pink;
+        margin-bottom: 1rem;
+    }
+    &__image {
+        img {
+            width: 100%;
+            display: block;
+            border-radius: $radius;
+            margin: 16px auto;
+        }
+    }
+}
+
+@include tablet {
+    .advantages {
+        &__container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        &__title {
+            text-align: left;
+        }
+    }
+}

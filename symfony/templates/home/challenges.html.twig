@@ -1,25 +1,44 @@
-<section class="home-section alt">
-    <div class="container-small">
+<section class="challenges">
 
-        <!-- TEXTE EN PREMIER (mobile) -->
-        <div class="block-content">
-            <span class="baseline-title-fixe">Prêt à relever les défis !</span>
+    <div class="challenges__container">
 
-            <ul>
-                <li><i class="fa-solid fa-gamepad" style="color: #b197fc"></i> Rejoignez le Game</li>
-                <li><i class="fa-solid fa-khanda" style="color: #b197fc"></i> Jouez les Matchs</li>
-                <li><i class="fa-solid fa-trophy" style="color: #b197fc"></i> Participez aux Tournois</li>
+        <div class="challenges__content">
+
+            <span class="challenges__subtitle">
+                Prêt à relever les défis ?
+            </span>
+
+            <ul class="challenges__list">
+
+                <li class="challenges__item">
+                    <i class="fa-solid fa-gamepad"></i>
+                    Rejoignez le Game
+                </li>
+
+                <li class="challenges__item">
+                    <i class="fa-solid fa-khanda"></i>
+                    Affrontez vos adversaires
+                </li>
+
+                <li class="challenges__item">
+                    <i class="fa-solid fa-trophy"></i>
+                    Grimpez dans les classements
+                </li>
+
             </ul>
 
-            <button type="button" class="btn-home btn-play" data-action="click->modal#open">
-                S'inscrire
-            </button>
+            <a href="{{ path('app_register') }}" class="btn-primary">
+                Rejoindre Esportify
+            </a>
+
         </div>
 
-        <!-- IMAGE EN DEUXIÈME (mobile) -->
-        <div class="block-img">
-            <img src="{{ asset('img/game-console.jpg') }}" alt="photo d'un casque de gamer">
+        <div class="challenges__image">
+
+            <img src="{{ asset('uploads/image-jeu.jpg') }}" alt="Joueur e-sport prêt à relever les défis">
+
         </div>
 
     </div>
+
 </section>

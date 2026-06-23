@@ -1,0 +1,72 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.challenges {
+    padding: 2rem 1rem;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    &__content {
+        text-align: center;
+    }
+    &__subtitle {
+        display: block;
+        margin-bottom: 1.5rem;
+        color: $color-pink;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+    &__list {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 1rem;
+        background: $color-card;
+        border-radius: $radius;
+
+        i {
+            color: $color-blue;
+            font-size: 1.3rem;
+        }
+    }
+    &__image {
+        img {
+            width: 100%;
+            display: block;
+            border-radius: $radius;
+            object-fit: cover;
+            box-shadow:
+                0 0 20px rgba(247, 37, 133, 0.25),
+                0 0 40px rgba(72, 149, 239, 0.2);
+        }
+    }
+}
+
+@include tablet {
+    .challenges {
+        &__container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        &__content {
+            text-align: left;
+        }
+
+        &__item {
+            justify-content: flex-start;
+        }
+    }
+}
