@@ -1,0 +1,101 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.community {
+    padding: 2rem 1rem;
+    display: grid;
+    gap: 2rem;
+
+    &__title {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    &__partners,
+    &__newsletter {
+        padding: 1.5rem;
+        background: $color-card;
+        border-radius: $radius;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(72, 149, 239, 0.12);
+    }
+    &__social {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: $color-card;
+        border-radius: $radius;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(72, 149, 239, 0.12);
+    }
+    &__image {
+        width: 100%;
+        max-height: 180px;
+        object-fit: cover;
+        border-radius: $radius;
+        margin-bottom: 1rem;
+    }
+
+    &__text {
+        margin-bottom: 1.5rem;
+    }
+
+    &__social-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        a {
+            font-size: 1.6rem;
+            color: $color-text;
+            transition: $transition;
+
+            &:hover {
+                color: $color-pink;
+                transform: translateY(-3px);
+            }
+        }
+    }
+
+    form {
+        display: grid;
+        gap: 1rem;
+    }
+
+    input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: $radius;
+        background: rgba(255, 255, 255, 0.08);
+        color: $color-text;
+        &::placeholder {
+            color: $color-text-muted;
+        }
+    }
+}
+
+@include tablet {
+    .community {
+        grid-template-columns: repeat(2, 1fr);
+
+        &__newsletter {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+@include desktop {
+    .community {
+        grid-template-columns: repeat(3, 1fr);
+
+        &__newsletter {
+            grid-column: auto;
+        }
+    }
+}

@@ -40,6 +40,20 @@ class EvenementRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    
+    public function findUpcomingEvents(int $limit = 3): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.status = :status')
+            ->andWhere('e.dateStart > :now')
+            ->setParameter('status', 'valide')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('e.dateStart', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Evenement[] Returns an array of Evenement objects
     //     */

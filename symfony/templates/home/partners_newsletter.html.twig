@@ -1,45 +1,79 @@
-<div class="partners-container">
+<section class="community">
 
-    <!-- PARTENAIRES -->
-    <div class="partners-block">
-        <img src="{{asset('img/partners.jpg') }}" alt="Logos des partenaires Esportify" class="partners-image">
+    <div class="community__partners">
 
-        <span class="partners-text">
-            Ils nous font confiance ! <br>
-            Pourquoi pas toi ?
-        </span>
-    </div>
+        <h2 class="community__title">
+            Nos partenaires
+        </h2>
 
-    <!-- RÉSEAUX SOCIAUX -->
-    <div class="social-block">
-        <a href="https://discord.gg/esportify" class="btn-discord" target="_blank">
-            <i class="fa-brands fa-discord"></i> Rejoindre le Discord
-        </a>
 
-        <a href="https://facebook.com/TAPAGEFACEBOOK" target="_blank" rel="noopener" aria-label="Facebook">
-            <i class="fa-brands fa-facebook"></i>
-        </a>
+        <img src="{{ asset('uploads/partners.jpg') }}" alt="Partenaires Esportify" class="community__image">
 
-        <a href="https://youtube.com/@TACHANNEYOUTUBE" target="_blank" rel="noopener" aria-label="YouTube">
-            <i class="fa-brands fa-youtube"></i>
-        </a>
 
-        <a href="https://tiktok.com/@TACOMPTETIKTOK" target="_blank" rel="noopener" aria-label="TikTok">
-            <i class="fa-brands fa-tiktok"></i>
-        </a>
-
-        <a href="https://playstation.com" target="_blank" rel="noopener" aria-label="PlayStation">
-            <i class="fa-brands fa-playstation"></i>
-        </a>
-
-        <a href="https://xbox.com" target="_blank" rel="noopener" aria-label="Xbox">
-            <i class="fa-brands fa-xbox"></i>
-        </a>
+        <p class="community__text">
+            Ils nous font confiance.
+            Pourquoi pas vous ?
+        </p>
 
     </div>
-    <h2>Newsletter</h2>
 
-    {{ form_start(newsletterForm) }}
-    {{ form_row(newsletterForm.email) }}
-    <button type="submit">S'inscrire</button>
-    {{ form_end(newsletterForm) }}
+    <div class="community__social">
+
+        <h2 class="community__title">
+            Rejoignez la communauté
+        </h2>
+
+        <div class="community__social-links">
+
+            <a href="#" class="community__discord">
+                <i class="fa-brands fa-discord"></i>
+
+            </a>
+
+            <a href="#">
+                <i class="fa-brands fa-facebook"></i>
+            </a>
+
+            <a href="#">
+                <i class="fa-brands fa-youtube"></i>
+            </a>
+
+            <a href="#">
+                <i class="fa-brands fa-tiktok"></i>
+            </a>
+
+            <a href="#">
+                <i class="fa-brands fa-playstation"></i>
+            </a>
+
+            <a href="#">
+                <i class="fa-brands fa-xbox"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="community__newsletter">
+
+        <h2 class="community__title">
+            Newsletter
+        </h2>
+
+        <p class="community__text">
+            Recevez les derniers tournois, actualités et événements Esportify.
+        </p>
+
+        {{ form_start(newsletterForm) }}
+
+        {{ form_row(newsletterForm.email) }}
+
+        <button type="submit" class="btn-primary">
+            S'inscrire
+        </button>
+
+        {{ form_end(newsletterForm) }}
+
+    </div>
+
+</section>

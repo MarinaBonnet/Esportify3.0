@@ -11,11 +11,15 @@
     &__container {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.75rem;
+        max-width: 1300px;
+        margin-inline: auto;
     }
     &__track {
         display: flex;
         gap: 1rem;
+        max-width: 1120px;
 
         overflow-x: auto;
         scroll-behavior: smooth;
@@ -81,7 +85,7 @@
 @include desktop {
     .games-carousel {
         &__item {
-            flex-basis: 30%;
+            flex: 0 0 calc(33.333% - 1rem);
         }
     }
 }

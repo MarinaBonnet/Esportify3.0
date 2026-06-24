@@ -1,15 +1,69 @@
-<div data-controller="carousel" class="carousel-container">
+<section class="gallery">
 
-    <button data-carousel-target="prev" data-action="click->carousel#prev" class="navigation-item" data-slider="prev">
-        <i class="fa-solid fa-backward"></i>
-    </button>
+    <h2 class="gallery__title">
+        La communauté Esportify
+    </h2>
 
-    <div class="carousel-track" data-carousel-target="track">
+    <p class="gallery__subtitle">
+        Plonge dans l’univers des joueurs, des tournois et de la compétition.
+    </p>
+
+    <div class="gallery__grid">
+
+        <article class="gallery__card">
+            <img src="{{ asset('uploads/gallery/player.jpg') }}" alt="Joueur esport" class="gallery__image">
+
+            <div class="gallery__content">
+                <h3>Joueurs</h3>
+                <p>Affrontez les meilleurs et progressez tournoi après tournoi.</p>
+            </div>
+        </article>
+
+        <article class="gallery__card">
+            <img src="{{ asset('uploads/gallery/tournois.jpg') }}" alt="Tournoi esport" class="gallery__image">
+
+            <div class="gallery__content">
+                <h3>Tournois</h3>
+                <p>Participez à des compétitions organisées par la communauté.</p>
+            </div>
+        </article>
+
+        <article class="gallery__card">
+            <img src="{{ asset('uploads/gallery/community.jpg') }}" alt="Communauté gaming" class="gallery__image">
+
+            <div class="gallery__content">
+                <h3>Communauté</h3>
+                <p>Échangez avec d’autres passionnés et trouvez vos futurs coéquipiers.</p>
+            </div>
+        </article>
+
+        <article class="gallery__card">
+            <img src="{{ asset('uploads/gallery/streaming.jpeg') }}" alt="Streaming esport" class="gallery__image">
+
+            <div class="gallery__content">
+                <h3>Streaming</h3>
+                <p>Suivez les matchs, partagez les moments forts et vibrez en direct.</p>
+            </div>
+        </article>
+
+        <article class="gallery__card">
+            <img src="{{ asset('uploads/gallery/setup.jpg') }}" alt="Setup gaming" class="gallery__image">
+
+            <div class="gallery__content">
+                <h3>Setup Gaming</h3>
+                <p>Un univers pensé pour les joueurs, les équipes et les organisateurs.</p>
+            </div>
+        </article>
+
+        <article class="gallery__card">
+            <img src="{{ asset('uploads/gallery/rewards.png') }}" alt="Récompenses esport" class="gallery__image">
+
+            <div class="gallery__content">
+                <h3>Récompenses</h3>
+                <p>Grimpez dans les classements et montrez ce que vous valez.</p>
+            </div>
+        </article>
 
     </div>
 
-    <button data-carousel-target="next" data-action="click->carousel#next" class="navigation-item" data-slider="next">
-        <i class="fa-solid fa-forward"></i>
-    </button>
-
-</div>
+</section>

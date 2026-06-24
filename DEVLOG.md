@@ -851,6 +851,37 @@ Création de la structure :
 - Ajouter les statistiques
 - Limiter les événements affichés sur l'accueil
 
+## 23/06/2026
+
+### Home Page
+
+- Création de la section "L'esprit compétition"
+- Refonte du contenu marketing de la page d'accueil
+- Ajout des statistiques de plateforme
+- Création du carrousel des jeux disponibles
+- Liaison des jeux de la base de données à la Home
+- Ajout des logos de jeux dans la base
+
+### Front-End
+
+- Mise en place du composant Carousel en JavaScript ES6
+- Utilisation d'une classe Carousel avec constructeur
+- Gestion du scroll horizontal par boutons
+- Débogage et correction de l'initialisation du composant
+
+### Responsive
+
+- Validation du comportement mobile-first
+- Vérification du fonctionnement du carousel sur mobile
+
+### Prochaine étape
+
+- Section Événements
+- Newsletter
+- À propos
+- Galerie
+- Footer
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés

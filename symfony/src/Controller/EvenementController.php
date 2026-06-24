@@ -401,4 +401,5 @@ final class EvenementController extends AbstractController
             'scores' => $scores,
         ]);
     }
+
 }

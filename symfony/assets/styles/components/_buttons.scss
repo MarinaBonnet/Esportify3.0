@@ -1,2 +1,46 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.85rem 1.4rem;
+    border-radius: $radius;
+
+    background: linear-gradient(135deg, $color-pink, $color-purple);
+    color: $color-text;
+
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    box-shadow: 0 0 18px rgba(247, 37, 133, 0.35);
+    transition: $transition;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 28px rgba(247, 37, 133, 0.55);
+    }
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.75rem 1.2rem;
+    border-radius: $radius;
+
+    border: 1px solid $color-blue;
+    color: $color-blue;
+
+    font-weight: 700;
+    transition: $transition;
+
+    &:hover {
+        background: $color-blue;
+        color: $color-dark;
+    }
+}

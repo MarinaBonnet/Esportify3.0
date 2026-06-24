@@ -68,5 +68,22 @@
         &__item {
             justify-content: flex-start;
         }
+
+        &__text {
+            margin: 1.5rem 0;
+            color: $color-text-muted;
+            line-height: 1.8;
+        }
+
+        .btn-primary {
+            margin-top: 1rem;
+        }
+
+        &__image {
+            img {
+                max-height: 500;
+                object-fit: cover;
+            }
+        }
     }
 }

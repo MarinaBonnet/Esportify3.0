@@ -1,21 +1,25 @@
-<footer class="footer-nav">
+<footer class="footer">
 
-    <a href="{{ path('app_home') }}">
-        <img src="{{ asset('img/logoManette.png') }}" class="footer-logo" alt="logo de esportify">
-    </a>
+    <div class="footer__container">
+        <a href="{{ path('app_home') }}" class="footer__brand">
+            <img src="{{ asset('uploads/logo-esportify.png') }}" class="footer__logo" alt="logo de esportify">
+        </a>
 
-    <ul>
-        <li>© 2025 Esportify. Tous droits réservés.</li>
 
-        <li>
+        <p class="footer__copyright">© 2026 Esportify. Tous droits réservés.</p>
+
+        <p class="footer__made">
             Made With
-            <img src="{{ asset('img/Vector_heart.png') }}" alt="icone coeur" class="icone-heart">
-        </li>
+            <img src="{{ asset('uploads/Vector_heart.png') }}" alt="icone coeur" class="footer__heart">
+        </p>
 
-        <li><a href="{{ path('conditions') }}">Conditions d'utilisation</a></li>
-        <li><a href="{{ path('mentions_legales') }}">Mentions légales</a></li>
-        <li><a href="{{ path('confidentialite') }}">Politique de confidentialité</a></li>
-        <li><a href="{{ path('contact') }}">Contacte-nous</a></li>
-    </ul>
+        <nav class="footer__nav">
+            <a href="{{ path('conditions') }}">Conditions d'utilisation</a>
+            <a href="{{ path('mentions_legales') }}">Mentions légales</a>
+            <a href="{{ path('confidentialite') }}">Politique de confidentialité</a>
+            <a href="{{ path('app_contact') }}">Contacte-nous</a>
+        </nav>
+
+    </div>
 
 </footer>

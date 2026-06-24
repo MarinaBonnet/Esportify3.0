@@ -32,7 +32,6 @@
             width: 100%;
             display: block;
             border-radius: $radius;
-            margin: 16px auto;
         }
     }
 }
@@ -45,9 +44,29 @@
             gap: 3rem;
             align-items: center;
         }
+        &__content {
+            order: 2;
+        }
+        &__image {
+            order: 1;
+            img {
+                height: 420px;
+                object-fit: cover;
+                margin-top: 6rem;
+            }
+        }
 
         &__title {
             text-align: left;
+        }
+    }
+}
+@include desktop {
+    .advantages {
+        &__image {
+            img {
+                height: 460px;
+            }
         }
     }
 }

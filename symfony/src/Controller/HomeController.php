@@ -29,11 +29,8 @@ final class HomeController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
     
-        $evenements = $evenementRepository->findBy(
-        ['status' => 'valide'],
-        ['dateStart' => 'ASC'],
-        3
-    );
+        $evenements = $evenementRepository->findUpcomingEvents(3);
+        
         $jeux = $jeuRepository->findBy(
         [],
         ['nom' => 'ASC']

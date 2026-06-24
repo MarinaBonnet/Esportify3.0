@@ -1,0 +1,52 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.legal {
+    padding: 4rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+
+    h1 {
+        margin-bottom: 2rem;
+        text-align: center;
+        color: $color-text;
+    }
+
+    h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: $color-pink;
+    }
+
+    p {
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        display: grid;
+        gap: 0.5rem;
+
+        margin: 1rem 0 2rem;
+        padding-left: 1.2rem;
+
+        list-style: disc;
+    }
+
+    li {
+        color: $color-text-muted;
+    }
+
+    a {
+        color: $color-blue;
+
+        &:hover {
+            color: $color-pink;
+        }
+    }
+}
+
+@include tablet {
+    .legal {
+        padding: 5rem 2rem;
+    }
+}

@@ -13,6 +13,7 @@
 @use "pages/joueur";
 @use "pages/organisateur";
 @use "pages/admin";
+@use "pages/legal";
 
 @use "sections/hero";
 @use "sections/presentation";
@@ -21,3 +22,6 @@
 @use "sections/competition";
 @use "sections/games-carousel";
 @use "sections/event";
+@use "sections/community";
+@use "sections/about";
+@use "sections/gallery";
