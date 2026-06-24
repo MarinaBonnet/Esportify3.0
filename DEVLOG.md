@@ -882,6 +882,16 @@ Création de la structure :
 - Galerie
 - Footer
 
+## 24/06/2026
+
+- Finalisation complète de la page d'accueil
+- Refonte responsive mobile-first
+- Création du carousel jeux en JavaScript ES6
+- Ajout des sections About et Gallery
+- Création du footer
+- Création des pages légales
+- Corrections desktop et responsive
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés

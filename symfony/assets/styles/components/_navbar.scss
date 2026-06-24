@@ -31,12 +31,13 @@
     }
 
     &__logo img {
-        width: 100px;
+        width: 110px;
         height: auto;
     }
 
     @include tablet {
         flex-direction: row;
         justify-content: center;
+        gap: 6rem;
     }
 }

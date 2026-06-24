@@ -4,77 +4,116 @@
 
 {% block body %}
 
-<h1>Tous les événements</h1>
+<section class="events-page">
 
-<p>
-    Retrouvez les événements e-sport validés par l'équipe Esportify.
-</p>
+    <header class="events-page__header">
 
-{% if evenements is empty %}
-<p>Aucun événement disponible pour le moment.</p>
-{% else %}
-<label for="sort-events">Trier par :</label>
-
-<select id="sort-events">
-    <option value="date">Date</option>
-    <option value="places">Nombre de joueurs</option>
-    <option value="organisateur">Organisateur</option>
-</select>
-
-<section id="events-results" class="events-list">
-    {% for evenement in evenements %}
-    <article class="event-card">
-
-        {% set image = evenement.images|first %}
-
-        {% if image %}
-        <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
-        {% endif %}
-
-        <h2>{{ evenement.titre }}</h2>
+        <h1>
+            Tous les événements
+        </h1>
 
         <p>
-            Joueurs : {{ evenement.nbPlaces }}
+            Retrouvez les événements e-sport validés par l'équipe Esportify.
         </p>
 
-        <p>
-            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}
-        </p>
+    </header>
 
-        <p>
-            Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
-        </p>
+    <div class="events-page__filters">
 
-        <p>
-            Organisateur : {{ evenement.organisateur.pseudo }}
-        </p>
+        <label for="sort-events">
+            Trier par :
+        </label>
 
-        <a href="{{ path('app_evenement_show', {
-                    id: evenement.id
-                }) }}">
-            Voir l'événement
-        </a>
-        {% if evenement.dateEnd <= "now" |date %} <a href="{{ path('app_evenement_classement', {
-            id: evenement.id
-                }) }}">
-            Voir le classement
+        <select id="sort-events">
+            <option value="date">Date</option>
+            <option value="places">Nombre de joueurs</option>
+            <option value="organisateur">
+                Organisateur
+            </option>
+        </select>
+
+    </div>
+
+    {% if is_granted('ROLE_ORGANISATEUR') %}
+    <a href="{{ path('app_evenement_new') }}" class="btn-primary">
+        Créer un événement
+    </a>
+    {% endif %}
+
+    <section id="events-results" class="events-page__grid">
+
+        {% for evenement in evenements %}
+
+        <article class="event-card">
+
+            <h2>
+                {{ evenement.titre }}
+            </h2>
+
+            <p>
+                <i class="fa-solid fa-users"></i>
+                {{ evenement.nbPlaces }} joueurs
+            </p>
+
+            <p>
+                Début :
+                {{ evenement.dateStart|date('d/m/Y H:i') }}
+            </p>
+
+            <p>
+                Fin :
+                {{ evenement.dateEnd|date('d/m/Y H:i') }}
+            </p>
+
+            <a href="{{ path(
+                        'app_evenement_show',
+                        { id: evenement.id }
+                    ) }}" class="btn-secondary">
+                Voir les détails
             </a>
-            {% endif %}
 
-    </article>
-    {% endfor %}
+        </article>
+
+        {% else %}
+
+        <p>
+            Aucun événement disponible.
+        </p>
+
+        {% endfor %}
+
+    </section>
+
+    <section class="events-ranking">
+
+        <h2>
+            Top joueurs
+        </h2>
+
+        {% for score in topScores %}
+
+        <div class="events-ranking__item">
+
+            <strong>
+                #{{ loop.index }}
+                {{ score.user.pseudo }}
+            </strong>
+
+            <span>
+                {{ score.value }} pts
+            </span>
+
+        </div>
+
+        {% endfor %}
+
+    </section>
+
 </section>
-{% endif %}
-
-{% if is_granted('ROLE_ORGANISATEUR') %}
-<a href="{{ path('app_evenement_new') }}">
-    Créer un événement
-</a>
-{% endif %}
 
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('js/events-filter.js') }}"></script>
+<script src="{{ asset('js/events-filter.js') }}" defer></script>
 {% endblock %}

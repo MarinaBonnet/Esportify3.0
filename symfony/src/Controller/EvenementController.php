@@ -24,12 +24,21 @@ final class EvenementController extends AbstractController
 {
 
     #[Route(name: 'app_evenement_index', methods: ['GET'])]
-    public function index(EvenementRepository $evenementRepository): Response
+    public function index(
+        EvenementRepository $evenementRepository,
+        ScoreRepository $scoreRepository
+    ): Response
     {
         return $this->render('evenement/index.html.twig', [
-            'evenements' => $evenementRepository->findBy(
-                ['status' => 'valide'],
-                [ 'dateStart' => 'ASC']
+        'evenements' => $evenementRepository->findBy(
+            ['status' => 'valide'],
+            ['dateStart' => 'ASC']
+        ),
+
+            'topScores' => $scoreRepository->findBy(
+                [],
+                ['value' => 'DESC'],
+                5
             ),
         ]);
     }
@@ -112,8 +121,7 @@ final class EvenementController extends AbstractController
                 'dateStart' => $evenement->getDateStart()?->format('d/m/Y H:i'),
                 'nbPlaces' => $evenement->getNbPlaces(),
                 'organisateur' => $evenement->getOrganisateur()?->getPseudo(),
-                'image' => $image ? $image->getUrl() : null,
-                'dateEnd' => $evenement->getDateEnd()?->format('Y-m-d H:i:s'),
+                'dateEnd' => $evenement->getDateEnd()?->format('Y-m-d H:i'),
             ];
         }
 

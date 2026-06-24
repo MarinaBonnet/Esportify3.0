@@ -1,42 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ evenement.titre }}{% endblock %}
+{% block title %}
+{{ evenement.titre }}
+{% endblock %}
 
 {% block body %}
 
 <section class="event-detail">
 
-    <h1>{{ evenement.titre }}</h1>
+    <h1>
+        {{ evenement.titre }}
+    </h1>
 
     {% set image = evenement.images|first %}
 
     {% if image %}
-    <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}">
+    <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}" class="event-detail__image">
     {% endif %}
 
-    <p>
+    <p class="event-detail__description">
         {{ evenement.description }}
     </p>
 
-    <ul>
-        <li>Jeu : {{ evenement.jeu.nom }}</li>
-        <li>Organisateur : {{ evenement.organisateur.pseudo }}</li>
-        <li>Places : {{ evenement.nbPlaces }}</li>
-        <li>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
-        <li>Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
-        <li>Statut : {{ evenement.status }}</li>
+    <ul class="event-detail__infos">
+
+        <li>
+            Jeu :
+            {{ evenement.jeu.nom }}
+        </li>
+
+        <li>
+            Organisateur :
+            {{ evenement.organisateur.pseudo }}
+        </li>
+
+        <li>
+            Places :
+            {{ evenement.nbPlaces }}
+        </li>
+
+        <li>
+            Début :
+            {{ evenement.dateStart|date('d/m/Y H:i') }}
+        </li>
+
+        <li>
+            Fin :
+            {{ evenement.dateEnd|date('d/m/Y H:i') }}
+        </li>
+
+        <li>
+            Statut :
+            {{ evenement.status }}
+        </li>
+
     </ul>
 
-    <div class="event-actions">
+    <div class="event-detail__actions">
 
-        <a href="{{ path('app_evenement_index') }}">
-            Retour aux événements
+        <a href="{{ path('app_evenement_index') }}" class="btn-secondary">
+            Retour
         </a>
 
         <a href="{{ path('app_evenement_classement', {
             id: evenement.id
-        }) }}">
-            Voir le classement
+        }) }}" class="btn-secondary">
+            Classement
         </a>
 
         {% if is_granted('ROLE_JOUEUR') %}
@@ -47,41 +76,37 @@
         {% if end > now %}
 
         <a href="{{ path('app_evenement_participer', {
-            id: evenement.id
-        }) }}">
+                    id: evenement.id
+                }) }}" class="btn-primary">
             Participer
         </a>
 
         <a href="{{ path('app_evenement_favori', {
-            id: evenement.id
-        }) }}">
-            Ajouter aux favoris
+                    id: evenement.id
+                }) }}" class="btn-secondary">
+            Favori
         </a>
-
-        {% else %}
-
-        <p>
-            Cet événement est terminé.
-        </p>
 
         {% endif %}
 
         {% endif %}
 
         {% if is_granted('ROLE_ADMIN')
-        or app.user == evenement.organisateur
-        %}
+        or app.user == evenement.organisateur %}
+
         {% if evenement.dateStart > date()
-        or is_granted('ROLE_ADMIN')
-        %}
+        or is_granted('ROLE_ADMIN') %}
+
         <a href="{{ path('app_evenement_edit', {
                     id: evenement.id
-                }) }}">
+                }) }}" class="btn-secondary">
             Modifier
         </a>
+
         {% endif %}
 
         {{ include('evenement/_delete_form.html.twig') }}
+
         {% endif %}
 
     </div>
