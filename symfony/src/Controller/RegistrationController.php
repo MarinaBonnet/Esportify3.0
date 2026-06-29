@@ -33,6 +33,7 @@ class RegistrationController extends AbstractController
                 'https://api.dicebear.com/9.x/adventurer/svg?seed='
                 . urlencode($user->getPseudo())
             );
+            $user->setCreatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($user);
             $entityManager->flush();

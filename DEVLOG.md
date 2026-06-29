@@ -892,6 +892,42 @@ Création de la structure :
 - Création des pages légales
 - Corrections desktop et responsive
 
+## 29/06/2026
+
+### Module Événements
+
+- Refactoring de la page événements
+- Séparation des événements en trois sections : à venir, en cours et terminés
+- Création d’un composant Twig `_card.html.twig`
+- Mise en place du tri AJAX des événements à venir
+- Création d’une popup de détails en JavaScript orienté objet
+- Ajout de la route JSON `/evenement/{id}/details`
+- Ajout du bouton Participer
+- Ajout du système de favoris en AJAX
+- Création d’un `FavoriteManager`
+- Mise en place d’un `main.js` pour centraliser les imports JavaScript
+
+### Front-End
+
+- Amélioration du Sass de la page événements
+- Création du Sass de la modal
+- Utilisation du BEM pour les classes de la popup
+- Correction du responsive mobile-first des boutons de la modal
+
+### Correctifs
+
+- Correction d’une erreur de portée JavaScript avec `response`
+- Correction des imports JavaScript en mode module
+- Correction des problèmes de cache et permissions Doctrine ODM MongoDB
+- Correction d’une erreur de nommage sur les actions de la modal
+
+### Prochaine étape
+
+- Créer le dashboard joueur
+- Afficher les événements favoris
+- Afficher les participations du joueur
+- Préparer les statistiques utilisateur
+
 À faire :
 
 □ Restreindre l’accès au chat aux participants acceptés

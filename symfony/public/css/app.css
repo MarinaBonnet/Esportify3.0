@@ -468,6 +468,108 @@ p {
     text-align: center;
   }
 }
+.player-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+.player-dashboard__header {
+  background: #1e1e1e;
+  border: 1px solid rgba(114, 9, 183, 0.4);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.player-dashboard__avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 2px solid #f72585;
+}
+.player-dashboard__header h1 {
+  color: #f72585;
+  margin-bottom: 0.5rem;
+}
+.player-dashboard__header p {
+  color: #bdbdbd;
+}
+.player-dashboard__actions {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.player-dashboard__actions h2 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+.player-dashboard__actions ul {
+  display: grid;
+  gap: 1rem;
+}
+.player-dashboard__actions a {
+  display: block;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(114, 9, 183, 0.2);
+  color: #ffffff;
+  text-align: center;
+  transition: 0.3s ease;
+}
+.player-dashboard__actions a:hover {
+  background: rgba(247, 37, 133, 0.25);
+  color: #f72585;
+}
+.player-dashboard__grid {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+.player-dashboard__card {
+  background: #1e1e1e;
+  height: fit-content;
+  border: 1px solid rgba(114, 9, 183, 0.35);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.player-dashboard__card h2 {
+  color: #f72585;
+  margin-bottom: 1rem;
+}
+.player-dashboard__card ul {
+  display: grid;
+  gap: 1rem;
+}
+.player-dashboard__card li {
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #bdbdbd;
+}
+.player-dashboard__card strong {
+  color: #ffffff;
+}
+.player-dashboard__card a {
+  display: inline-block;
+  margin-top: 0.7rem;
+  color: #4895ef;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .player-dashboard {
+    padding: 3rem 1.5rem;
+  }
+  .player-dashboard__actions ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .player-dashboard__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 .legal {
   padding: 4rem 1rem;
   max-width: 900px;
