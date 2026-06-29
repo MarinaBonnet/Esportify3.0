@@ -27,13 +27,34 @@ final class EvenementController extends AbstractController
     public function index(
         EvenementRepository $evenementRepository,
         ScoreRepository $scoreRepository
-    ): Response
-    {
-        return $this->render('evenement/index.html.twig', [
-        'evenements' => $evenementRepository->findBy(
+    ): Response {
+        $evenements = $evenementRepository->findBy(
             ['status' => 'valide'],
             ['dateStart' => 'ASC']
-        ),
+        );
+
+        $now = new \DateTimeImmutable();
+
+        $aVenir = [];
+        $enCours = [];
+        $termines = [];
+
+        foreach ($evenements as $evenement) {
+            if ($evenement->getDateStart() > $now) {
+                $aVenir[] = $evenement;
+            } elseif (
+                $evenement->getDateStart() <= $now &&
+                $evenement->getDateEnd() >= $now
+            ) {
+                $enCours[] = $evenement;
+            } else {
+                $termines[] = $evenement;
+            }
+        }
+        return $this->render('evenement/index.html.twig', [
+            'aVenir' => $aVenir,
+            'enCours' => $enCours,
+            'termines' => $termines,
 
             'topScores' => $scoreRepository->findBy(
                 [],
@@ -113,19 +134,35 @@ final class EvenementController extends AbstractController
 
         foreach ($evenements as $evenement) {
 
-            $image = $evenement->getImages()->first();
-
             $data[] = [
                 'id' => $evenement->getId(),
                 'titre' => $evenement->getTitre(),
                 'dateStart' => $evenement->getDateStart()?->format('d/m/Y H:i'),
+                'dateEnd' => $evenement->getDateEnd()?->format('d/m/Y H:i'),
                 'nbPlaces' => $evenement->getNbPlaces(),
                 'organisateur' => $evenement->getOrganisateur()?->getPseudo(),
-                'dateEnd' => $evenement->getDateEnd()?->format('Y-m-d H:i'),
+                
             ];
         }
 
         return $this->json($data);
+    }
+
+    #[Route('/{id}/details', name: 'app_evenement_details', methods: ['GET'])]
+    public function details(Evenement $evenement): JsonResponse
+    {
+        $image = $evenement->getImages()->first();
+
+        return $this->json([
+            'id' => $evenement->getId(),
+            'titre' => $evenement->getTitre(),
+            'description' => $evenement->getDescription(),
+            'nbPlaces' => $evenement->getNbPlaces(),
+            'dateStart' => $evenement->getDateStart()?->format('d/m/Y H:i'),
+            'dateEnd' => $evenement->getDateEnd()?->format('d/m/Y H:i'),
+            'organisateur' => $evenement->getOrganisateur()?->getPseudo(),
+            'image' => $image ? $image->getUrl() : null,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_evenement_show', methods: ['GET'])]
@@ -307,36 +344,49 @@ final class EvenementController extends AbstractController
     }
 
     #[IsGranted('ROLE_JOUEUR')]
-    #[Route('/{id}/favori', name: 'app_evenement_favori', methods: ['GET'])]
-    public function ajouterFavori(
+    #[Route('/{id}/favori', name: 'app_evenement_favori', methods: ['POST'])]
+    public function toggleFavori(
         Evenement $evenement,
         EntityManagerInterface $entityManager
-    ): Response {
-        $favoriExistant = $entityManager
-            ->getRepository(Favori::class)
-            ->findOneBy([
-                'user' => $this->getUser(),
-                'evenement' => $evenement,
-            ]);
-
+    ): JsonResponse {
         if ($evenement->getDateEnd() <= new \DateTimeImmutable()) {
-            throw $this->createAccessDeniedException(
-                'Vous ne pouvez pas ajouter un événement terminé aux favoris.'
-            );
+            return $this->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez pas ajouter un événement terminé aux favoris.',
+            ], 403);
         }
 
+        $favoriRepository = $entityManager->getRepository(Favori::class);
+
+        $favoriExistant = $favoriRepository->findOneBy([
+            'user' => $this->getUser(),
+            'evenement' => $evenement,
+        ]);
+
         if ($favoriExistant) {
-            return $this->redirectToRoute('app_joueur');
+            $entityManager->remove($favoriExistant);
+            $entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'favorite' => false,
+                'message' => 'Événement retiré des favoris.',
+            ]);
         }
 
         $favori = new Favori();
         $favori->setUser($this->getUser());
         $favori->setEvenement($evenement);
+        $favori->setCreatedAt(new \DateTimeImmutable());
 
         $entityManager->persist($favori);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_joueur');
+        return $this->json([
+            'success' => true,
+            'favorite' => true,
+            'message' => 'Événement ajouté aux favoris.',
+        ]);
     }
 
     #[IsGranted('ROLE_JOUEUR')]

@@ -21,20 +21,18 @@ class EvenementRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('e')
             ->andWhere('e.status = :status')
-            ->setParameter('status', 'valide');
-
-        if ($sort === 'date') {
-            $qb->orderBy('e.dateStart', 'ASC');
-        }
+            ->andWhere('e.dateStart > :now')
+            ->setParameter('status', 'valide')
+            ->setParameter('now', new \DateTimeImmutable());
 
         if ($sort === 'places') {
             $qb->orderBy('e.nbPlaces', 'DESC');
-        }
-
-        if ($sort === 'organisateur') {
+        } elseif ($sort === 'organisateur') {
             $qb
                 ->join('e.organisateur', 'u')
                 ->orderBy('u.pseudo', 'ASC');
+        } else {
+            $qb->orderBy('e.dateStart', 'ASC');
         }
 
         return $qb->getQuery()->getResult();

@@ -6,10 +6,11 @@
 
 @use "components/navbar";
 @use "components/buttons";
-@use "components/cards";
+@use "components/modal";
 @use "components/footer";
 
 @use "pages/home";
+@use "pages/events";
 @use "pages/joueur";
 @use "pages/organisateur";
 @use "pages/admin";

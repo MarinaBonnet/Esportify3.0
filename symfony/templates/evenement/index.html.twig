@@ -7,31 +7,21 @@
 <section class="events-page">
 
     <header class="events-page__header">
-
-        <h1>
-            Tous les événements
-        </h1>
+        <h1>Tous les événements</h1>
 
         <p>
             Retrouvez les événements e-sport validés par l'équipe Esportify.
         </p>
-
     </header>
 
     <div class="events-page__filters">
-
-        <label for="sort-events">
-            Trier par :
-        </label>
+        <label for="sort-events">Trier les événements à venir :</label>
 
         <select id="sort-events">
             <option value="date">Date</option>
             <option value="places">Nombre de joueurs</option>
-            <option value="organisateur">
-                Organisateur
-            </option>
+            <option value="organisateur">Organisateur</option>
         </select>
-
     </div>
 
     {% if is_granted('ROLE_ORGANISATEUR') %}
@@ -40,80 +30,80 @@
     </a>
     {% endif %}
 
-    <section id="events-results" class="events-page__grid">
+    <section class="events-section events-section--upcoming">
+        <h2>Événements à venir</h2>
 
-        {% for evenement in evenements %}
+        <div id="events-results" class="events-page__grid">
+            {% for evenement in aVenir %}
+            {% include 'evenement/_card.html.twig' with { evenement: evenement } %}
+            {% else %}
+            <p class="events-page__empty">Aucun événement à venir.</p>
+            {% endfor %}
+        </div>
+    </section>
 
-        <article class="event-card">
+    <section class="events-section events-section--live">
+        <h2>Événements en cours</h2>
 
-            <h2>
-                {{ evenement.titre }}
-            </h2>
+        <div class="events-page__grid">
+            {% for evenement in enCours %}
+            {% include 'evenement/_card.html.twig' with { evenement: evenement } %}
+            {% else %}
+            <p class="events-page__empty">Aucun événement en cours.</p>
+            {% endfor %}
+        </div>
+    </section>
 
-            <p>
-                <i class="fa-solid fa-users"></i>
-                {{ evenement.nbPlaces }} joueurs
-            </p>
+    <section class="events-section events-section--finished">
+        <h2>Événements terminés</h2>
 
-            <p>
-                Début :
-                {{ evenement.dateStart|date('d/m/Y H:i') }}
-            </p>
-
-            <p>
-                Fin :
-                {{ evenement.dateEnd|date('d/m/Y H:i') }}
-            </p>
-
-            <a href="{{ path(
-                        'app_evenement_show',
-                        { id: evenement.id }
-                    ) }}" class="btn-secondary">
-                Voir les détails
-            </a>
-
-        </article>
-
-        {% else %}
-
-        <p>
-            Aucun événement disponible.
-        </p>
-
-        {% endfor %}
-
+        <div class="events-page__grid">
+            {% for evenement in termines %}
+            {% include 'evenement/_card.html.twig' with { evenement: evenement } %}
+            {% else %}
+            <p class="events-page__empty">Aucun événement terminé.</p>
+            {% endfor %}
+        </div>
     </section>
 
     <section class="events-ranking">
-
-        <h2>
-            Top joueurs
-        </h2>
+        <h2>Top joueurs</h2>
 
         {% for score in topScores %}
-
         <div class="events-ranking__item">
-
             <strong>
-                #{{ loop.index }}
-                {{ score.user.pseudo }}
+                #{{ loop.index }} {{ score.user.pseudo }}
             </strong>
 
-            <span>
-                {{ score.value }} pts
-            </span>
-
+            <span>{{ score.value }} pts</span>
         </div>
-
         {% endfor %}
-
     </section>
 
 </section>
+
+<div class="event-modal" id="event-modal" aria-hidden="true">
+
+    <div class="event-modal__overlay" data-close-modal></div>
+
+    <div class="event-modal__content">
+
+        <button class="event-modal__close" type="button" data-close-modal>
+            &times;
+        </button>
+
+        <div id="event-modal-body">
+            Chargement...
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('js/events-filter.js') }}" defer></script>
+<script type="module" src="{{ asset('js/main.js') }}" defer></script>
+
 {% endblock %}

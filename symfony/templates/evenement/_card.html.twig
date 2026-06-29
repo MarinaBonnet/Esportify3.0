@@ -1,0 +1,21 @@
+<article class="event-card">
+    <h3>{{ evenement.titre }}</h3>
+
+    <p>
+        <i class="fa-solid fa-users"></i>
+        {{ evenement.nbPlaces }} joueurs
+    </p>
+
+    <p>
+        Début : {{ evenement.dateStart|date('d/m/Y H:i') }}
+    </p>
+
+    <p>
+        Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}
+    </p>
+
+    <button type="button" class="btn-secondary event-card__details" data-event-id="{{ evenement.id }}">
+        Voir les détails
+    </button>
+
+</article>
