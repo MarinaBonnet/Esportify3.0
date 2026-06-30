@@ -31,8 +31,7 @@ final class RoomController extends AbstractController
         }
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-        $isOrganisateur =
-            $this->isGranted('ROLE_ORGANISATEUR');
+        $isOrganisateur = $evenement ->getOrganisateur() === $user;
 
         $participation = $participationRepository->findOneBy([
             'user' => $user,
