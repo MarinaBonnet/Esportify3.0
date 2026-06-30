@@ -16,6 +16,19 @@ class ParticipationRepository extends ServiceEntityRepository
         parent::__construct($registry, Participation::class);
     }
 
+    public function findAcceptedByOrganisateur($organisateur): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.evenement', 'e')
+            ->andWhere('e.organisateur = :organisateur')
+            ->andWhere('p.status = :status')
+            ->setParameter('organisateur', $organisateur)
+            ->setParameter('status', 'accepte')
+            ->orderBy('e.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+}
 //    /**
 //     * @return Participation[] Returns an array of Participation objects
 //     */
@@ -40,4 +53,3 @@ class ParticipationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-}

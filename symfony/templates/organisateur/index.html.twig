@@ -4,169 +4,185 @@
 
 {% block body %}
 
-<h1>Dashboard Organisateur</h1>
+<section class="dashboard dashboard--organizer">
 
-<p>
-    Bienvenue {{ app.user.pseudo ?? app.user.email }}
-</p>
+    <header class="dashboard__header">
+        <div>
+            <h1>Bienvenue {{ app.user.pseudo ?? app.user.email }} 👋</h1>
+            <p>Gérez vos événements, vos participants et vos rooms.</p>
+        </div>
 
-<section>
-    <h2>Actions rapides</h2>
+        <a href="{{ path('app_evenement_new') }}" class="btn btn--primary">
+            Créer un événement
+        </a>
+    </header>
+    <section class="dashboard__actions">
+        <a href="{{ path('app_evenement_new') }}" class="btn btn--primary">
+            Créer un événement
+        </a>
 
-    <ul>
-        <li>
-            <a href="{{ path('app_evenement_new') }}">
-                Créer un événement
+        <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">
+            Voir les événements
+        </a>
+
+        <a href="{{ path('app_joueur') }}" class="btn btn--secondary">
+            Mon espace joueur
+        </a>
+    </section>
+
+    <section class="dashboard__stats">
+        <article class="dashboard-card">
+            <span class="dashboard-card__label">Mes événements</span>
+            <strong class="dashboard-card__value">{{ nbEvenements }}</strong>
+        </article>
+
+        <article class="dashboard-card">
+            <span class="dashboard-card__label">Participants inscrits</span>
+            <strong class="dashboard-card__value">{{ nbParticipantsInscrits }}</strong>
+        </article>
+
+        <article class="dashboard-card">
+            <span class="dashboard-card__label">Remplissage</span>
+            <strong class="dashboard-card__value">{{ tauxRemplissage }}%</strong>
+        </article>
+
+    </section>
+
+    <section class="dashboard__section">
+        <div class="dashboard__section-header">
+            <h2>Mes événements</h2>
+            <a href="{{ path('app_evenement_index') }}">Voir tous les événements</a>
+        </div>
+
+        {% if evenements is empty %}
+        <div class="empty-state">
+            <p>Aucun événement créé pour le moment.</p>
+            <a href="{{ path('app_evenement_new') }}" class="btn btn--secondary">
+                Créer mon premier événement
             </a>
-        </li>
+        </div>
+        {% else %}
+        <div class="event-grid">
+            {% for evenement in evenements %}
 
-        <li>
-            <a href="{{ path('app_evenement_index') }}">
-                Voir tous les événements
-            </a>
-        </li>
+            {% set now = "now"|date("U", "Europe/Paris") %}
+            {% set start = evenement.dateStart|date("U", "Europe/Paris") %}
+            {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+            {% set startLimit = start - 1800 %}
+            {% set participantsAcceptes = 0 %}
 
-        <li>
-            <a href="{{ path('app_joueur') }}">
-                Mon espace joueur
-            </a>
-        </li>
-    </ul>
-</section>
+            {% for participation in evenement.participations %}
+            {% if participation.status == 'accepte' %}
+            {% set participantsAcceptes = participantsAcceptes + 1 %}
+            {% endif %}
+            {% endfor %}
 
-<section>
-    <h2>Mes événements</h2>
+            <article class="event-card">
 
-    {% if evenements is empty %}
-    <p>Aucun événement créé pour le moment.</p>
-    {% else %}
-    <ul>
-        {% for evenement in evenements %}
+                <div class="event-card__header">
+                    <h3>{{ evenement.titre }}</h3>
 
-        {% set now = "now"|date("U", "Europe/Paris") %}
-        {% set start = evenement.dateStart|date("U", "Europe/Paris") %}
-        {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
-        {% set startLimit = start - 1800 %}
+                    <span class="badge badge--{{ evenement.status }}">
+                        {{ evenement.status }}
+                    </span>
+                </div>
 
-        {% set participantsAcceptes = 0 %}
+                <ul class="event-card__infos">
+                    <li>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
+                    <li>Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
+                    <li>Participants : {{ participantsAcceptes }} / {{ evenement.nbPlaces }}</li>
+                    <li>Places restantes : {{ evenement.nbPlaces - participantsAcceptes }}</li>
+                </ul>
 
-        {% for participation in evenement.participations %}
-        {% if participation.status == 'accepte' %}
-        {% set participantsAcceptes = participantsAcceptes + 1 %}
-        {% endif %}
-        {% endfor %}
+                <div class="event-card__state">
+                    {% if end <= now %} <strong>Terminé</strong>
+                        {% elseif evenement.startedAt is not null %}
+                        <strong>En cours</strong>
+                        {% elseif start <= now %} <strong>En attente de démarrage</strong>
+                            {% else %}
+                            <strong>À venir</strong>
+                            {% endif %}
+                </div>
 
-        <li>
-            <strong>{{ evenement.titre }}</strong><br>
-
-            Proposé par : {{ evenement.organisateur.pseudo }}<br>
-            Statut de validation : {{ evenement.status }}<br>
-            Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
-            Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}<br>
-
-            Participants :
-            {{ participantsAcceptes }} / {{ evenement.nbPlaces }}<br>
-
-            Places restantes :
-            {{ evenement.nbPlaces - participantsAcceptes }}<br>
-
-            {% if end <= now %} <strong>Terminé</strong><br>
-                {% elseif evenement.startedAt is not null %}
-                <strong>En cours</strong><br>
-                {% elseif start <= now %} <strong>En attente de démarrage</strong><br>
-                    {% else %}
-                    <strong>À venir</strong><br>
-                    {% endif %}
-
-                    <a href="{{ path('app_evenement_show', {
-                    id: evenement.id
-                }) }}">
+                <div class="event-card__actions">
+                    <a href="{{ path('app_evenement_show', { id: evenement.id }) }}">
                         Voir
                     </a>
 
                     {% if end > now %}
+
                     {% if start > now and evenement.startedAt is null %}
-                    <a href="{{ path('app_evenement_edit', {
-                                id: evenement.id
-                            }) }}">
+                    <a href="{{ path('app_evenement_edit', { id: evenement.id }) }}">
                         Modifier
                     </a>
                     {% endif %}
 
                     {% if evenement.status == 'valide' %}
-                    {% if evenement.startedAt is null and now >= startLimit %}
-                    <a href="{{ path('app_evenement_start', {
-                        id: evenement.id
-                    }) }}">
-                        Démarrer l'événement
-                    </a>
 
+                    {% if evenement.startedAt is null and now >= startLimit %}
+                    <a href="{{ path('app_evenement_start', { id: evenement.id }) }}">
+                        Démarrer
+                    </a>
                     {% elseif evenement.startedAt is not null %}
                     <span>Événement démarré</span>
                     {% else %}
-                    <small>
-                        Démarrage disponible 30 min avant
-                    </small>
+                    <small>Démarrage disponible 30 min avant</small>
                     {% endif %}
 
                     {% else %}
-                    <small>
-                        En attente de validation admin
-                    </small>
+                    <small>En attente de validation admin</small>
                     {% endif %}
 
                     {% if evenement.startedAt is not null and end > now %}
-                    <br>
-                    <a href="{{ path('app_evenement_room', {
-                                id: evenement.id
-                            }) }}">
+                    <a href="{{ path('app_evenement_room', { id: evenement.id }) }}">
                         Accéder à la room
                     </a>
                     {% endif %}
+
                     {% else %}
-                    <a href="{{ path('app_evenement_classement', {
-                            id: evenement.id
-                        }) }}">
+                    <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}">
                         Voir le classement
                     </a>
                     {% endif %}
-        </li>
+                </div>
 
-        {% endfor %}
-    </ul>
-    {% endif %}
-</section>
+            </article>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
 
-<section>
-    <h2>Demandes de participation</h2>
+    <section class="dashboard__section">
+        <h2>Participants inscrits</h2>
 
-    {% if participationsEnAttente is empty %}
-    <p>Aucune demande de participation en attente.</p>
-    {% else %}
-    <ul>
-        {% for participation in participationsEnAttente %}
-        <li>
-            <strong>{{ participation.user.pseudo }}</strong>
-            souhaite participer à
-            <strong>{{ participation.evenement.titre }}</strong>
+        {% if participationsAcceptees is empty %}
+        <div class="empty-state">
+            <p>Aucun participant inscrit pour le moment.</p>
+        </div>
+        {% else %}
+        <div class="request-list">
+            {% for participation in participationsAcceptees %}
+            <article class="request-card">
+                <p>
+                    <strong>{{ participation.user.pseudo }}</strong>
+                    est inscrit à
+                    <strong>{{ participation.evenement.titre }}</strong>
+                </p>
 
-            <br>
+                <div class="request-card__actions">
+                    <a href="{{ path('app_organisateur_participation_refuser', {
+                            id: participation.id
+                        }) }}" class="btn btn--danger">
+                        Refuser l'inscription
+                    </a>
+                </div>
+            </article>
 
-            <a href="{{ path('app_organisateur_participation_accepter', {
-                        id: participation.id
-                    }) }}">
-                Accepter
-            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
 
-            <a href="{{ path('app_organisateur_participation_refuser', {
-                        id: participation.id
-                    }) }}">
-                Refuser
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
 </section>
 
 {% endblock %}

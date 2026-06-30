@@ -19,23 +19,66 @@ final class OrganisateurController extends AbstractController
         EvenementRepository $evenementRepository,
         ParticipationRepository $participationRepository
     ): Response {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $evenements = $evenementRepository->findAll();
-        } else {
-            $evenements = $evenementRepository->findBy(
-                ['status' => 'valide'],
-                ['dateStart' => 'ASC']
-            );
+       $organisateur = $this->getUser();
+
+        $evenements = $evenementRepository->findBy(
+            ['organisateur' => $organisateur],
+            ['dateStart' => 'ASC']
+        );
+
+        $participationsAcceptees = $participationRepository->findAcceptedByOrganisateur($organisateur);
+
+        $nbEvenements = count($evenements);
+        $nbParticipantsInscrits = count($participationsAcceptees);
+
+        $nbParticipants = 0;
+        $nbValidation = 0;
+        $nbEnCours = 0;
+        $nbAVenir = 0;
+        $nbTermines = 0;
+        $nbPlaces = 0;
+
+        $now = new \DateTimeImmutable();
+
+        foreach ($evenements as $evenement) {
+            $nbPlaces += $evenement->getNbPlaces();
+
+            foreach ($evenement->getParticipations() as $participation) {
+                if ($participation->getStatus() === 'accepte') {
+                    $nbParticipants++;
+                }
+            }
+
+            if ($evenement->getStatus() === 'en_attente') {
+                $nbValidation++;
+            }
+
+            if ($evenement->getDateEnd() <= $now) {
+                $nbTermines++;
+            } elseif ($evenement->getStartedAt() !== null) {
+                $nbEnCours++;
+            } else {
+                $nbAVenir++;
+            }
         }
 
-        $participationsEnAttente = $participationRepository->findBy([
-            'status' => 'en_attente',
-        ]);
+        $tauxRemplissage = $nbPlaces > 0
+            ? round(($nbParticipants / $nbPlaces) * 100)
+            : 0;
+
 
         return $this->render('organisateur/index.html.twig', [
             'controller_name' => 'OrganisateurController',
             'evenements' => $evenements,
-            'participationsEnAttente' => $participationsEnAttente,
+            'participationsAcceptees' => $participationsAcceptees,
+            'nbEvenements' => $nbEvenements,
+            'nbParticipants' => $nbParticipants,
+            'nbParticipantsInscrits' => $nbParticipantsInscrits,
+            'nbValidation' => $nbValidation,
+            'nbEnCours' => $nbEnCours,
+            'nbAVenir' => $nbAVenir,
+            'nbTermines' => $nbTermines,
+            'tauxRemplissage' => $tauxRemplissage
         ]);
     }
 

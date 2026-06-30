@@ -1,0 +1,250 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.dashboard {
+    max-width: $container-width;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    &__header {
+        background: $color-card;
+        border: 1px solid rgba($color-purple, 0.4);
+        border-radius: $radius;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+
+        h1 {
+            color: $color-pink;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: $color-text-muted;
+        }
+    }
+
+    &__eyebrow {
+        color: $color-blue;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+    }
+
+    &__avatar {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        border: 2px solid $color-pink;
+    }
+
+    &__actions {
+        display: grid;
+        gap: 1rem;
+        background: $color-card;
+        border-radius: $radius;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+
+        a {
+            display: block;
+            padding: 1rem;
+            border-radius: $radius;
+            background: rgba($color-purple, 0.2);
+            color: $color-text;
+            text-align: center;
+            transition: $transition;
+
+            &:hover {
+                background: rgba($color-pink, 0.25);
+                color: $color-pink;
+            }
+        }
+    }
+
+    &__stats {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    &__grid {
+        display: grid;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    &__section {
+        margin-top: 2rem;
+    }
+
+    &__section-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h2 {
+            color: $color-pink;
+        }
+
+        a {
+            color: $color-blue;
+            font-weight: 600;
+        }
+    }
+}
+
+.dashboard-card,
+.event-card,
+.request-card,
+.empty-state {
+    background: $color-card;
+    border: 1px solid rgba($color-purple, 0.35);
+    border-radius: $radius;
+    padding: 1.5rem;
+}
+
+.dashboard-card {
+    height: fit-content;
+
+    h2 {
+        color: $color-pink;
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        display: grid;
+        gap: 1rem;
+    }
+
+    li {
+        padding: 1rem;
+        border-radius: $radius;
+        background: rgba(255, 255, 255, 0.04);
+        color: $color-text-muted;
+    }
+
+    strong {
+        color: $color-text;
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 0.7rem;
+        color: $color-blue;
+        font-weight: 600;
+    }
+
+    &__label {
+        display: block;
+        color: $color-text-muted;
+        margin-bottom: 0.5rem;
+    }
+
+    &__value {
+        display: block;
+        color: $color-pink;
+        font-size: 2rem;
+    }
+}
+
+.event-grid,
+.request-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.event-card {
+    display: grid;
+    gap: 1rem;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: flex-start;
+
+        h3 {
+            color: $color-text;
+        }
+    }
+
+    &__infos {
+        display: grid;
+        gap: 0.4rem;
+        color: $color-text-muted;
+    }
+
+    &__state strong {
+        color: $color-pink;
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+
+        a,
+        span,
+        small {
+            color: $color-blue;
+            font-weight: 600;
+        }
+    }
+}
+
+.request-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+
+    p {
+        color: $color-text-muted;
+    }
+
+    strong {
+        color: $color-text;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+    }
+}
+
+.empty-state {
+    color: $color-text-muted;
+    text-align: center;
+}
+
+@media (min-width: $bp-tablet) {
+    .dashboard {
+        padding: 3rem 1.5rem;
+
+        &__actions {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        &__stats {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        &__grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .event-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

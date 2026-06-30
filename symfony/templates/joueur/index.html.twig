@@ -4,45 +4,40 @@
 
 {% block body %}
 
-<section class="player-dashboard">
-    <header class="player-dashboard__header">
-        {% if app.user.avatar %}
-        <img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}" class="player-dashboard__avatar"
-            loading="lazy">
-        {% endif %}
-        <h1>Bonjour {{ app.user.pseudo }}</h1>
-        <p>Bienvenue sur ton espace joueur.</p>
-        <p>Inscrit le {{ app.user.createdAt|date('d/m/Y') }}</p>
+<section class="dashboard dashboard--player">
+
+    <header class="dashboard__header">
+        <div>
+            <p class="dashboard__eyebrow">Espace joueur</p>
+
+            {% if app.user.avatar %}
+            <img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}" class="dashboard__avatar"
+                loading="lazy">
+            {% endif %}
+
+            <h1>Bonjour {{ app.user.pseudo }} 👋</h1>
+            <p>Bienvenue sur ton espace joueur.</p>
+            <p>Inscrit le {{ app.user.createdAt|date('d/m/Y') }}</p>
+        </div>
     </header>
 
+    <section class="dashboard__actions">
+        <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">
+            Voir les événements disponibles
+        </a>
 
-    <section class="player-dashboard__actions">
+        <a href="{{ path('app_profile') }}" class="btn btn--secondary">
+            Mon profil
+        </a>
 
-        <ul>
-            <li>
-                <a href="{{ path('app_evenement_index') }}">
-                    Voir les événements disponibles
-                </a>
-            </li>
-
-            <li>
-                <a href="{{ path('app_profile') }}">
-                    Mon profil
-                </a>
-            </li>
-
-
-            <li>
-                <a href="{{ path('app_evenement_new') }}">
-                    Créer un événement
-                </a>
-            </li>
-
-        </ul>
+        <a href="{{ path('app_evenement_new') }}" class="btn btn--primary">
+            Créer un événement
+        </a>
     </section>
 
-    <div class="player-dashboard__grid">
-        <section class="player-dashboard__card">
+    <div class="dashboard__grid">
+
+        <section class="dashboard-card">
             <h2>Mes participations</h2>
 
             {% if participations is empty %}
@@ -63,36 +58,26 @@
 
                     {% if endTime <= now %} <br><small>Événement terminé.</small><br>
 
-                        <a href="{{ path('app_evenement_classement', {
-        id: participation.evenement.id
-        }) }}">
+                        <a href="{{ path('app_evenement_classement', { id: participation.evenement.id }) }}">
                             Voir le classement
                         </a>
-
                         {% else %}
-
                         {% if participation.status == 'accepte'
                         and participation.evenement.startedAt is not null
                         and now >= startTime
                         %}
-                        <a href="{{ path('app_evenement_room', {
-            id: participation.evenement.id
-        }) }}">
+                        <a href="{{ path('app_evenement_room', { id: participation.evenement.id }) }}">
                             Rejoindre la room
                         </a><br>
-
                         {% elseif participation.status == 'accepte' %}
                         <small>En attente du démarrage de l'événement.</small><br>
                         {% endif %}
 
                         {% if participation.status != 'refuse' and startTime > now %}
-                        <a href="{{ path('app_evenement_desinscrire', {
-            id: participation.evenement.id
-        }) }}">
+                        <a href="{{ path('app_evenement_desinscrire', { id: participation.evenement.id }) }}">
                             Se désinscrire
                         </a>
                         {% endif %}
-
                         {% endif %}
                 </li>
                 {% endfor %}
@@ -100,7 +85,7 @@
             {% endif %}
         </section>
 
-        <section class="player-dashboard__card">
+        <section class="dashboard-card">
             <h2>Mes favoris</h2>
 
             {% if favoris is empty %}
@@ -114,9 +99,7 @@
                     Début : {{ favori.evenement.dateStart|date('d/m/Y H:i') }}<br>
                     Places : {{ favori.evenement.nbPlaces }}<br>
 
-                    <a href="{{ path('app_evenement_retirer_favori', {
-                        id: favori.evenement.id
-                    }) }}">
+                    <a href="{{ path('app_evenement_retirer_favori', { id: favori.evenement.id }) }}">
                         Retirer des favoris
                     </a>
                 </li>
@@ -125,7 +108,7 @@
             {% endif %}
         </section>
 
-        <section class="player-dashboard__card">
+        <section class="dashboard-card">
             <h2>Mes événements proposés</h2>
 
             {% if evenementsProposes is empty %}
@@ -145,29 +128,21 @@
 
                     {% if end <= now %} <small>Événement terminé.</small>
 
-                        <a href="{{ path('app_evenement_classement', {
-        id: evenement.id
-        }) }}">
+                        <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}">
                             Voir le classement
                         </a>
-
                         {% elseif start > now and evenement.startedAt is null %}
-                        <a href="{{ path('app_evenement_edit', {
-        id: evenement.id
-        }) }}">
+                        <a href="{{ path('app_evenement_edit', { id: evenement.id }) }}">
                             Modifier
                         </a>
+
                         {% if evenement.status == 'valide' %}
-                        <a href="{{ path('app_evenement_participer', {
-            id: evenement.id
-        }) }}">
+                        <a href="{{ path('app_evenement_participer', { id: evenement.id }) }}">
                             Participer
                         </a>
                         {% endif %}
-
                         {% elseif evenement.startedAt is not null %}
                         <small>Événement démarré.</small>
-
                         {% else %}
                         <small>Modification impossible après le début.</small>
                         {% endif %}
@@ -177,7 +152,7 @@
             {% endif %}
         </section>
 
-        <section class="player-dashboard__card">
+        <section class="dashboard-card">
             <h2>Mes scores</h2>
 
             {% if scores is empty %}
@@ -188,15 +163,14 @@
                 <li>
                     <strong>{{ score.evenement.titre }}</strong><br>
                     Score : {{ score.value }}<br>
-                    Enregistré le :
-                    {{ score.createdAt|date('d/m/Y H:i') }}
+                    Enregistré le : {{ score.createdAt|date('d/m/Y H:i') }}
                 </li>
                 {% endfor %}
             </ul>
             {% endif %}
         </section>
+
     </div>
 </section>
-
 
 {% endblock %}
