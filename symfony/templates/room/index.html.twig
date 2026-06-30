@@ -59,8 +59,22 @@
         <li>
             <img src="{{ avatars[message.id] ?? '' }}" alt="Avatar" width="40">
             <strong>{{ pseudos[message.id] ?? 'Utilisateur inconnu' }}</strong><br>
+            {% if message.deleted %}
+            <em>Message supprimé par un modérateur.</em><br>
+            {% else %}
             {{ message.contenu }}<br>
+            {% endif %}
             <small>{{ message.createdAt|date('d/m/Y H:i') }}</small>
+            {% if isAdmin or isOrganisateur %}
+            <br>
+
+            <a href="{{ path('app_room_delete_message', {
+            id: evenement.id,
+            messageId: message.id
+        }) }}" class="btn btn--danger" onclick="return confirm('Supprimer ce message ?')">
+                Supprimer
+            </a>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>

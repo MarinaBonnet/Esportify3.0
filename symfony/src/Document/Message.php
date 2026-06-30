@@ -29,6 +29,15 @@ class Message
     #[MongoDB\Field(type: 'date_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[MongoDB\Field(type: 'bool')]
+    private bool $deleted = false;
+
+    #[MongoDB\Field(type: 'int', nullable: true)]
+    private ?int $deletedBy = null;
+
+    #[MongoDB\Field(type: 'date_immutable', nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -90,5 +99,41 @@ class Message
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): static
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    public function getDeletedBy(): ?int
+    {
+        return $this->deletedBy;
+    }
+
+    public function setDeletedBy(?int $deletedBy): static
+    {
+        $this->deletedBy = $deletedBy;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
     }
 }

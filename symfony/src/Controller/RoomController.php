@@ -24,7 +24,7 @@ final class RoomController extends AbstractController
         UserRepository $userRepository,
         DocumentManager $dm
     ): Response {
-         $user = $this->getUser();
+        $user = $this->getUser();
 
         if (!$user instanceof \App\Entity\User) {
             throw $this->createAccessDeniedException();
@@ -99,6 +99,54 @@ final class RoomController extends AbstractController
             'messages' => $messages,
             'pseudos' => $pseudos,
             'avatars' => $avatars,
+            'isAdmin' => $isAdmin,
+            'isOrganisateur' => $isOrganisateur,
+        ]);
+    }
+    
+    #[Route('/evenement/{id}/room/message/{messageId}/delete', name: 'app_room_delete_message')]
+    public function deleteMessage(
+        Evenement $evenement,
+        string $messageId,
+        DocumentManager $dm
+    ): Response {
+        $user = $this->getUser();
+
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $isOrganisateur = $evenement->getOrganisateur() === $user;
+
+        if (!$isAdmin && !$isOrganisateur) {
+            throw $this->createAccessDeniedException(
+                'Vous n’avez pas le droit de modérer cette room.'
+            );
+        }
+
+        $message = $dm
+            ->getRepository(Message::class)
+            ->find($messageId);
+
+        if (!$message) {
+            throw $this->createNotFoundException('Message introuvable.');
+        }
+
+        if ($message->getEvenementId() !== $evenement->getId()) {
+            throw $this->createAccessDeniedException(
+                'Ce message ne correspond pas à cet événement.'
+            );
+        }
+
+        $message->setDeleted(true);
+        $message->setDeletedBy($user->getId());
+        $message->setDeletedAt(new \DateTimeImmutable());
+
+        $dm->flush();
+
+        return $this->redirectToRoute('app_evenement_room', [
+            'id' => $evenement->getId(),
         ]);
     }
 }
