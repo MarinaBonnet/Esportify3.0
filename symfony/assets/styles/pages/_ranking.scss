@@ -1,0 +1,218 @@
+@use "../abstracts/variables" as *;
+
+.ranking-page {
+    padding: 2rem 1rem;
+
+    &__container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: $color-card;
+        border: 1px solid rgba($color-purple, 0.35);
+        border-radius: $radius;
+        box-shadow: 0 0 30px rgba($color-purple, 0.25);
+    }
+
+    &__header {
+        text-align: center;
+        margin-bottom: 3rem;
+
+        h1 {
+            margin: 0.75rem 0 0.5rem;
+            color: $color-pink;
+        }
+
+        p {
+            color: $color-text-muted;
+        }
+    }
+
+    &__icon {
+        display: block;
+        font-size: 3rem;
+    }
+
+    &__empty {
+        text-align: center;
+        color: $color-text-muted;
+        padding: 2rem 0;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+}
+
+.podium {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 3rem;
+
+    &__card {
+        width: 100%;
+        padding: 1.5rem;
+        text-align: center;
+        background: rgba($color-purple, 0.12);
+        border-radius: $radius;
+        border: 1px solid rgba($color-purple, 0.35);
+        transition: $transition;
+        overflow-wrap: anywhere;
+
+        span {
+            display: block;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            margin-bottom: 0.5rem;
+            color: $color-text;
+            font-size: 1.5rem;
+            text-transform: capitalize;
+            overflow-wrap: anywhere;
+        }
+
+        p {
+            color: $color-blue;
+            font-weight: 700;
+        }
+    }
+
+    &__card--first {
+        order: 1;
+        border-color: rgba(255, 215, 0, 0.65);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+    }
+
+    &__card--second {
+        order: 2;
+        border-color: rgba(192, 192, 192, 0.5);
+        box-shadow: 0 0 20px rgba(192, 192, 192, 0.25);
+    }
+
+    &__card--third {
+        order: 3;
+        border-color: rgba(205, 127, 50, 0.5);
+        box-shadow: 0 0 20px rgba(205, 127, 50, 0.25);
+    }
+}
+
+@media (min-width: $bp-tablet) {
+    .podium {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: stretch;
+
+        &__card {
+            min-width: 0;
+        }
+
+        &__card--second {
+            order: 1;
+        }
+
+        &__card--first {
+            order: 2;
+        }
+
+        &__card--third {
+            order: 3;
+        }
+    }
+}
+
+.ranking-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        padding: 1rem;
+        margin-bottom: 1rem;
+
+        background: rgba($color-purple, 0.12);
+
+        border-left: 4px solid $color-pink;
+        border-radius: $radius;
+
+        transition: $transition;
+
+        &:hover {
+            transform: translateX(5px);
+        }
+    }
+
+    &__position {
+        color: $color-blue;
+        font-weight: 700;
+    }
+
+    &__player {
+        color: $color-text;
+        font-weight: 700;
+    }
+
+    &__score {
+        color: $color-pink;
+        font-weight: 700;
+    }
+}
+
+@media (min-width: $bp-tablet) {
+    .ranking-page {
+        padding: 3rem 1.5rem;
+
+        &__header {
+            margin-bottom: 4rem;
+        }
+
+        &__container {
+            padding: 3rem;
+        }
+    }
+
+    .podium {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: end;
+
+        &__card {
+            min-width: 0;
+        }
+
+        &__card--second {
+            order: 1;
+        }
+
+        &__card--first {
+            order: 2;
+            transform: translateY(-25px);
+            z-index: 2;
+        }
+
+        &__card--third {
+            order: 3;
+        }
+    }
+
+    .ranking-list {
+        &__item {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        &__position {
+            width: 60px;
+        }
+
+        &__player {
+            flex: 1;
+            padding: 0 1rem;
+        }
+    }
+}

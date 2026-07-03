@@ -4,24 +4,74 @@
 
 {% block body %}
 
-<h1>Classement - {{ evenement.titre }}</h1>
+<section class="ranking-page">
 
-{% if scores is empty %}
-<p>Aucun score enregistré pour cet événement.</p>
-{% else %}
-<ol>
-    {% for score in scores %}
-    <li>
-        {{ score.user.pseudo }}
-        -
-        {{ score.value }} points
-    </li>
-    {% endfor %}
-</ol>
-{% endif %}
+    <div class="ranking-page__container">
 
-<a href="{{ path('app_evenement_show', { id: evenement.id }) }}">
-    Retour à l'événement
-</a>
+        <header class="ranking-page__header">
+            <span class="ranking-page__icon">🏆</span>
+
+            <h1>Classement</h1>
+
+            <p>{{ evenement.titre }}</p>
+        </header>
+
+        {% if scores is empty %}
+        <p class="ranking-page__empty">
+            Aucun score enregistré pour cet événement.
+        </p>
+        {% else %}
+        {% set first = scores|first %}
+        {% set second = scores|length > 1 ? scores[1] : null %}
+        {% set third = scores|length > 2 ? scores[2] : null %}
+
+        <div class="podium">
+            {% if second %}
+            <div class="podium__card podium__card--second">
+                <span>🥈</span>
+                <h2>{{ second.user.pseudo }}</h2>
+                <p>{{ second.value }} pts</p>
+            </div>
+            {% endif %}
+
+            {% if first %}
+            <div class="podium__card podium__card--first">
+                <span>🥇</span>
+                <h2>{{ first.user.pseudo }}</h2>
+                <p>{{ first.value }} pts</p>
+            </div>
+            {% endif %}
+
+            {% if third %}
+            <div class="podium__card podium__card--third">
+                <span>🥉</span>
+                <h2>{{ third.user.pseudo }}</h2>
+                <p>{{ third.value }} pts</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if scores|length > 3 %}
+        <ol class="ranking-list">
+            {% for score in scores|slice(3) %}
+            <li class="ranking-list__item">
+                <span class="ranking-list__position">#{{ loop.index0 + 4 }}</span>
+                <span class="ranking-list__player">{{ score.user.pseudo }}</span>
+                <span class="ranking-list__score">{{ score.value }} pts</span>
+            </li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+        {% endif %}
+
+        <div class="ranking-page__actions">
+            <a href="{{ path('app_evenement_show', { id: evenement.id }) }}" class="btn btn--secondary">
+                Retour à l'événement
+            </a>
+        </div>
+
+    </div>
+
+</section>
 
 {% endblock %}

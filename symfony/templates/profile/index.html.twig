@@ -4,15 +4,20 @@
 
 {% block body %}
 
-<section class="auth">
-    <div class="auth__form">
+<section class="profile-page">
+
+    <div class="profile-page__container">
 
         <div class="profile-card">
-            <h1 class="form__title">Mon profil</h1>
-
             <div class="profile-card__avatar">
                 <img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}">
             </div>
+
+            <h1 class="profile-card__title">Mon profil</h1>
+
+            <p class="profile-card__subtitle">
+                Modifiez vos informations personnelles et votre avatar.
+            </p>
         </div>
 
         {% for message in app.flashes('success') %}
@@ -23,7 +28,7 @@
 
         {{ form_start(form, {
         attr: {
-        class: 'form'
+        class: 'form profile-page__form'
         }
         }) }}
 
@@ -53,14 +58,11 @@
 
         {{ form_end(form) }}
 
-    </div>
-    <div class="profile-links">
-
-        <a href="{{ path('app_change_password') }}" class="btn btn--secondary">
-
-            Changer mon mot de passe
-
-        </a>
+        <div class="profile-links">
+            <a href="{{ path('app_profile_password') }}" class="btn btn--secondary">
+                Changer mon mot de passe
+            </a>
+        </div>
 
     </div>
 

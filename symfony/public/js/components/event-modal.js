@@ -160,29 +160,66 @@ class EventModal {
         const actions = document.createElement("div");
         actions.classList.add("event-modal__actions");
 
-        const participateButton = document.createElement("button");
-        participateButton.type = "button";
-        participateButton.classList.add("btn-primary");
-        participateButton.textContent = "Participer";
-
-        const favoriteButton = document.createElement("button");
-        favoriteButton.type = "button";
-        favoriteButton.classList.add("btn-secondary");
-        favoriteButton.dataset.eventId = evenement.id;
-        favoriteButton.dataset.favoriteEvent = "true";
-        favoriteButton.textContent = "☆ Ajouter aux favoris";
-
-        const closeButton = document.createElement("button");
-        closeButton.type = "button";
-        closeButton.classList.add("btn-secondary");
-        closeButton.textContent = "Fermer";
-        closeButton.dataset.closeModal = "true";
-
         const secondaryActions = document.createElement("div");
         secondaryActions.classList.add("event-modal__actions-secondary");
 
-        secondaryActions.append(favoriteButton, closeButton);
-        actions.append(participateButton, secondaryActions);
+        const now = new Date();
+        const endDate = new Date(evenement.dateEndRaw ?? evenement.dateEnd);
+
+        if (evenement.isAuthenticated) {
+            if (endDate > now) {
+                const participateButton = document.createElement("a");
+                participateButton.href = evenement.participateUrl;
+                participateButton.classList.add("btn", "btn--primary");
+                participateButton.textContent = "Participer";
+
+                actions.appendChild(participateButton);
+
+                const favoriteButton = document.createElement("button");
+                favoriteButton.type = "button";
+                favoriteButton.classList.add("btn", "btn--secondary");
+                favoriteButton.dataset.eventId = evenement.id;
+                favoriteButton.dataset.favoriteEvent = "true";
+                favoriteButton.textContent = "☆ Ajouter aux favoris";
+
+                secondaryActions.appendChild(favoriteButton);
+            } else {
+                const finished = document.createElement("p");
+                finished.classList.add("event-modal__notice");
+                finished.textContent = "🏁 Cet événement est terminé.";
+
+                actions.appendChild(finished);
+            }
+        } else {
+            const notice = document.createElement("p");
+            notice.classList.add("event-modal__notice");
+            notice.textContent =
+                "Connectez-vous pour participer ou ajouter cet événement à vos favoris.";
+
+            const loginLink = document.createElement("a");
+            loginLink.href = "/login";
+            loginLink.classList.add("btn", "btn--secondary");
+            loginLink.textContent = "Se connecter";
+
+            actions.appendChild(notice);
+            secondaryActions.appendChild(loginLink);
+        }
+
+        const detailLink = document.createElement("a");
+        detailLink.href = `/evenement/${evenement.id}`;
+        detailLink.classList.add("btn", "btn--secondary");
+        detailLink.textContent = "Voir la page complète";
+
+        secondaryActions.appendChild(detailLink);
+
+        const closeButton = document.createElement("button");
+        closeButton.type = "button";
+        closeButton.classList.add("btn", "btn--secondary");
+        closeButton.textContent = "Fermer";
+        closeButton.dataset.closeModal = "true";
+
+        secondaryActions.appendChild(closeButton);
+        actions.append(secondaryActions);
 
         return actions;
     }

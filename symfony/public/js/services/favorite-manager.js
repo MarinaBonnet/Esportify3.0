@@ -28,10 +28,18 @@ class FavoriteManager {
                 },
             });
 
+            const contentType = response.headers.get("content-type");
+
+            if (!contentType?.includes("application/json")) {
+                throw new Error(
+                    "Vous devez être connecté pour utiliser les favoris.",
+                );
+            }
+
             const data = await response.json();
 
             if (!response.ok || !data.success) {
-                throw new Error(data.message ?? "Erreur favori");
+                throw new Error(data.message);
             }
 
             this.updateButton(button, data.favorite);

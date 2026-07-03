@@ -21,11 +21,11 @@
         </span>
 
         {% if not app.user %}
-        <a class="btn-primary baseline__cta" href="{{ path('app_register') }}">
+        <a class="btn btn--primary baseline__cta" href="{{ path('app_register') }}">
             Rejoindre Esportify
         </a>
         {% else %}
-        <a class="btn-primary baseline__cta" href="{{ path('app_evenement_index') }}">
+        <a class="btn btn--primary baseline__cta" href="{{ path('app_evenement_index') }}">
             Voir les événements
         </a>
         {% endif %}

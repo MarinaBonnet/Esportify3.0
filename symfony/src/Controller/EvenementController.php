@@ -160,8 +160,13 @@ final class EvenementController extends AbstractController
             'nbPlaces' => $evenement->getNbPlaces(),
             'dateStart' => $evenement->getDateStart()?->format('d/m/Y H:i'),
             'dateEnd' => $evenement->getDateEnd()?->format('d/m/Y H:i'),
+            'dateEndRaw' => $evenement->getDateEnd()?->format('Y-m-d H:i:s'),
             'organisateur' => $evenement->getOrganisateur()?->getPseudo(),
             'image' => $image ? $image->getUrl() : null,
+            'isAuthenticated' => $this->getUser() !== null,
+            'participateUrl' => $this->generateUrl('app_evenement_participer', [
+                'id' => $evenement->getId(),
+            ]),
         ]);
     }
 
@@ -343,12 +348,20 @@ final class EvenementController extends AbstractController
         return $this->redirectToRoute('app_joueur');
     }
 
-    #[IsGranted('ROLE_JOUEUR')]
+    
     #[Route('/{id}/favori', name: 'app_evenement_favori', methods: ['POST'])]
     public function toggleFavori(
         Evenement $evenement,
         EntityManagerInterface $entityManager
     ): JsonResponse {
+
+        if (!$this->isGranted('ROLE_JOUEUR')) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Vous devez être connecté pour ajouter un événement aux favoris.',
+            ], 401);
+        }
+        
         if ($evenement->getDateEnd() <= new \DateTimeImmutable()) {
             return $this->json([
                 'success' => false,

@@ -1,15 +1,30 @@
 @use "../abstracts/variables" as *;
 
+.profile-page {
+    padding: 2rem 1rem;
+
+    &__container {
+        width: 100%;
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    &__form {
+        margin-top: 1.5rem;
+    }
+}
+
 .profile-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 2rem;
+    text-align: center;
 
     &__avatar {
-        width: 160px;
-        height: 160px;
-        margin-top: 1rem;
+        width: 130px;
+        height: 130px;
+        margin-bottom: 1.5rem;
         border-radius: 50%;
         overflow: hidden;
         border: 4px solid $color-pink;
@@ -28,21 +43,40 @@
             display: block;
         }
     }
+
+    &__title {
+        margin-bottom: 0.5rem;
+        color: $color-pink;
+        font-size: 1.8rem;
+    }
+
+    &__subtitle {
+        color: $color-text-muted;
+        line-height: 1.6;
+    }
 }
 
 .profile-links {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     display: flex;
     justify-content: center;
-    gap: 1rem;
     flex-wrap: wrap;
+    gap: 1rem;
 }
 
-@media (max-width: $bp-mobile) {
+@media (min-width: $bp-tablet) {
+    .profile-page {
+        padding: 3rem 1rem;
+    }
+
     .profile-card {
         &__avatar {
-            width: 130px;
-            height: 130px;
+            width: 160px;
+            height: 160px;
+        }
+
+        &__title {
+            font-size: 2rem;
         }
     }
 }

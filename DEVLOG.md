@@ -928,30 +928,299 @@ Création de la structure :
 - Afficher les participations du joueur
 - Préparer les statistiques utilisateur
 
-À faire :
+# 30/06/2026
 
-□ Restreindre l’accès au chat aux participants acceptés
+## Objectif de la journée
 
-□ Limiter la longueur du message
+Poursuivre le développement d'Esportify en finalisant les tableaux de bord et en améliorant l'architecture du projet.
 
-□ Bloquer les messages vides/espaces
+### Dashboard Organisateur
 
-□ Bloquer le chat tant que l’événement n’a pas démarré
+- Refonte complète de l'interface.
+- Ajout d'un tableau de bord moderne.
+- Affichage des statistiques :
 
-□ Prévoir modération/suppression des messages
+- nombre d'événements ;
+- participants inscrits ;
+- taux de remplissage.
+- Gestion des événements de l'organisateur.
+- Liste des participants inscrits.
+- Ajout des actions rapides.
+- Vérification des accès et des droits.
 
-□ Repasser automatiquement un événement à "en_attente" lors d'une modification.
+### Dashboard Joueur
 
-□ Ajouter la gestion des images des événements.
+- Refactorisation du Twig.
+- Adoption de la nouvelle structure commune des dashboards.
+- Préparation à une architecture réutilisable.
 
-□ Permettre l'inscription des joueurs aux événements (Participation).
+### Dashboard Administrateur
 
-□ Simplifier les rôles stockés en base
+- Refonte de l'interface avec la même architecture que les autres dashboards.
+- Ajout des cartes de statistiques.
+- Réorganisation des sections (événements, utilisateurs, contacts, newsletters).
+- Uniformisation de l'expérience utilisateur.
 
-□ Gestion des scores
+### Refactorisation Front-End
 
-□ Résultats tournoi
+- Création d'un composant Sass commun `_dashboard.scss`.
+- Mutualisation des styles entre les dashboards Joueur, Organisateur et Administrateur.
+- Réduction de la duplication du code.
+- Préparation d'une architecture de composants réutilisables.
 
-□ Fermeture room après dateEnd
+### Sécurité et gestion des rôles
 
-□ Retour dashboard
+- Vérification de la hiérarchie des rôles.
+- Contrôle d'accès aux rooms :
+
+- un joueur doit être accepté ;
+- un organisateur accède uniquement aux rooms de ses propres événements ;
+- un administrateur accède à toutes les rooms.
+
+### Chat MongoDB
+
+- Début de la mise en place de la modération.
+- Ajout des champs permettant le "soft delete" des messages.
+- Conception de la future route de suppression des messages.
+- Choix de conserver les messages en base afin d'assurer une meilleure traçabilité.
+
+## Architecture
+
+Nouvelle méthode de travail adoptée :
+
+1. Analyse du besoin.
+2. Schéma de fonctionnement.
+3. Développement.
+4. Tests et validation.
+
+Cette approche sera utilisée pour les prochaines fonctionnalités afin de mieux comprendre la logique métier et gagner en autonomie.
+
+## Prochaine étape
+
+- Finaliser la modération du chat MongoDB.
+- Effectuer une recette complète de l'application (Joueur, Organisateur, Administrateur, Room, Favoris, Classements, Profil).
+- Corriger les derniers bugs avant l'envoi du projet au formateur.
+
+J'ai choisi MongoDB pour le chat, car les messages sont des données non relationnelles qui peuvent être très nombreuses. Une base documentaire est adaptée à ce type de contenu et évite de surcharger la base SQL qui gère les utilisateurs, les événements et les participations
+
+# 02/07/2026
+
+Objectif :
+Améliorer l'interface utilisateur et harmoniser les formulaires Symfony.
+
+Travaux réalisés :
+
+- Refonte de la page de connexion.
+- Refonte de la page d'inscription.
+- Création d'un composant de formulaire réutilisable.
+- Refonte des formulaires des événements.
+- Refonte du formulaire de profil.
+- Refonte du formulaire de changement de mot de passe.
+- Refonte des pages de création, modification et détail d'un événement.
+- Amélioration du formulaire de suppression.
+- Création du style de la page profil.
+- Début du style de la page détail d'un événement.
+- Réorganisation de l'architecture SCSS (components/pages).
+- Mise à jour des notes du dossier projet.
+- Réflexion sur la réutilisation des modales et décision de conserver EventModal telle quelle pour l'ECF afin de privilégier la stabilité.
+
+Compétences travaillées :
+
+- Symfony Forms
+- Twig
+- Sass (SCSS)
+- Architecture de composants
+- UX / UI
+- Organisation d'un projet Symfony
+
+Prochaine étape :
+
+- Vérifier le rendu de tous les formulaires.
+- Finaliser le style de la page détail des événements.
+- Poursuivre l'harmonisation graphique de l'application.
+
+# 03/07/2026
+
+## Validation de l'application
+
+Avant la livraison de l'application, une phase de recette fonctionnelle a été réalisée.
+
+Points vérifiés :
+
+- Tests des différents rôles (visiteur, joueur, organisateur, administrateur)
+- Vérification des liens de navigation
+- Vérification des droits d'accès
+- Vérification des formulaires et des validations
+- Vérification du responsive (mobile, tablette, desktop)
+
+Les anomalies détectées sont corrigées au fur et à mesure afin de garantir une application stable et cohérente.
+
+# Check-up final Esportify
+
+## 1. Tests par rôle
+
+### Visiteur non connecté
+
+- [ok] Accueil visible
+- [ok] Liste des événements visibles
+- [ok] Détail d’un événement visible si événement validé
+- [ok] Connexion accessible
+- [ok] Inscription accessible
+- [ok] Contact accessible
+- [ok] Impossible de participer
+- [ok] Impossible d’accéder aux dashboards
+
+### Joueur
+
+- [ok] Connexion OK
+- [ok] Dashboard joueur accessible
+- [ok] Profil accessible
+- [ok] Modification profil ok
+- [ ] Changement mot de passe OK
+- [ok] Voir événements
+- [ ] Participer à un événement à venir
+- [ ] Impossible de participer à un événement terminé
+- [ ] Ajouter / retirer favori
+- [ ] Accès au chat d’un événement où il participe
+- [ok] Déconnexion OK
+
+### Organisateur
+
+- [ ] Connexion OK
+- [ ] Dashboard organisateur accessible
+- [ ] Proposer un événement
+- [ ] Modifier ses propres événements
+- [ ] Impossible de modifier un événement d’un autre organisateur
+- [ ] Voir participants
+- [ ] Démarrer un événement si les conditions sont remplies
+- [ ] Accès au chat de ses événements
+- [ ] Déconnexion OK
+
+### Admin
+
+- [ ] Connexion OK
+- [ ] Dashboard admin accessible
+- [ ] Voir tous les utilisateurs
+- [ ] Voir tous les événements
+- [ ] Valider / refuser un événement
+- [ ] Modifier un événement
+- [ ] Supprimer un événement
+- [ ] Accès aux profils/pages admin
+- [ ] Déconnexion OK
+
+---
+
+## 2. Liens à vérifier
+
+- [ ] Logo → accueil
+- [ ] Accueil
+- [ ] Événements
+- [ ] Contact
+- [ ] Connexion
+- [ ] Inscription
+- [ ] Profil
+- [ ] Changer mot de passe
+- [ ] Dashboard joueur
+- [ ] Dashboard organisateur
+- [ ] Dashboard admin
+- [ ] Retour liste événements
+- [ ] Classement événement
+- [ ] Participer
+- [ ] Favori
+- [ ] Modifier événement
+- [ ] Supprimer événement
+- [ ] Déconnexion
+
+---
+
+## 3. Droits d’accès
+
+- [ ] Visiteur bloqué sur `/joueur`
+- [ ] Visiteur bloqué sur `/organisateur`
+- [ ] Visiteur bloqué sur `/admin`
+- [ ] Joueur bloqué sur `/admin`
+- [ ] Joueur bloqué sur les pages organisateur non autorisées
+- [ ] Organisateur bloqué sur `/admin`
+- [ ] Un organisateur ne peut pas modifier l’événement d’un autre
+- [ ] Un événement non validé n’est pas visible publiquement
+- [ ] Un événement terminé ne permet plus la participation
+- [ ] Un événement commencé ne peut plus être modifié sauf admin
+
+---
+
+## 4. Formulaires
+
+### Auth
+
+- [ ] Connexion avec bons identifiants
+- [ ] Connexion avec mauvais identifiants
+- [ ] Inscription valide
+- [ ] Inscription avec email déjà utilisé
+- [ ] Champs obligatoires
+- [ ] Messages d’erreur visibles
+
+### Profil
+
+- [ ] Modifier pseudo
+- [ ] Modifier email
+- [ ] Modifier avatar
+- [ ] Changer mot de passe
+- [ ] Message succès affiché
+
+### Événements
+
+- [ ] Créer événement complet
+- [ ] Créer événement sans image
+- [ ] Créer événement avec image
+- [ ] Modifier événement
+- [ ] Supprimer événement
+- [ ] Dates invalides si test prévu
+- [ ] Upload image mauvais format refusé
+
+### Contact
+
+- [ ] Envoi formulaire valide
+- [ ] Champs obligatoires
+- [ ] Message succès
+
+---
+
+## 5. Responsive
+
+Tester en mode navigateur responsive :
+
+### Mobile 375px
+
+- [ ] Accueil
+- [ ] Menu navigation
+- [ ] Liste événements
+- [ ] Cards
+- [ ] Modale événement
+- [ ] Login
+- [ ] Register
+- [ ] Contact
+- [ ] Profil
+- [ ] Dashboard
+
+### Tablette 768px
+
+- [ ] Grilles correctes
+- [ ] Formulaires lisibles
+- [ ] Boutons bien placés
+
+### Desktop 1024px+
+
+- [ ] Mise en page équilibrée
+- [ ] Espacements cohérents
+- [ ] Pas de bouton perdu
+- [ ] Pas de texte qui déborde
+
+A Faire:
+
+Restreindre le chat aux participants acceptés
+Bloquer les messages vides
+Limiter la longueur des messages
+Fermer le chat après dateEnd
+Bloquer le chat avant startedAt
+Dossier Projet
+Dossier Professionnel

@@ -94,7 +94,9 @@ class Evenement
 
     public function setTitre(string $titre): static
     {
-        $this->titre = $titre;
+        $titre = trim($titre);
+        $titre = preg_replace('/\s+/', ' ', $titre);
+        $this->titre = mb_convert_case($titre, MB_CASE_TITLE, 'UTF-8');
 
         return $this;
     }

@@ -4,30 +4,61 @@
 
 {% block body %}
 
-<h1>Contact</h1>
+<section class="auth">
+    <div class="auth__form">
 
-<p>
-    Une question, une suggestion ou un problème ?
-    Contactez l'équipe Esportify.
-</p>
+        <h1 class="form__title">Contact</h1>
 
-{% for message in app.flashes('success') %}
-<div>
-    {{ message }}
-</div>
-{% endfor %}
+        <p class="form__intro">
+            Une question, une suggestion ou un problème ? Contactez l'équipe Esportify.
+        </p>
 
-{{ form_start(form) }}
+        {% for message in app.flashes('success') %}
+        <div class="alert alert--success">
+            {{ message }}
+        </div>
+        {% endfor %}
 
-{{ form_row(form.nom) }}
-{{ form_row(form.email) }}
-{{ form_row(form.sujet) }}
-{{ form_row(form.message) }}
+        {{ form_start(form, {
+        attr: {
+        class: 'form'
+        }
+        }) }}
 
-<button type="submit">
-    Envoyer
-</button>
+        <div class="form__group">
+            {{ form_label(form.nom, 'Nom') }}
+            {{ form_widget(form.nom) }}
+            {{ form_errors(form.nom) }}
+        </div>
 
-{{ form_end(form) }}
+        <div class="form__group">
+            {{ form_label(form.email, 'Adresse e-mail') }}
+            {{ form_widget(form.email) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        <div class="form__group">
+            {{ form_label(form.sujet, 'Sujet') }}
+            {{ form_widget(form.sujet) }}
+            {{ form_errors(form.sujet) }}
+        </div>
+
+        <div class="form__group">
+            {{ form_label(form.message, 'Message') }}
+            {{ form_widget(form.message) }}
+            {{ form_errors(form.message) }}
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="btn btn--primary">
+                Envoyer
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+
+</section>
 
 {% endblock %}

@@ -39,9 +39,23 @@
                 de progresser et de marquer votre empreinte.
             </p>
 
-            <a href="{{ path('app_register') }}" class="btn-primary">
+            {% set dashboardRoute = 'app_joueur' %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+            {% set dashboardRoute = 'app_admin' %}
+            {% elseif is_granted('ROLE_ORGANISATEUR') %}
+            {% set dashboardRoute = 'app_organisateur' %}
+            {% endif %}
+
+            {% if app.user %}
+            <a href="{{ path(dashboardRoute) }}" class="btn btn--primary">
+                Accéder à mon espace
+            </a>
+            {% else %}
+            <a href="{{ path('app_register') }}" class="btn btn--primary">
                 Rejoindre Esportify
             </a>
+            {% endif %}
 
         </div>
 

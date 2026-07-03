@@ -58,7 +58,8 @@
             {% endif %}
             {% endif %}
 
-            {% if is_granted('ROLE_ADMIN') or app.user == evenement.organisateur %}
+            {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_ORGANISATEUR') and app.user == evenement.organisateur)
+            %}
             {% if evenement.dateStart > date() or is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_evenement_edit', { id: evenement.id }) }}" class="btn btn--secondary">
                 Modifier

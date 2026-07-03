@@ -25,13 +25,15 @@
     </div>
 
     {% if is_granted('ROLE_ORGANISATEUR') %}
-    <a href="{{ path('app_evenement_new') }}" class="btn btn-primary">
-        Créer un événement
-    </a>
+    <div class="events-page__actions">
+        <a href="{{ path('app_evenement_new') }}" class="btn btn--primary">
+            Proposer un événement
+        </a>
+    </div>
     {% endif %}
 
     <section class="events-section events-section--upcoming">
-        <h2>Événements à venir</h2>
+        <h2><span>À venir</span> Événements à venir</h2>
 
         <div id="events-results" class="events-page__grid">
             {% for evenement in aVenir %}
@@ -43,7 +45,7 @@
     </section>
 
     <section class="events-section events-section--live">
-        <h2>Événements en cours</h2>
+        <h2><span>En cours</span> Événements en cours</h2>
 
         <div class="events-page__grid">
             {% for evenement in enCours %}
@@ -55,7 +57,7 @@
     </section>
 
     <section class="events-section events-section--finished">
-        <h2>Événements terminés</h2>
+        <h2><span>Terminés</span> Événements terminés</h2>
 
         <div class="events-page__grid">
             {% for evenement in termines %}
