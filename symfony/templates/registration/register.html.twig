@@ -1,19 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+<section class="auth">
+    <div class="form auth__form">
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        <h1 class="form__title">Créer un compte</h1>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm) }}
+
+        <div class="form__group">
+            {{ form_label(registrationForm.email, 'Adresse e-mail') }}
+            {{ form_widget(registrationForm.email) }}
+            {{ form_errors(registrationForm.email) }}
+        </div>
+
+        <div class="form__group">
+            {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
+            {{ form_widget(registrationForm.plainPassword) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+        </div>
+
+        <div class="form__checkbox">
+            <label>
+                {{ form_widget(registrationForm.agreeTerms) }}
+                J'accepte les conditions d'utilisation
+            </label>
+            {{ form_errors(registrationForm.agreeTerms) }}
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="btn btn--primary">
+                Créer mon compte
+            </button>
+        </div>
+
+        {{ form_end(registrationForm) }}
+
+        <div class="auth__links">
+            <p>Vous avez déjà un compte ?</p>
+            <a href="{{ path('app_login') }}">Se connecter</a>
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}

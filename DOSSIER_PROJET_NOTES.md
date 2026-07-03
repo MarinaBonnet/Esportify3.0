@@ -2,16 +2,95 @@
 
 ## Présentation du projet
 
-Esportify 3.0 est une plateforme de gestion de compétitions e-sport permettant à des joueurs et organisateurs d'interagir autour de tournois en ligne.
+Esportify 3.0 est une plateforme web de gestion de compétitions e-sport développée dans le cadre de ma préparation au Titre Professionnel Développeur Web et Web Mobile.
+
+L'application permet à des joueurs, des organisateurs et des administrateurs d'interagir autour d'événements e-sport grâce à un système d'authentification, de gestion des compétitions, d'inscriptions, de tableaux de bord personnalisés et d'un système de messagerie utilisant MongoDB.
 
 ## Pourquoi ce projet ?
 
 Objectifs :
 
-- Mettre en pratique Symfony
-- Utiliser Docker
-- Travailler avec SQL et NoSQL
-- Mettre en place une architecture professionnelle
+- Mettre en pratique Symfony.
+- Utiliser Docker pour disposer d'un environnement de développement reproductible.
+- Combiner une base de données relationnelle (MySQL) et une base NoSQL (MongoDB).
+- Concevoir une architecture professionnelle basée sur le modèle MVC.
+- Développer une application proche d'un cas réel pouvant évoluer dans le temps.
+
+## Public visé
+
+La plateforme est destinée :
+
+- aux joueurs souhaitant participer à des compétitions ;
+- aux organisateurs créant des événements ;
+- aux administrateurs assurant la gestion globale de la plateforme.
+
+## Architecture générale
+
+L'application est construite selon l'architecture MVC de Symfony.
+
+- Controllers : gestion des requêtes HTTP
+- Entities : données relationnelles (MySQL)
+- Documents MongoDB : stockage des messages du tchat grace a doctrine ODM
+- Repositories : accès aux données
+- Twig : affichage
+- Services Symfony : centralisation de certaines règles métier afin de conserver des contrôleurs légers.
+
+## Fonctionnalités
+
+### Profils utilisateurs
+
+- Profil joueur
+- Profil organisateur
+- Profil administrateur
+
+### Authentification
+
+- Inscription
+- Connexion
+- Déconnexion
+- Gestion des rôles
+
+### Gestion des événements
+
+- Création
+- Modification
+- Suppression
+- Consultation
+
+### Participations
+
+- Inscription
+- Désinscription
+
+### Chat
+
+- Room privée
+- Messages MongoDB
+
+### Jeux
+
+- Consultation des jeux
+- Association d'un jeu à un événement
+
+### Médias
+
+- Upload d'images
+- Gestion des illustrations des événements
+
+### Dashboard
+
+- Joueur
+- Organisateur
+- Administrateur
+
+### Avatar
+
+- Génération automatique DiceBear
+
+### Administration
+
+- Gestion des utilisateurs
+- Gestion des événements
 
 ## Choix techniques
 
@@ -35,13 +114,17 @@ Objectifs :
 
 ### Pourquoi MongoDB ?
 
+Le chat génère de nombreux messages indépendants des données relationnelles. MongoDB est particulièrement adapté à ce type de stockage documentaire, offrant une grande souplesse et de bonnes performances.
+
 - Gestion performante des messages
 - Données souples
 - Cas d'usage adapté au chat
 
 ## Difficultés rencontrées
 
-### Exemple
+### Authentification Symfony
+
+### Doctrine ORM
 
 Problème :
 
@@ -65,6 +148,10 @@ Vérification des relations entre entités puis régénération de la migration.
 
 - Accueil
 - Connexion
+- Profil joueur
+- Profil organisateur
+- Profil administrateur
+- Salle de discussion
 - Dashboard administrateur
 - Gestion utilisateurs
 - Gestion tournois
@@ -75,6 +162,18 @@ Vérification des relations entre entités puis régénération de la migration.
 - Collections MongoDB
 
 ## Compétences DWWM couvertes
+
+### Architecture
+
+- MVC
+- Doctrine ORM
+- Doctrine ODM
+
+### Sécurité
+
+- Authentification Symfony
+- Gestion des rôles
+- Contrôle d'accès
 
 ### Front-end
 
@@ -102,7 +201,7 @@ Vérification des relations entre entités puis régénération de la migration.
 - Docker
 - Nginx
 
-## Perspectives d'évolution
+## Evolutions possibles
 
 ✓ Gestion des équipes e-sport
 ✓ Notifications utilisateurs
@@ -164,3 +263,16 @@ Accepter invitation
 Inscrire équipe
 Afficher roster
 Gérer capitaine
+
+## Ce que ce projet m'a appris
+
+Le développement d'Esportify m'a permis d'acquérir et de consolider de nombreuses compétences techniques :
+
+- développement avec Symfony ;
+- architecture MVC ;
+- gestion des bases de données relationnelles avec MySQL ;
+- utilisation de MongoDB via Doctrine ODM ;
+- mise en œuvre de Docker ;
+- utilisation de Git et GitHub ;
+- sécurisation d'une application Symfony ;
+- organisation d'un projet web professionnel.

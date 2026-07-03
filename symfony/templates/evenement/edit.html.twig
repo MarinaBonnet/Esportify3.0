@@ -1,13 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Evenement{% endblock %}
+{% block title %}Modifier un événement{% endblock %}
 
 {% block body %}
-    <h1>Edit Evenement</h1>
 
-    {{ include('evenement/_form.html.twig', {'button_label': 'Update'}) }}
+<section class="auth">
 
-    <a href="{{ path('app_evenement_index') }}">back to list</a>
+    <div class="auth__form">
 
-    {{ include('evenement/_delete_form.html.twig') }}
+        <h1 class="form__title">Modifier un événement</h1>
+
+        {{ include('evenement/_form.html.twig', {
+        button_label: 'Enregistrer les modifications'
+        }) }}
+
+        <div class="form__actions">
+            {{ include('evenement/_delete_form.html.twig') }}
+        </div>
+
+        <div class="auth__links">
+            <a href="{{ path('app_evenement_index') }}">
+                Retour à la liste des événements
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}

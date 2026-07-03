@@ -8,6 +8,7 @@
 @use "components/dashboard";
 @use "components/buttons";
 @use "components/modal";
+@use "components/forms";
 @use "components/footer";
 
 @use "pages/home";
@@ -16,6 +17,9 @@
 @use "pages/organisateur";
 @use "pages/admin";
 @use "pages/legal";
+@use "pages/auth";
+@use "pages/event-detail";
+@use "pages/profile";
 
 @use "sections/hero";
 @use "sections/presentation";

@@ -1,0 +1,93 @@
+@use "../abstracts/variables" as *;
+
+.event-detail {
+    padding: 3rem 1rem;
+
+    &__container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: $color-card;
+        border: 1px solid rgba($color-purple, 0.4);
+        border-radius: $radius;
+        box-shadow: 0 0 35px rgba($color-purple, 0.2);
+    }
+
+    &__title {
+        margin-bottom: 2rem;
+        text-align: center;
+        color: $color-pink;
+        font-size: 2.3rem;
+    }
+
+    &__image {
+        width: 100%;
+        max-height: 420px;
+        object-fit: cover;
+        border-radius: $radius;
+        margin-bottom: 2rem;
+    }
+
+    &__description {
+        margin-bottom: 2rem;
+        color: $color-text-muted;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    &__infos {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 0;
+        list-style: none;
+
+        li {
+            padding: 1rem;
+            background: rgba($color-dark, 0.75);
+            border-left: 4px solid $color-blue;
+            border-radius: $radius;
+            color: $color-text;
+        }
+
+        strong {
+            color: $color-blue;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+
+        form {
+            display: inline-flex;
+        }
+    }
+}
+
+@media (max-width: $bp-tablet) {
+    .event-detail {
+        padding: 2rem 1rem;
+
+        &__container {
+            padding: 1.5rem;
+        }
+
+        &__title {
+            font-size: 1.8rem;
+        }
+
+        &__actions {
+            flex-direction: column;
+
+            .btn,
+            form,
+            form button {
+                width: 100%;
+            }
+        }
+    }
+}

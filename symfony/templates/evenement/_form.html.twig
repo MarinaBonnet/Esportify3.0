@@ -1,4 +1,55 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {
+attr: {
+class: 'form'
+}
+}) }}
+
+<div class="form__group">
+    {{ form_label(form.titre, 'Titre') }}
+    {{ form_widget(form.titre) }}
+    {{ form_errors(form.titre) }}
+</div>
+
+<div class="form__group">
+    {{ form_label(form.description, 'Description') }}
+    {{ form_widget(form.description) }}
+    {{ form_errors(form.description) }}
+</div>
+
+<div class="form__group">
+    {{ form_label(form.dateStart, 'Date de début') }}
+    {{ form_widget(form.dateStart) }}
+    {{ form_errors(form.dateStart) }}
+</div>
+
+<div class="form__group">
+    {{ form_label(form.dateEnd, 'Date de fin') }}
+    {{ form_widget(form.dateEnd) }}
+    {{ form_errors(form.dateEnd) }}
+</div>
+
+<div class="form__group">
+    {{ form_label(form.nbPlaces, 'Nombre de places') }}
+    {{ form_widget(form.nbPlaces) }}
+    {{ form_errors(form.nbPlaces) }}
+</div>
+
+<div class="form__group">
+    {{ form_label(form.jeu, 'Jeu') }}
+    {{ form_widget(form.jeu) }}
+    {{ form_errors(form.jeu) }}
+</div>
+
+<div class="form__group">
+    {{ form_label(form.imageFile) }}
+    {{ form_widget(form.imageFile) }}
+    {{ form_errors(form.imageFile) }}
+</div>
+
+<div class="form__actions">
+    <button class="btn btn--primary">
+        {{ button_label|default('Enregistrer') }}
+    </button>
+</div>
+
 {{ form_end(form) }}

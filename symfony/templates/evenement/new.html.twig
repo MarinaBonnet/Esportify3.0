@@ -1,11 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Evenement{% endblock %}
+{% block title %}Créer un événement{% endblock %}
 
 {% block body %}
-    <h1>Create new Evenement</h1>
 
-    {{ include('evenement/_form.html.twig') }}
+<section class="auth">
+    <div class="auth__form">
 
-    <a href="{{ path('app_evenement_index') }}">back to list</a>
+        <h1 class="form__title">Créer un événement</h1>
+
+        {{ include('evenement/_form.html.twig', {
+        button_label: 'Créer l’événement'
+        }) }}
+
+        <div class="auth__links">
+            <a href="{{ path('app_evenement_index') }}">
+                Retour à la liste des événements
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}

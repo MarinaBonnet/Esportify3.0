@@ -2,37 +2,44 @@
 
 ## Architecture générale
 
-Esportify 3.0 est une application web développée avec Symfony.
+Esportify 3.0 est une application web développée avec Symfony 7 selon le modèle d'architecture MVC (Model - View - Controller).
 
-L'application repose sur une architecture conteneurisée Docker permettant de séparer les différents services.
+L'application est exécutée dans un environnement Docker composé de plusieurs conteneurs permettant de séparer les différents services (PHP, Nginx, MySQL et MongoDB).
+
+Les données relationnelles sont gérées avec Doctrine ORM et MySQL, tandis que les messages du chat sont stockés dans MongoDB grâce à Doctrine ODM.
 
 ## Services Docker
 
 ### PHP
 
-Responsable de l'exécution de l'application Symfony.
+- Exécution de Symfony
+- Doctrine ORM
+- Doctrine ODM
+- Composer
 
 ### Nginx
 
-Serveur web.
+- Serveur HTTP
+- Distribution des fichiers publics
+- Communication avec PHP-FPM
 
 ### MySQL
 
-Base de données relationnelle utilisée pour :
+Stockage des données relationnelles :
 
 - utilisateurs
+- événements
+- jeux
+- participations
+- images
 - rôles
-- équipes
-- tournois
-- inscriptions
 
 ### MongoDB
 
-Base NoSQL utilisée pour :
+Stockage documentaire :
 
-- conversations
-- messages du chat
-- historique des échanges
+- salons de discussion
+- messages
 
 ## Gestion des utilisateurs
 
@@ -40,31 +47,104 @@ Trois rôles principaux :
 
 ### Administrateur
 
-- gestion complète
+- gestion des utilisateurs
+- gestion des événements
+- accès au tableau de bord
 - modération
-- gestion utilisateurs
 
 ### Organisateur
 
-- création tournois
-- gestion inscriptions
+- création d'événements
+- modification de ses événements
+- gestion des participants
 
 ### Joueur
 
-- participation aux compétitions
-- gestion profil
+- inscription aux événements
+- participation au chat
+- gestion de son profil
 
 ## Authentification
 
-L'authentification repose sur Symfony Security.
-
-Composants utilisés :
+Elle utilise :
 
 - User
+- UserRepository
 - LoginFormAuthenticator
 - SecurityController
-- Route /login
-- Route /logout
+- PasswordHasher
+- Sessions Symfony
+
+## Bases de données
+
+### MySQL
+
+Doctrine ORM est utilisé pour gérer les entités relationnelles :
+
+- User
+- Role
+- Evenement
+- Jeu
+- Participation
+- Image
+
+### MongoDB
+
+Doctrine ODM est utilisé pour gérer les documents :
+
+- Message
+
+src/
+
+Controller/
+
+Entity/
+
+Document/
+
+Repository/
+
+Form/
+
+Security/
+
+Service/
+
+assets/
+
+templates/
+
+## Sécurité
+
+- Authentification Symfony
+- Hashage des mots de passe
+- Gestion des rôles
+- Contrôle d'accès avec #[IsGranted]
+- Protection CSRF
+
+## Outils
+
+- Symfony
+- PHP
+- Docker
+- Git
+- GitHub
+- MySQL
+- MongoDB
+- Nginx
+- Composer
+- Twig
+
+## Déploiement
+
+Le projet est développé dans un environnement Docker.
+
+Les commandes principales sont :
+
+- docker compose up -d
+- composer install
+- doctrine:migrations:migrate
+- doctrine:mongodb:schema:create
 
 ## Gestion de versions
 

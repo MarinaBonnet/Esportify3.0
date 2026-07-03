@@ -4,28 +4,66 @@
 
 {% block body %}
 
-<h1>Mon profil</h1>
+<section class="auth">
+    <div class="auth__form">
 
-<h2>Avatar</h2>
+        <div class="profile-card">
+            <h1 class="form__title">Mon profil</h1>
 
-<img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}" width="150">
+            <div class="profile-card__avatar">
+                <img src="{{ app.user.avatar }}" alt="Avatar de {{ app.user.pseudo }}">
+            </div>
+        </div>
 
-{% for message in app.flashes('success') %}
-<div>
-    {{ message }}
-</div>
-{% endfor %}
+        {% for message in app.flashes('success') %}
+        <div class="alert alert--success">
+            {{ message }}
+        </div>
+        {% endfor %}
 
-{{ form_start(form) }}
+        {{ form_start(form, {
+        attr: {
+        class: 'form'
+        }
+        }) }}
 
-{{ form_row(form.pseudo) }}
-{{ form_row(form.email) }}
-{{ form_row(form.avatar) }}
+        <div class="form__group">
+            {{ form_label(form.pseudo, 'Pseudo') }}
+            {{ form_widget(form.pseudo) }}
+            {{ form_errors(form.pseudo) }}
+        </div>
 
-<button type="submit">
-    Enregistrer
-</button>
+        <div class="form__group">
+            {{ form_label(form.email, 'Adresse e-mail') }}
+            {{ form_widget(form.email) }}
+            {{ form_errors(form.email) }}
+        </div>
 
-{{ form_end(form) }}
+        <div class="form__group">
+            {{ form_label(form.avatar, 'Avatar') }}
+            {{ form_widget(form.avatar) }}
+            {{ form_errors(form.avatar) }}
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="btn btn--primary">
+                Enregistrer
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+    <div class="profile-links">
+
+        <a href="{{ path('app_change_password') }}" class="btn btn--secondary">
+
+            Changer mon mot de passe
+
+        </a>
+
+    </div>
+
+</section>
 
 {% endblock %}

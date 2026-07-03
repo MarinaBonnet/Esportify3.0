@@ -8,106 +8,67 @@
 
 <section class="event-detail">
 
-    <h1>
-        {{ evenement.titre }}
-    </h1>
+    <div class="event-detail__container">
 
-    {% set image = evenement.images|first %}
+        <h1 class="event-detail__title">
+            {{ evenement.titre }}
+        </h1>
 
-    {% if image %}
-    <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}" class="event-detail__image">
-    {% endif %}
+        {% set image = evenement.images|first %}
 
-    <p class="event-detail__description">
-        {{ evenement.description }}
-    </p>
-
-    <ul class="event-detail__infos">
-
-        <li>
-            Jeu :
-            {{ evenement.jeu.nom }}
-        </li>
-
-        <li>
-            Organisateur :
-            {{ evenement.organisateur.pseudo }}
-        </li>
-
-        <li>
-            Places :
-            {{ evenement.nbPlaces }}
-        </li>
-
-        <li>
-            Début :
-            {{ evenement.dateStart|date('d/m/Y H:i') }}
-        </li>
-
-        <li>
-            Fin :
-            {{ evenement.dateEnd|date('d/m/Y H:i') }}
-        </li>
-
-        <li>
-            Statut :
-            {{ evenement.status }}
-        </li>
-
-    </ul>
-
-    <div class="event-detail__actions">
-
-        <a href="{{ path('app_evenement_index') }}" class="btn-secondary">
-            Retour
-        </a>
-
-        <a href="{{ path('app_evenement_classement', {
-            id: evenement.id
-        }) }}" class="btn-secondary">
-            Classement
-        </a>
-
-        {% if is_granted('ROLE_JOUEUR') %}
-
-        {% set now = "now"|date("U") %}
-        {% set end = evenement.dateEnd|date("U") %}
-
-        {% if end > now %}
-
-        <a href="{{ path('app_evenement_participer', {
-                    id: evenement.id
-                }) }}" class="btn-primary">
-            Participer
-        </a>
-
-        <a href="{{ path('app_evenement_favori', {
-                    id: evenement.id
-                }) }}" class="btn-secondary">
-            Favori
-        </a>
-
+        {% if image %}
+        <img src="{{ asset(image.url) }}" alt="{{ image.alt ?? evenement.titre }}" class="event-detail__image">
         {% endif %}
 
-        {% endif %}
+        <p class="event-detail__description">
+            {{ evenement.description }}
+        </p>
 
-        {% if is_granted('ROLE_ADMIN')
-        or app.user == evenement.organisateur %}
+        <ul class="event-detail__infos">
+            <li><strong>Jeu :</strong> {{ evenement.jeu.nom }}</li>
+            <li><strong>Organisateur :</strong> {{ evenement.organisateur.pseudo }}</li>
+            <li><strong>Places :</strong> {{ evenement.nbPlaces }}</li>
+            <li><strong>Début :</strong> {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
+            <li><strong>Fin :</strong> {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
+            <li><strong>Statut :</strong> {{ evenement.status }}</li>
+        </ul>
 
-        {% if evenement.dateStart > date()
-        or is_granted('ROLE_ADMIN') %}
+        <div class="event-detail__actions">
 
-        <a href="{{ path('app_evenement_edit', {
-                    id: evenement.id
-                }) }}" class="btn-secondary">
-            Modifier
-        </a>
+            <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">
+                Retour
+            </a>
 
-        {% endif %}
+            <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}" class="btn btn--secondary">
+                Classement
+            </a>
 
-        {{ include('evenement/_delete_form.html.twig') }}
+            {% if is_granted('ROLE_JOUEUR') %}
+            {% set now = "now"|date("U") %}
+            {% set end = evenement.dateEnd|date("U") %}
 
-        {% endif %}
+            {% if end > now %}
+            <a href="{{ path('app_evenement_participer', { id: evenement.id }) }}" class="btn btn--primary">
+                Participer
+            </a>
+
+            <a href="{{ path('app_evenement_favori', { id: evenement.id }) }}" class="btn btn--secondary">
+                Ajouter aux favoris
+            </a>
+            {% endif %}
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') or app.user == evenement.organisateur %}
+            {% if evenement.dateStart > date() or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_evenement_edit', { id: evenement.id }) }}" class="btn btn--secondary">
+                Modifier
+            </a>
+            {% endif %}
+
+            {{ include('evenement/_delete_form.html.twig') }}
+            {% endif %}
+
+        </div>
 
     </div>
 

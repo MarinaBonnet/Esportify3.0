@@ -12,7 +12,9 @@ class EventModal {
         }
 
         document.addEventListener("click", (event) => {
-            const detailButton = event.target.closest("[data-event-id]");
+            const detailButton = event.target.closest(
+                "[data-open-event-modal]",
+            );
             const closeButton = event.target.closest("[data-close-modal]");
 
             if (detailButton) {
