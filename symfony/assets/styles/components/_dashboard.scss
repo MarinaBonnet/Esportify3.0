@@ -1,9 +1,6 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-@use "../abstracts/variables" as *;
-@use "../abstracts/mixins" as *;
-
 .dashboard {
     max-width: $container-width;
     margin: 0 auto;
@@ -165,16 +162,20 @@
 .event-card {
     display: grid;
     gap: 1rem;
+    box-shadow: 0 0 18px rgba($color-purple, 0.15);
 
     &__header {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
         align-items: flex-start;
+    }
 
-        h3 {
-            color: $color-text;
-        }
+    &__title {
+        margin: 0;
+        color: $color-pink;
+        font-size: 1.15rem;
+        font-weight: 800;
     }
 
     &__infos {
@@ -183,21 +184,110 @@
         color: $color-text-muted;
     }
 
-    &__state strong {
-        color: $color-pink;
+    &__status,
+    &__label,
+    &__hint {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    &__status {
+        padding: 0.35rem 0.65rem;
+        text-transform: uppercase;
+    }
+
+    &__label {
+        padding: 0.4rem 0.7rem;
+    }
+
+    &__hint {
+        padding: 0.35rem 0.65rem;
+        color: $color-blue;
+        background: rgba($color-blue, 0.12);
+        border: 1px solid rgba($color-blue, 0.35);
+    }
+
+    &__status--valid,
+    &__label--success {
+        color: #32d583;
+        background: rgba(25, 135, 84, 0.15);
+        border: 1px solid rgba(25, 135, 84, 0.35);
+    }
+
+    &__status--pending,
+    &__label--warning {
+        color: #ffc107;
+        background: rgba(255, 193, 7, 0.15);
+        border: 1px solid rgba(255, 193, 7, 0.35);
+    }
+
+    &__label--info {
+        color: $color-blue;
+        background: rgba($color-blue, 0.15);
+        border: 1px solid rgba($color-blue, 0.35);
+    }
+
+    &__label--danger {
+        color: #ff6b6b;
+        background: rgba(220, 53, 69, 0.15);
+        border: 1px solid rgba(220, 53, 69, 0.35);
     }
 
     &__actions {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         gap: 0.7rem;
 
-        a,
-        span,
-        small {
+        a {
             color: $color-blue;
-            font-weight: 600;
+            font-weight: 700;
+            text-decoration: none;
+
+            &:hover {
+                color: $color-pink;
+                text-decoration: underline;
+            }
         }
+    }
+
+    &__refuse-form {
+        display: grid;
+        gap: 0.6rem;
+        width: 100%;
+
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            resize: vertical;
+            border-radius: $radius;
+            border: 1px solid rgba($color-purple, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+            color: $color-text;
+            padding: 0.8rem;
+
+            &::placeholder {
+                color: $color-text-muted;
+            }
+        }
+    }
+
+    &__notice {
+        padding: 0.8rem;
+        border-radius: $radius;
+        font-size: 0.9rem;
+    }
+
+    &__notice--danger {
+        color: #ffb3b3;
+        background: rgba(220, 53, 69, 0.12);
+        border: 1px solid rgba(220, 53, 69, 0.35);
     }
 }
 

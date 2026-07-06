@@ -1076,37 +1076,38 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 - [ok] Dashboard joueur accessible
 - [ok] Profil accessible
 - [ok] Modification profil ok
-- [ ] Changement mot de passe OK
+- [ok] Changement mot de passe OK
 - [ok] Voir événements
-- [ ] Participer à un événement à venir
+- [ ] Modifier ses propres événements
+- [ok] Participer à un événement à venir
 - [ ] Impossible de participer à un événement terminé
-- [ ] Ajouter / retirer favori
+- [ok] Ajouter / retirer favori
 - [ ] Accès au chat d’un événement où il participe
 - [ok] Déconnexion OK
 
 ### Organisateur
 
-- [ ] Connexion OK
-- [ ] Dashboard organisateur accessible
-- [ ] Proposer un événement
+- [ok] Connexion OK
+- [ok] Dashboard organisateur accessible
+- [ok] Proposer un événement
 - [ ] Modifier ses propres événements
 - [ ] Impossible de modifier un événement d’un autre organisateur
 - [ ] Voir participants
-- [ ] Démarrer un événement si les conditions sont remplies
+- [ok] Démarrer un événement si les conditions sont remplies
 - [ ] Accès au chat de ses événements
-- [ ] Déconnexion OK
+- [ok] Déconnexion OK
 
 ### Admin
 
-- [ ] Connexion OK
-- [ ] Dashboard admin accessible
-- [ ] Voir tous les utilisateurs
-- [ ] Voir tous les événements
-- [ ] Valider / refuser un événement
+- [ok] Connexion OK
+- [ok] Dashboard admin accessible
+- [ok] Voir tous les utilisateurs
+- [ok] Voir tous les événements
+- [ok] Valider / refuser un événement
 - [ ] Modifier un événement
-- [ ] Supprimer un événement
-- [ ] Accès aux profils/pages admin
-- [ ] Déconnexion OK
+- [ok] Supprimer un événement
+- [ok] Accès aux profils/pages admin
+- [ok] Déconnexion OK
 
 ---
 
@@ -1152,7 +1153,7 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 
 ### Auth
 
-- [ ] Connexion avec bons identifiants
+- [ok] Connexion avec bons identifiants
 - [ ] Connexion avec mauvais identifiants
 - [ ] Inscription valide
 - [ ] Inscription avec email déjà utilisé
@@ -1161,21 +1162,21 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 
 ### Profil
 
-- [ ] Modifier pseudo
-- [ ] Modifier email
-- [ ] Modifier avatar
-- [ ] Changer mot de passe
-- [ ] Message succès affiché
+- [ok] Modifier pseudo
+- [ok] Modifier email
+- [ok] Modifier avatar
+- [ok] Changer mot de passe
+- [ok] Message succès affiché
 
 ### Événements
 
-- [ ] Créer événement complet
-- [ ] Créer événement sans image
-- [ ] Créer événement avec image
+- [ok] Créer événement complet
+- [ok] Créer événement sans image
+- [ok] Créer événement avec image
 - [ ] Modifier événement
 - [ ] Supprimer événement
 - [ ] Dates invalides si test prévu
-- [ ] Upload image mauvais format refusé
+- [ok] Upload image mauvais format refusé
 
 ### Contact
 
@@ -1218,9 +1219,9 @@ Tester en mode navigateur responsive :
 A Faire:
 
 Restreindre le chat aux participants acceptés
-Bloquer les messages vides
-Limiter la longueur des messages
-Fermer le chat après dateEnd
-Bloquer le chat avant startedAt
+Bloquer les messages vides /ok
+Limiter la longueur des messages /ok
+Fermer le chat après dateEnd /ok
+Bloquer le chat avant startedAt /ok
 Dossier Projet
 Dossier Professionnel

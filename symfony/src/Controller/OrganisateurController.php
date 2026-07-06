@@ -19,14 +19,20 @@ final class OrganisateurController extends AbstractController
         EvenementRepository $evenementRepository,
         ParticipationRepository $participationRepository
     ): Response {
-       $organisateur = $this->getUser();
 
-        $evenements = $evenementRepository->findBy(
-            ['organisateur' => $organisateur],
-            ['dateStart' => 'ASC']
-        );
+        
+        $now = new \DateTimeImmutable();
 
-        $participationsAcceptees = $participationRepository->findAcceptedByOrganisateur($organisateur);
+        $evenements = $evenementRepository->createQueryBuilder('e')
+        ->andWhere('e.status = :status')
+        ->andWhere('e.dateEnd > :now')
+        ->setParameter('status', 'valide')
+        ->setParameter('now', $now)
+        ->orderBy('e.dateStart', 'ASC')
+        ->getQuery()
+        ->getResult();
+
+        $participationsAcceptees = $participationRepository->findAcceptedForActiveValidatedEvents($now);
 
         $nbEvenements = count($evenements);
         $nbParticipantsInscrits = count($participationsAcceptees);
@@ -37,8 +43,6 @@ final class OrganisateurController extends AbstractController
         $nbAVenir = 0;
         $nbTermines = 0;
         $nbPlaces = 0;
-
-        $now = new \DateTimeImmutable();
 
         foreach ($evenements as $evenement) {
             $nbPlaces += $evenement->getNbPlaces();

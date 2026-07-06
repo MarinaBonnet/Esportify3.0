@@ -22,17 +22,9 @@
     </header>
 
     <section class="dashboard__actions">
-        <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">
-            Voir les événements disponibles
-        </a>
-
-        <a href="{{ path('app_profile') }}" class="btn btn--secondary">
-            Mon profil
-        </a>
-
-        <a href="{{ path('app_evenement_new') }}" class="btn btn--primary">
-            Créer un événement
-        </a>
+        <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">Voir les événements disponibles</a>
+        <a href="{{ path('app_profile') }}" class="btn btn--secondary">Mon profil</a>
+        <a href="{{ path('app_evenement_new') }}" class="btn btn--primary">Créer un événement</a>
     </section>
 
     <div class="dashboard__grid">
@@ -45,36 +37,44 @@
             {% else %}
             <ul>
                 {% for participation in participations %}
+                {% set evenement = participation.evenement %}
+                {% set now = "now"|date("U", "Europe/Paris") %}
+                {% set start = evenement.dateStart|date("U", "Europe/Paris") %}
+                {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+
                 <li>
-                    <strong>{{ participation.evenement.titre }}</strong><br>
-                    Jeu : {{ participation.evenement.jeu.nom }}<br>
-                    Statut : {{ participation.status }}<br>
-                    Début : {{ participation.evenement.dateStart|date('d/m/Y H:i') }}<br>
-                    Fin : {{ participation.evenement.dateEnd|date('d/m/Y H:i') }}
+                    <strong>{{ evenement.titre }}</strong><br>
+                    Jeu : {{ evenement.jeu.nom }}<br>
+                    Statut inscription : {{ participation.status }}<br>
+                    Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
+                    Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}<br>
 
-                    {% set now = "now"|date("U") %}
-                    {% set startTime = participation.evenement.dateStart|date("U") %}
-                    {% set endTime = participation.evenement.dateEnd|date("U") %}
+                    {% if end <= now %} <span class="event-card__label event-card__label--danger">
+                        Terminé / archivé
+                        </span><br>
 
-                    {% if endTime <= now %} <br><small>Événement terminé.</small><br>
-
-                        <a href="{{ path('app_evenement_classement', { id: participation.evenement.id }) }}">
+                        <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}">
                             Voir le classement
                         </a>
-                        {% else %}
-                        {% if participation.status == 'accepte'
-                        and participation.evenement.startedAt is not null
-                        and now >= startTime
-                        %}
-                        <a href="{{ path('app_evenement_room', { id: participation.evenement.id }) }}">
-                            Rejoindre la room
-                        </a><br>
-                        {% elseif participation.status == 'accepte' %}
-                        <small>En attente du démarrage de l'événement.</small><br>
-                        {% endif %}
 
-                        {% if participation.status != 'refuse' and startTime > now %}
-                        <a href="{{ path('app_evenement_desinscrire', { id: participation.evenement.id }) }}">
+                        {% elseif participation.status == 'refuse' %}
+                        <span class="event-card__label event-card__label--danger">
+                            Inscription refusée
+                        </span>
+
+                        {% elseif participation.status == 'accepte' and evenement.startedAt is not null and now >= start
+                        %}
+                        <a href="{{ path('app_evenement_room', { id: evenement.id }) }}">
+                            Rejoindre la room
+                        </a>
+
+                        {% elseif participation.status == 'accepte' %}
+                        <span class="event-card__label event-card__label--info">
+                            En attente du démarrage
+                        </span><br>
+
+                        {% if start > now %}
+                        <a href="{{ path('app_evenement_desinscrire', { id: evenement.id }) }}">
                             Se désinscrire
                         </a>
                         {% endif %}
@@ -93,15 +93,30 @@
             {% else %}
             <ul>
                 {% for favori in favoris %}
-                <li>
-                    <strong>{{ favori.evenement.titre }}</strong><br>
-                    Jeu : {{ favori.evenement.jeu.nom }}<br>
-                    Début : {{ favori.evenement.dateStart|date('d/m/Y H:i') }}<br>
-                    Places : {{ favori.evenement.nbPlaces }}<br>
+                {% set evenement = favori.evenement %}
+                {% set now = "now"|date("U", "Europe/Paris") %}
+                {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
 
-                    <a href="{{ path('app_evenement_retirer_favori', { id: favori.evenement.id }) }}">
-                        Retirer des favoris
-                    </a>
+                <li>
+                    <strong>{{ evenement.titre }}</strong><br>
+                    Jeu : {{ evenement.jeu.nom }}<br>
+                    Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
+                    Places : {{ evenement.nbPlaces }}<br>
+
+                    {% if end <= now %} <span class="event-card__label event-card__label--danger">
+                        Terminé / archivé
+                        </span><br>
+                        {% endif %}
+
+                        <a href="{{ path('app_evenement_show', { id: evenement.id }) }}">
+                            Voir
+                        </a><br>
+
+                        {% if end > now %}
+                        <a href="{{ path('app_evenement_retirer_favori', { id: evenement.id }) }}">
+                            Retirer des favoris
+                        </a>
+                        {% endif %}
                 </li>
                 {% endfor %}
             </ul>
@@ -116,35 +131,63 @@
             {% else %}
             <ul>
                 {% for evenement in evenementsProposes %}
+                {% set now = "now"|date("U", "Europe/Paris") %}
+                {% set start = evenement.dateStart|date("U", "Europe/Paris") %}
+                {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+                {% set startLimit = start - 1800 %}
+
                 <li>
                     <strong>{{ evenement.titre }}</strong><br>
                     Jeu : {{ evenement.jeu.nom }}<br>
                     Statut : {{ evenement.status }}<br>
                     Début : {{ evenement.dateStart|date('d/m/Y H:i') }}<br>
 
-                    {% set now = "now"|date("U") %}
-                    {% set start = evenement.dateStart|date("U") %}
-                    {% set end = evenement.dateEnd|date("U") %}
-
-                    {% if end <= now %} <small>Événement terminé.</small>
+                    {% if end <= now %} <span class="event-card__label event-card__label--danger">
+                        Terminé / archivé
+                        </span><br>
 
                         <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}">
                             Voir le classement
                         </a>
-                        {% elseif start > now and evenement.startedAt is null %}
-                        <a href="{{ path('app_evenement_edit', { id: evenement.id }) }}">
-                            Modifier
-                        </a>
+
+                        {% else %}
 
                         {% if evenement.status == 'valide' %}
-                        <a href="{{ path('app_evenement_participer', { id: evenement.id }) }}">
-                            Participer
-                        </a>
+                        <span class="event-card__label event-card__label--success">
+                            Validé
+                        </span><br>
+                        {% elseif evenement.status == 'refuse' %}
+                        <span class="event-card__label event-card__label--danger">
+                            Non validé
+                        </span><br>
+                        {% if evenement.motifRefus %}
+                        <div class="event-card__notice event-card__notice--danger">
+                            <strong>Motif du refus :</strong><br>
+                            {{ evenement.motifRefus }}
+                        </div>
                         {% endif %}
-                        {% elseif evenement.startedAt is not null %}
-                        <small>Événement démarré.</small>
                         {% else %}
-                        <small>Modification impossible après le début.</small>
+                        <span class="event-card__label event-card__label--warning">
+                            En attente admin
+                        </span><br>
+                        {% endif %}
+
+                        {% if start > now and evenement.startedAt is null %}
+                        <a href="{{ path('app_evenement_edit', { id: evenement.id }) }}">
+                            Modifier
+                        </a><br>
+                        {% endif %}
+
+                        {% if evenement.status == 'valide' %}
+                        {% if evenement.startedAt is not null %}
+                        <a href="{{ path('app_evenement_room', { id: evenement.id }) }}">
+                            Accéder à la room
+                        </a><br>
+                        {% else %}
+                        <small>En attente de démarrage par un organisateur.</small>
+                        {% endif %}
+                        {% endif %}
+
                         {% endif %}
                 </li>
                 {% endfor %}

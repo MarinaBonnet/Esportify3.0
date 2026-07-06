@@ -229,6 +229,7 @@ final class EvenementController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $evenement->setStatus('en_attente');
+            $evenement->setMotifRefus(null);
             $entityManager->flush();
 
         if ($this->isGranted('ROLE_ADMIN')) {
@@ -262,11 +263,36 @@ final class EvenementController extends AbstractController
         }
     
         if ($this->isCsrfTokenValid('delete' . $evenement->getId(), $request->getPayload()->getString('_token'))) {
+
+            foreach ($evenement->getImages() as $image) {
+                $entityManager->remove($image);
+            }
+            foreach ($evenement->getParticipations() as $participation) {
+                $entityManager->remove($participation);
+            }
+
+            foreach ($evenement->getFavoris() as $favori) {
+                $entityManager->remove($favori);
+            }
+
+            foreach ($evenement->getScores() as $score) {
+                $entityManager->remove($score);
+            }
+            
             $entityManager->remove($evenement);
             $entityManager->flush();
         }
+        
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_admin');
+        }
 
-        return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
+        if ($this->isGranted('ROLE_ORGANISATEUR')) {
+            return $this->redirectToRoute('app_organisateur');
+        }
+
+        return $this->redirectToRoute('app_joueur');
+
     }
 
     #[IsGranted('ROLE_JOUEUR')]
@@ -312,7 +338,7 @@ final class EvenementController extends AbstractController
         $participation = new Participation();
         $participation->setUser($this->getUser());
         $participation->setEvenement($evenement);
-        $participation->setStatus('en_attente');
+        $participation->setStatus('accepte');
 
         $entityManager->persist($participation);
         $entityManager->flush();

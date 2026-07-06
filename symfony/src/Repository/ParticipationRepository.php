@@ -28,6 +28,21 @@ class ParticipationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAcceptedForActiveValidatedEvents(\DateTimeImmutable $now): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.evenement', 'e')
+            ->andWhere('p.status = :status')
+            ->andWhere('e.status = :eventStatus')
+            ->andWhere('e.dateEnd > :now')
+            ->setParameter('status', 'accepte')
+            ->setParameter('eventStatus', 'valide')
+            ->setParameter('now', $now)
+            ->orderBy('e.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
 //    /**
 //     * @return Participation[] Returns an array of Participation objects

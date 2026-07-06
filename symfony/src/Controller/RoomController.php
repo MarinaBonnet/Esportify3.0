@@ -31,7 +31,8 @@ final class RoomController extends AbstractController
         }
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-        $isOrganisateur = $evenement ->getOrganisateur() === $user;
+        $isOrganisateur = $this->isGranted('ROLE_ORGANISATEUR');
+        $isCreateur = $evenement->getOrganisateur() === $user;
 
         $participation = $participationRepository->findOneBy([
             'user' => $user,
@@ -39,11 +40,13 @@ final class RoomController extends AbstractController
             'status' => 'accepte',
         ]);
 
-        if ( !$isAdmin && !$isOrganisateur && !$participation) {
+        if ( !$isAdmin && !$isOrganisateur &&!$isCreateur && !$participation) {
             throw $this->createAccessDeniedException(
                 'Vous devez être accepté à cet événement pour rejoindre la room.'
             );
         }
+
+        $now = new \DateTimeImmutable();
 
         if ($evenement->getStartedAt() === null) {
             throw $this->createAccessDeniedException(
@@ -51,16 +54,36 @@ final class RoomController extends AbstractController
             );
         }
 
-        if ($evenement->getDateStart() > new \DateTimeImmutable()) {
+        if ($evenement->getDateStart() > $now) {
             throw $this->createAccessDeniedException(
                 'L’événement n’a pas encore commencé.'
+            );
+        }
+
+        if ($evenement->getDateEnd() <= $now) {
+            throw $this->createAccessDeniedException(
+                'Le chat est fermé car l’événement est terminé.'
             );
         }
 
         if ($request->isMethod('POST')) {
             $contenu = trim($request->request->get('contenu', ''));
 
-            if ($contenu !== '') {
+            if ($contenu === '') {
+                $this->addFlash('error', 'Le message ne peut pas être vide.');
+
+                return $this->redirectToRoute('app_evenement_room', [
+                    'id' => $evenement->getId(),
+                ]);
+            }
+            if (mb_strlen($contenu) > 500) {
+                $this->addFlash('error', 'Le message ne peut pas dépasser 500 caractères.');
+
+                return $this->redirectToRoute('app_evenement_room', [
+                    'id' => $evenement->getId(),
+                ]);
+            }
+
                 $message = new Message();
                 $message->setEvenementId($evenement->getId());
                 $message->setUserId($user->getId());
@@ -68,7 +91,7 @@ final class RoomController extends AbstractController
 
                 $dm->persist($message);
                 $dm->flush();
-            }
+            
 
             return $this->redirectToRoute('app_evenement_room', [
                 'id' => $evenement->getId(),
@@ -100,7 +123,7 @@ final class RoomController extends AbstractController
             'pseudos' => $pseudos,
             'avatars' => $avatars,
             'isAdmin' => $isAdmin,
-            'isOrganisateur' => $isOrganisateur,
+            'isOrganisateur' => $isOrganisateur || $isCreateur,
         ]);
     }
     
@@ -117,9 +140,10 @@ final class RoomController extends AbstractController
         }
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
-        $isOrganisateur = $evenement->getOrganisateur() === $user;
+        $isOrganisateur = $this->isGranted('ROLE_ORGANISATEUR');
+        $isCreateur = $evenement->getOrganisateur() === $user;
 
-        if (!$isAdmin && !$isOrganisateur) {
+        if (!$isAdmin && !$isOrganisateur &&!$isCreateur) {
             throw $this->createAccessDeniedException(
                 'Vous n’avez pas le droit de modérer cette room.'
             );

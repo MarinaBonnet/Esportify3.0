@@ -246,6 +246,7 @@ p {
 .event-card {
   display: grid;
   gap: 1rem;
+  box-shadow: 0 0 18px rgba(114, 9, 183, 0.15);
 }
 .event-card__header {
   display: flex;
@@ -253,27 +254,102 @@ p {
   gap: 1rem;
   align-items: flex-start;
 }
-.event-card__header h3 {
-  color: #ffffff;
+.event-card__title {
+  margin: 0;
+  color: #f72585;
+  font-size: 1.15rem;
+  font-weight: 800;
 }
 .event-card__infos {
   display: grid;
   gap: 0.4rem;
   color: #bdbdbd;
 }
-.event-card__state strong {
-  color: #f72585;
+.event-card__status, .event-card__label, .event-card__hint {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+.event-card__status {
+  padding: 0.35rem 0.65rem;
+  text-transform: uppercase;
+}
+.event-card__label {
+  padding: 0.4rem 0.7rem;
+}
+.event-card__hint {
+  padding: 0.35rem 0.65rem;
+  color: #4895ef;
+  background: rgba(72, 149, 239, 0.12);
+  border: 1px solid rgba(72, 149, 239, 0.35);
+}
+.event-card__status--valid, .event-card__label--success {
+  color: #32d583;
+  background: rgba(25, 135, 84, 0.15);
+  border: 1px solid rgba(25, 135, 84, 0.35);
+}
+.event-card__status--pending, .event-card__label--warning {
+  color: #ffc107;
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.35);
+}
+.event-card__label--info {
+  color: #4895ef;
+  background: rgba(72, 149, 239, 0.15);
+  border: 1px solid rgba(72, 149, 239, 0.35);
+}
+.event-card__label--danger {
+  color: #ff6b6b;
+  background: rgba(220, 53, 69, 0.15);
+  border: 1px solid rgba(220, 53, 69, 0.35);
 }
 .event-card__actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.7rem;
 }
-.event-card__actions a,
-.event-card__actions span,
-.event-card__actions small {
+.event-card__actions a {
   color: #4895ef;
-  font-weight: 600;
+  font-weight: 700;
+  text-decoration: none;
+}
+.event-card__actions a:hover {
+  color: #f72585;
+  text-decoration: underline;
+}
+.event-card__refuse-form {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+}
+.event-card__refuse-form textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  border-radius: 12px;
+  border: 1px solid rgba(114, 9, 183, 0.4);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  padding: 0.8rem;
+}
+.event-card__refuse-form textarea::placeholder {
+  color: #bdbdbd;
+}
+.event-card__notice {
+  padding: 0.8rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+.event-card__notice--danger {
+  color: #ffb3b3;
+  background: rgba(220, 53, 69, 0.12);
+  border: 1px solid rgba(220, 53, 69, 0.35);
 }
 
 .request-card {
@@ -1482,7 +1558,7 @@ p {
 }
 .competition__question {
   display: block;
-  margin-top: 1rem;
+  margin: 1rem;
   color: #f72585;
   font-size: 1.3rem;
   font-weight: 700;

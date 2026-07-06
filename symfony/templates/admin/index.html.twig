@@ -15,17 +15,9 @@
     </header>
 
     <section class="dashboard__actions">
-        <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">
-            Voir les événements
-        </a>
-
-        <a href="{{ path('app_organisateur') }}" class="btn btn--secondary">
-            Espace organisateur
-        </a>
-
-        <a href="{{ path('app_joueur') }}" class="btn btn--secondary">
-            Espace joueur
-        </a>
+        <a href="{{ path('app_evenement_index') }}" class="btn btn--secondary">Voir les événements</a>
+        <a href="{{ path('app_organisateur') }}" class="btn btn--secondary">Espace organisateur</a>
+        <a href="{{ path('app_joueur') }}" class="btn btn--secondary">Espace joueur</a>
     </section>
 
     <section class="dashboard__stats">
@@ -65,27 +57,49 @@
         {% else %}
         <div class="event-grid">
             {% for evenement in evenementsEnAttente %}
+            {% set now = "now"|date("U", "Europe/Paris") %}
+            {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+
             <article class="event-card">
                 <div class="event-card__header">
-                    <h3>{{ evenement.titre }}</h3>
-                    <span class="badge badge--{{ evenement.status }}">
-                        {{ evenement.status }}
+                    <h3 class="event-card__title">{{ evenement.titre }}</h3>
+
+                    <span class="event-card__status event-card__status--pending">
+                        En attente
                     </span>
                 </div>
 
                 <ul class="event-card__infos">
                     <li>Organisateur : {{ evenement.organisateur.pseudo ?? evenement.organisateur.email }}</li>
                     <li>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
+                    <li>Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
                 </ul>
 
                 <div class="event-card__actions">
-                    <a href="{{ path('app_admin_evenement_valider', { id: evenement.id }) }}" class="btn btn--success">
-                        Valider
-                    </a>
+                    {% if end <= now %} <span class="event-card__label event-card__label--danger">
+                        Terminé / archivé
+                        </span>
 
-                    <a href="{{ path('app_admin_evenement_refuser', { id: evenement.id }) }}" class="btn btn--danger">
-                        Refuser
-                    </a>
+                        <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}"
+                            class="btn btn--secondary">
+                            Classement
+                        </a>
+                        {% else %}
+                        <a href="{{ path('app_admin_evenement_valider', { id: evenement.id }) }}"
+                            class="btn btn--success">
+                            Valider
+                        </a>
+
+                        <form method="post" action="{{ path('app_admin_evenement_refuser', { id: evenement.id }) }}"
+                            class="event-card__refuse-form">
+
+                            <textarea name="motifRefus" rows="3" placeholder="Motif du refus..."></textarea>
+
+                            <button type="submit" class="btn btn--danger">
+                                Refuser
+                            </button>
+                        </form>
+                        {% endif %}
                 </div>
             </article>
             {% endfor %}
@@ -96,88 +110,175 @@
     <section class="dashboard__section">
         <h2>Événements validés</h2>
 
+        {% set hasValidEvents = false %}
+
         <div class="event-grid">
             {% for evenement in evenementsTraites %}
             {% if evenement.status == 'valide' %}
+            {% set hasValidEvents = true %}
+            {% set now = "now"|date("U", "Europe/Paris") %}
+            {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+
             <article class="event-card">
                 <div class="event-card__header">
-                    <h3>{{ evenement.titre }}</h3>
-                    <span class="badge badge--valide">Validé</span>
+                    <h3 class="event-card__title">{{ evenement.titre }}</h3>
+
+                    <span class="event-card__status event-card__status--valid">
+                        Validé
+                    </span>
                 </div>
 
                 <ul class="event-card__infos">
                     <li>Organisateur : {{ evenement.organisateur.pseudo ?? evenement.organisateur.email }}</li>
                     <li>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
+                    <li>Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
                 </ul>
 
                 <div class="event-card__actions">
-                    <a href="{{ path('app_admin_evenement_refuser', { id: evenement.id }) }}" class="btn btn--danger">
-                        Suspendre
-                    </a>
+                    {% if end <= now %} <span class="event-card__label event-card__label--danger">
+                        Terminé / archivé
+                        </span>
+
+                        <a href="{{ path('app_evenement_classement', { id: evenement.id }) }}"
+                            class="btn btn--secondary">
+                            Classement
+                        </a>
+                        {% else %}
+                        <a href="{{ path('app_admin_evenement_refuser', { id: evenement.id }) }}"
+                            class="btn btn--danger">
+                            Suspendre
+                        </a>
+                        {% endif %}
                 </div>
             </article>
             {% endif %}
             {% endfor %}
         </div>
+
+        {% if not hasValidEvents %}
+        <div class="empty-state">
+            <p>Aucun événement validé.</p>
+        </div>
+        {% endif %}
     </section>
 
     <section class="dashboard__section">
         <h2>Événements refusés</h2>
 
+        {% set hasRefusedEvents = false %}
+
         <div class="event-grid">
             {% for evenement in evenementsTraites %}
             {% if evenement.status == 'refuse' %}
+            {% set hasRefusedEvents = true %}
+            {% set now = "now"|date("U", "Europe/Paris") %}
+            {% set end = evenement.dateEnd|date("U", "Europe/Paris") %}
+
             <article class="event-card">
                 <div class="event-card__header">
-                    <h3>{{ evenement.titre }}</h3>
-                    <span class="badge badge--refuse">Refusé</span>
+                    <h3 class="event-card__title">{{ evenement.titre }}</h3>
+
+                    <span class="event-card__label event-card__label--danger">
+                        Refusé
+                    </span>
                 </div>
 
                 <ul class="event-card__infos">
                     <li>Organisateur : {{ evenement.organisateur.pseudo ?? evenement.organisateur.email }}</li>
                     <li>Début : {{ evenement.dateStart|date('d/m/Y H:i') }}</li>
+                    <li>Fin : {{ evenement.dateEnd|date('d/m/Y H:i') }}</li>
                 </ul>
 
+                {% if evenement.motifRefus %}
+                <div class="event-card__notice event-card__notice--danger">
+                    <strong>Motif du refus :</strong><br>
+                    {{ evenement.motifRefus }}
+                </div>
+                {% endif %}
+
                 <div class="event-card__actions">
-                    <a href="{{ path('app_admin_evenement_valider', { id: evenement.id }) }}" class="btn btn--success">
-                        Valider
-                    </a>
+                    {% if end <= now %} <span class="event-card__label event-card__label--danger">
+                        Terminé / archivé
+                        </span>
+                        {% else %}
+                        <a href="{{ path('app_admin_evenement_valider', { id: evenement.id }) }}"
+                            class="btn btn--success">
+                            Valider
+                        </a>
+                        {% endif %}
+
+                        <form method="post" action="{{ path('app_evenement_delete', { id: evenement.id }) }}"
+                            onsubmit="return confirm('Supprimer définitivement cet événement ?');">
+
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evenement.id) }}">
+
+                            <button type="submit" class="btn btn--danger">
+                                Supprimer
+                            </button>
+                        </form>
                 </div>
             </article>
             {% endif %}
             {% endfor %}
         </div>
+
+        {% if not hasRefusedEvents %}
+        <div class="empty-state">
+            <p>Aucun événement refusé.</p>
+        </div>
+        {% endif %}
     </section>
 
     <section class="dashboard__section">
         <h2>Gestion des utilisateurs</h2>
 
+        {% if users is empty %}
+        <div class="empty-state">
+            <p>Aucun utilisateur enregistré.</p>
+        </div>
+        {% else %}
         <div class="request-list">
             {% for user in users %}
             <article class="request-card">
                 <p>
-                    <strong>{{ user.pseudo }}</strong><br>
+                    <strong>{{ user.pseudo ?? 'Utilisateur sans pseudo' }}</strong><br>
                     {{ user.email }}<br>
-                    {{ user.roles|join(', ') }}
+
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                    <span class="event-card__label event-card__label--success">
+                        Administrateur
+                    </span>
+                    {% elseif 'ROLE_ORGANISATEUR' in user.roles %}
+                    <span class="event-card__label event-card__label--info">
+                        Organisateur
+                    </span>
+                    {% else %}
+                    <span class="event-card__label event-card__label--warning">
+                        Joueur
+                    </span>
+                    {% endif %}
                 </p>
 
                 <div class="request-card__actions">
-                    {% if 'ROLE_ADMIN' not in user.roles %}
-                    {% if 'ROLE_ORGANISATEUR' not in user.roles %}
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                    <span class="event-card__label event-card__label--success">
+                        Compte protégé
+                    </span>
+                    {% elseif 'ROLE_ORGANISATEUR' in user.roles %}
+                    <a href="{{ path('app_admin_user_remove_organisateur', { id: user.id }) }}" class="btn btn--danger">
+                        Retirer organisateur
+                    </a>
+                    {% else %}
                     <a href="{{ path('app_admin_user_promote_organisateur', { id: user.id }) }}"
                         class="btn btn--primary">
                         Promouvoir organisateur
                     </a>
-                    {% else %}
-                    <a href="{{ path('app_admin_user_remove_organisateur', { id: user.id }) }}" class="btn btn--danger">
-                        Retirer organisateur
-                    </a>
-                    {% endif %}
                     {% endif %}
                 </div>
             </article>
             {% endfor %}
         </div>
+        {% endif %}
     </section>
 
     <section class="dashboard__section">

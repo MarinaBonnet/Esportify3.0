@@ -13,6 +13,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -73,19 +74,24 @@ final class AdminController extends AbstractController
     ): Response
     {
         $evenement->setStatus('valide');
+        $evenement->setMotifRefus(null);
 
         $entityManager->flush();
 
         return $this->redirectToRoute('app_admin');
     }
 
-    #[Route('/admin/evenement/{id}/refuser', name: 'app_admin_evenement_refuser')]
+    #[Route('/admin/evenement/{id}/refuser', name: 'app_admin_evenement_refuser', methods:['POST'])]
     public function refuser(
+        Request $request,
         Evenement $evenement,
         EntityManagerInterface $entityManager
     ): Response
     {
+         $motifRefus = trim($request->request->get('motifRefus', ''));
+
         $evenement->setStatus('refuse');
+        $evenement->setMotifRefus($motifRefus ?: null);
 
         $entityManager->flush();
 

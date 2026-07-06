@@ -72,6 +72,9 @@ class Evenement
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $motifRefus = null;
+
 
     public function __construct()
     {
@@ -325,6 +328,17 @@ class Evenement
     public function setStartedAt(\DateTimeImmutable $startedAt): static
     {
         $this->startedAt = $startedAt;
+
+        return $this;
+    }
+    public function getMotifRefus(): ?string
+    {
+        return $this->motifRefus;
+    }
+
+    public function setMotifRefus(?string $motifRefus): static
+    {
+        $this->motifRefus = $motifRefus;
 
         return $this;
     }
