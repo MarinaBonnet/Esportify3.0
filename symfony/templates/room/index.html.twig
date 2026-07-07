@@ -65,13 +65,17 @@
             {{ message.contenu }}<br>
             {% endif %}
             <small>{{ message.createdAt|date('d/m/Y H:i') }}</small>
-            {% if isAdmin or isOrganisateur %}
+            {% if not message.deleted and (
+            isAdmin
+            or isOrganisateur
+            or message.userId == app.user.id
+            ) %}
             <br>
 
             <a href="{{ path('app_room_delete_message', {
-            id: evenement.id,
-            messageId: message.id
-        }) }}" class="btn btn--danger" onclick="return confirm('Supprimer ce message ?')">
+        id: evenement.id,
+        messageId: message.id
+    }) }}" class="btn btn--danger" onclick="return confirm('Supprimer ce message ?')">
                 Supprimer
             </a>
             {% endif %}
@@ -86,7 +90,8 @@
     <h2>Envoyer un message</h2>
 
     <form method="post">
-        <textarea name="contenu" placeholder="Votre message"></textarea>
+        <label for="contenu">Message</label>
+        <textarea id="contenu" name="contenu" placeholder="Votre message"></textarea>
         <button type="submit">Envoyer</button>
     </form>
 </section>

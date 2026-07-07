@@ -143,12 +143,7 @@ final class RoomController extends AbstractController
         $isOrganisateur = $this->isGranted('ROLE_ORGANISATEUR');
         $isCreateur = $evenement->getOrganisateur() === $user;
 
-        if (!$isAdmin && !$isOrganisateur &&!$isCreateur) {
-            throw $this->createAccessDeniedException(
-                'Vous n’avez pas le droit de modérer cette room.'
-            );
-        }
-
+    
         $message = $dm
             ->getRepository(Message::class)
             ->find($messageId);
@@ -160,6 +155,18 @@ final class RoomController extends AbstractController
         if ($message->getEvenementId() !== $evenement->getId()) {
             throw $this->createAccessDeniedException(
                 'Ce message ne correspond pas à cet événement.'
+            );
+        }
+
+        $canDeleteMessage =
+            $isAdmin
+            || $isOrganisateur
+            || $isCreateur
+            || $message->getUserId() === $user->getId();
+
+        if (!$canDeleteMessage) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez pas supprimer ce message.'
             );
         }
 

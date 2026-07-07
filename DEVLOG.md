@@ -1078,11 +1078,11 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 - [ok] Modification profil ok
 - [ok] Changement mot de passe OK
 - [ok] Voir événements
-- [ ] Modifier ses propres événements
+- [ok] Modifier ses propres événements
 - [ok] Participer à un événement à venir
-- [ ] Impossible de participer à un événement terminé
+- [ok] Impossible de participer à un événement terminé
 - [ok] Ajouter / retirer favori
-- [ ] Accès au chat d’un événement où il participe
+- [ok] Accès au chat d’un événement où il participe
 - [ok] Déconnexion OK
 
 ### Organisateur
@@ -1090,11 +1090,11 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 - [ok] Connexion OK
 - [ok] Dashboard organisateur accessible
 - [ok] Proposer un événement
-- [ ] Modifier ses propres événements
-- [ ] Impossible de modifier un événement d’un autre organisateur
-- [ ] Voir participants
+- [ok] Modifier ses propres événements
+- [ok] Impossible de modifier un événement d’un autre organisateur
+- [ok] Voir participants
 - [ok] Démarrer un événement si les conditions sont remplies
-- [ ] Accès au chat de ses événements
+- [ok] Accès au chat de ses événements
 - [ok] Déconnexion OK
 
 ### Admin
@@ -1104,7 +1104,7 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 - [ok] Voir tous les utilisateurs
 - [ok] Voir tous les événements
 - [ok] Valider / refuser un événement
-- [ ] Modifier un événement
+- [ok] Modifier un événement
 - [ok] Supprimer un événement
 - [ok] Accès aux profils/pages admin
 - [ok] Déconnexion OK
@@ -1136,16 +1136,15 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 
 ## 3. Droits d’accès
 
-- [ ] Visiteur bloqué sur `/joueur`
-- [ ] Visiteur bloqué sur `/organisateur`
-- [ ] Visiteur bloqué sur `/admin`
-- [ ] Joueur bloqué sur `/admin`
-- [ ] Joueur bloqué sur les pages organisateur non autorisées
-- [ ] Organisateur bloqué sur `/admin`
-- [ ] Un organisateur ne peut pas modifier l’événement d’un autre
-- [ ] Un événement non validé n’est pas visible publiquement
-- [ ] Un événement terminé ne permet plus la participation
-- [ ] Un événement commencé ne peut plus être modifié sauf admin
+- [ok] Visiteur bloqué sur `/joueur`
+- [ok] Visiteur bloqué sur `/organisateur`
+- [ok] Visiteur bloqué sur `/admin`
+- [ok] Joueur bloqué sur `/admin`
+- [ok] Joueur bloqué sur les pages organisateur non autorisées
+- [ok] Organisateur bloqué sur `/admin`
+- [ok] Un événement non validé n’est pas visible publiquement
+- [ok] Un événement terminé ne permet plus la participation
+- [ok] Un événement commencé ne peut plus être modifié sauf admin
 
 ---
 
@@ -1154,11 +1153,11 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 ### Auth
 
 - [ok] Connexion avec bons identifiants
-- [ ] Connexion avec mauvais identifiants
-- [ ] Inscription valide
-- [ ] Inscription avec email déjà utilisé
-- [ ] Champs obligatoires
-- [ ] Messages d’erreur visibles
+- [ok] Connexion avec mauvais identifiants
+- [ok] Inscription valide
+- [ok] Inscription avec email déjà utilisé
+- [ok] Champs obligatoires
+- [ok] Messages d’erreur visibles
 
 ### Profil
 
@@ -1173,8 +1172,8 @@ Les anomalies détectées sont corrigées au fur et à mesure afin de garantir u
 - [ok] Créer événement complet
 - [ok] Créer événement sans image
 - [ok] Créer événement avec image
-- [ ] Modifier événement
-- [ ] Supprimer événement
+- [ok] Modifier événement
+- [ok] Supprimer événement
 - [ ] Dates invalides si test prévu
 - [ok] Upload image mauvais format refusé
 
@@ -1218,10 +1217,78 @@ Tester en mode navigateur responsive :
 
 A Faire:
 
-Restreindre le chat aux participants acceptés
+Restreindre le chat aux participants acceptés /ok
 Bloquer les messages vides /ok
 Limiter la longueur des messages /ok
 Fermer le chat après dateEnd /ok
 Bloquer le chat avant startedAt /ok
 Dossier Projet
 Dossier Professionnel
+
+# DevLog – 7 juillet 2026
+
+## Objectif
+
+Finaliser l'application **Esportify 3.0** en vue de son envoi en correction pour l'ECF.
+
+## Travaux réalisés
+
+### Authentification
+
+- Correction de la redirection après connexion.
+- Mise en place d'une redirection automatique selon le rôle de l'utilisateur :
+
+- Administrateur → Dashboard administrateur
+- Organisateur → Dashboard organisateur
+- Joueur → Dashboard joueur
+- Suppression du comportement qui renvoyait un joueur vers une page administrateur après une tentative d'accès interdite.
+
+### Chat MongoDB
+
+- Amélioration des droits de suppression des messages.
+- Un joueur peut désormais supprimer uniquement ses propres messages.
+- Les organisateurs peuvent supprimer tous les messages des événements qu'ils modèrent.
+- Les administrateurs peuvent supprimer tous les messages.
+- Sécurisation de la suppression côté contrôleur afin d'empêcher toute suppression non autorisée via une URL.
+
+### Sécurité
+
+- Vérification des droits d'accès des différents rôles.
+- Début de la phase de recette fonctionnelle :
+
+- Parcours visiteur validé.
+- Vérification des restrictions d'accès.
+- Préparation des tests complets des rôles Joueur, Organisateur et Administrateur.
+
+### Documentation
+
+- Refonte complète du fichier **README.md**.
+- Ajout :
+  - présentation du projet ;
+  - fonctionnalités principales ;
+  - technologies utilisées ;
+  - prérequis ;
+  - procédure d'installation locale ;
+  - comptes de démonstration ;
+  - informations sur l'auteur.
+
+### Préparation du déploiement
+
+- Début de la préparation du déploiement sur Hostinger.
+- Définition des prochaines étapes :
+  - export SQL ;
+  - mise en ligne de l'application ;
+  - rédaction de la documentation de déploiement.
+
+## Difficultés rencontrées
+
+- Identification d'une erreur lors de l'upload d'une image supérieure à la limite PHP (`post_max_size`), liée à la configuration du serveur et non à l'application.
+- Analyse et correction du problème de redirection après authentification.
+
+## Prochaines étapes
+
+- Finaliser les tests de recette des différents rôles.
+- Générer le fichier SQL demandé pour l'ECF.
+- Déployer l'application sur Hostinger.
+- Finaliser les documents livrables (manuel utilisateur, documentation technique, documentation de déploiement et gestion de projet).
+- Effectuer le commit final puis envoyer le projet en correction.
